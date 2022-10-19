@@ -1,0 +1,29 @@
+[
+  {
+    "icon": "feather:grid",
+    "name": "Dashboard",
+    "route": {
+      "name": "app-dashboard",
+      "path": "/app/dashboard"
+    },
+    "slug": "dashboard"
+  },
+  {
+    "icon": "feather:users",
+    "name": "Users",
+    "route": {
+      "name": "app-users",
+      "path": "/app/users"
+    },
+    "slug": "users"
+  },
+  {
+    "icon": "feather:shield",
+    "name": "Roles",
+    "route": {
+      "name": "app-Roles",
+      "path": "/app/roles"
+    },
+    "slug": "roles"
+  }
+]
