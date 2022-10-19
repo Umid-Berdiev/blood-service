@@ -65,7 +65,7 @@ const currentPage = computed({
 viewWrapper.setPageTitle(t('Roles_List'))
 
 useHead({
-  title: t('Roles') + ' - Nefrit',
+  title: t('Roles'),
 })
 
 await fetchData()

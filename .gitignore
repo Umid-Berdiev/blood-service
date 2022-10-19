@@ -166,3 +166,4 @@ public/robots.txt
 # zone identifier
 *:Zone.Identifier
 .env
+.npmrc

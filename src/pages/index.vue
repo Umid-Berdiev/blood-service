@@ -55,7 +55,7 @@ const handleLogin = async (event: Event) => {
 }
 
 useHead({
-  title: t('auth_login_nefrit'),
+  title: t('auth_login'),
 })
 
 function clearErrors(event: Event) {
