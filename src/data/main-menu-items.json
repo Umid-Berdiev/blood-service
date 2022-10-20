@@ -10,12 +10,26 @@
   },
   {
     "icon": "feather:users",
-    "name": "Users",
-    "route": {
-      "name": "app-users",
-      "path": "/app/users"
-    },
-    "slug": "users"
+    "name": "Blood bank",
+    "slug": "blood-bank",
+    "submenu": [
+      {
+        "name": "sticker_create_form",
+        "route": {
+          "name": "app-blood-bank-sticker-create-form",
+          "path": "/app/blood-bank/sticker-create-form"
+        },
+        "slug": "sticker-create-form"
+      },
+      {
+        "name": "donor_system_directories",
+        "route": {
+          "name": "app-blood-bank-donor-system-directories",
+          "path": "/app/blood-bank/donor-system-directories"
+        },
+        "slug": "donor-system-directories"
+      }
+    ]
   },
   {
     "icon": "feather:shield",

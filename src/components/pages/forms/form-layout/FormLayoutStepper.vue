@@ -112,7 +112,7 @@ const validateStep = async () => {
         </li>
       </ul>
     </div>
-    <div class="stepper-form">
+    <div class="stepper-form is-justify-content-center">
       <div class="form-sections">
         <div v-if="currentStep >= 0" id="form-step-0" class="form-section is-active">
           <h3 class="form-section-title">

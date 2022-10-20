@@ -259,7 +259,7 @@ const themeClasses = computed(() => {
 
         ul {
           li {
-            height: 32px;
+            // height: 32px;
             font-family: var(--font);
 
             &.is-active {

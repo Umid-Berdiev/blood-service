@@ -57,6 +57,8 @@ export default defineComponent({
     return () => {
       const header = slots.header?.()
       const slotContent = slots.default?.() ?? []
+      console.log({ slotContent })
+
       const links = slotContent.map((child) => h('li', {}, child))
 
       const parentLink = h(

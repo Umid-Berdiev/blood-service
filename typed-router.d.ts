@@ -36,6 +36,8 @@ declare module 'vue-router/auto/routes' {
     '/[...all]': RouteRecordInfo<'/[...all]', '/:all(.*)', { all: ParamValue<true> }, { all: ParamValue<false> }>,
     '/app': RouteRecordInfo<'/app', '/app', Record<never, never>, Record<never, never>>,
     '/app/dashboard': RouteRecordInfo<'/app/dashboard', '/app/dashboard', Record<never, never>, Record<never, never>>,
+    '/app/registration/register-donors': RouteRecordInfo<'/app/registration/register-donors', '/app/registration/register-donors', Record<never, never>, Record<never, never>>,
+    '/app/registration/unified-donor-register': RouteRecordInfo<'/app/registration/unified-donor-register', '/app/registration/unified-donor-register', Record<never, never>, Record<never, never>>,
     '/app/roles/': RouteRecordInfo<'/app/roles/', '/app/roles/', Record<never, never>, Record<never, never>>,
     '/app/roles/[id]/': RouteRecordInfo<'/app/roles/[id]/', '/app/roles/:id/', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/app/roles/[id]/permissions': RouteRecordInfo<'/app/roles/[id]/permissions', '/app/roles/:id/permissions', { id: ParamValue<true> }, { id: ParamValue<false> }>,

@@ -24,7 +24,6 @@ const { app } = useMainStore()
 const panels = usePanels()
 const route = useRoute()
 const router = useRouter()
-const openSideblockLinks = ref('')
 const isMobileSideblockOpen = ref(false)
 const isDesktopSideblockOpen = ref(props.openOnMounted)
 const activeMobileSubsidebar = ref(props.defaultSideblock)
@@ -101,14 +100,8 @@ watch(
           <h3>{{ app.name }}</h3>
         </template>
         <template #links>
-          <li v-for="(item, itemIndex) in mainMenuItems" :key="itemIndex">
-            <RouterLink :to="item.route.path" class="single-link">
-              <span class="icon">
-                <i class="iconify" :data-icon="item.icon"></i>
-              </span>
-              {{ $t(item.name) }}
-            </RouterLink>
-          </li>
+          <!-- main menu links -->
+          <MainMenuLinks />
         </template>
       </Sideblock>
     </Transition>

@@ -11,6 +11,7 @@ export type VFieldProps = {
   horizontal?: boolean
   subcontrol?: boolean
   raw?: boolean
+  required?: boolean
 }
 
 const props = withDefaults(defineProps<VFieldProps>(), {
@@ -53,7 +54,10 @@ defineExpose(vFieldContext)
     </template>
     <template v-else-if="hasLabel">
       <slot v-bind="vFieldContext" name="label">
-        <VLabel>{{ props.label }}</VLabel>
+        <VLabel>
+          {{ props.label }}
+          <span v-if="props.required" class="has-text-danger">*</span>
+        </VLabel>
       </slot>
 
       <slot v-bind="vFieldContext"></slot>
