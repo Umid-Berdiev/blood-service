@@ -394,7 +394,7 @@
   "Type_author": "Введите автора",
   "Profile_Picture": "Фото профиля",
   "Update_profile": "Обновить профиля",
-  "Personal_Info": "Личные данные",
+  "Personal_Info": "Персональные данные",
   "Edit_profile_pwd": "Изменить пароль профиля",
   "Old_Password": "Старый пароль",
   "New_Password": "Новый пароль",
@@ -469,8 +469,12 @@
   "Quality-control": "Контроль качество",
   "Quality-control-products": "Список продуктов на контроль качество",
   "Print": "Печать",
-  "": "",
   "Continue": "Продолжить",
   "Middlename": "Отчество",
-  "Doc_number": "Номер документа"
+  "Doc_number": "Номер документа",
+  "Advanced_Search": "Расширенный поиск",
+  "Certifying_document": "Удостоверяющий документ",
+  "Place_work_study": "Место работы/учебы",
+  "District": "Район",
+  "Region": "Область"
 }

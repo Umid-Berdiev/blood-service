@@ -469,8 +469,12 @@
   "Quality-control": "Quality control",
   "Quality-control-products": "List of products for quality control",
   "Print": "Print",
-  "": "",
   "Continue": "Continue",
   "Middlename": "Middlename",
-  "Doc_number": "Document number"
+  "Doc_number": "Document number",
+  "Advanced_Search": "Advanced search",
+  "Certifying_document": "Certifying document",
+  "Place_work_study": "Place of work/study",
+  "District": "District",
+  "Region": "Region"
 }
