@@ -2,6 +2,7 @@
 import { useHead } from '@vueuse/head'
 import { useI18n } from 'vue-i18n'
 import VueScrollTo from 'vue-scrollto'
+import { lazy } from 'zod'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import sleep from '/@src/utils/sleep'
@@ -23,6 +24,14 @@ const search = reactive({
   middlename: '',
   date_of_birth: new Date(),
   phone_number: '',
+  passport_series: '',
+  passport_number: '',
+  issued_by: '',
+  when_issued: '',
+  region: '',
+  district: '',
+  work_study_place: '',
+  email: '',
 })
 const errors = reactive({
   lastname: '',
@@ -30,6 +39,14 @@ const errors = reactive({
   middlename: '',
   date_of_birth: '',
   phone_number: '',
+  passport_series: '',
+  passport_number: '',
+  issued_by: '',
+  when_issued: '',
+  region: '',
+  district: '',
+  work_study_place: '',
+  email: '',
 })
 viewWrapper.setPageTitle(t('Registration'))
 useHead({
@@ -43,11 +60,11 @@ const validateStep = async () => {
     }
 
     isLoading.value = true
-    notyf.success('Your shipment is successfully stored!')
+    notyf.success('New patient data is successfully stored!')
     await sleep(1000)
 
     router.push({
-      name: '/app/dashboard',
+      name: '/app/registration/unified-donor-register',
     })
     return
   }
@@ -133,9 +150,9 @@ const validateStep = async () => {
                     v-model="search.phone_number"
                     class="input"
                     :options="{
-                      mask: '+{000}(00)000-00-00',
+                      mask: '{+998}(00)000-00-00',
+                      lazy: false,
                     }"
-                    placeholder="Pattern (Phone) +{7}(000)000-00-00"
                   />
                 </VControl>
               </VField>
@@ -246,11 +263,11 @@ const validateStep = async () => {
                 <VField :label="$t('Place_work_study')">
                   <VControl>
                     <VTextarea
-                      v-model="search.district"
+                      v-model="search.work_study_place"
                       rows="2"
                       :placeholder="$t('Place_work_study')"
                     />
-                    <p class="help has-text-danger">{{ errors.district }}</p>
+                    <p class="help has-text-danger">{{ errors.work_study_place }}</p>
                   </VControl>
                 </VField>
                 <VField :label="$t('Email')">
@@ -271,7 +288,7 @@ const validateStep = async () => {
         <div class="navigation-buttons">
           <div class="buttons is-right">
             <VButton type="submit" color="primary" bold :loading="isLoading" tabindex="0">
-              {{ $t('Continue') }}
+              {{ currentStep == 2 ? $t('Save') : $t('Continue') }}
             </VButton>
           </div>
         </div>

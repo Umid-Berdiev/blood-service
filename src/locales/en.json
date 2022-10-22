@@ -476,5 +476,7 @@
   "Certifying_document": "Certifying document",
   "Place_work_study": "Place of work/study",
   "District": "District",
-  "Region": "Region"
+  "Region": "Region",
+  "Passport_series_number": "Series and number of passport",
+  "Date-of-birth": "Date of birth"
 }

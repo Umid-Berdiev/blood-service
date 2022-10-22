@@ -476,5 +476,7 @@
   "Certifying_document": "Удостоверяющий документ",
   "Place_work_study": "Место работы/учебы",
   "District": "Район",
-  "Region": "Область"
+  "Region": "Область",
+  "Passport_series_number": "Серия и номер паспорта",
+  "Date-of-birth": "Дата рождения"
 }

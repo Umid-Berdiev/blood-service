@@ -70,3 +70,10 @@ export interface UserData {
   role_id?: number
   role?: RoleData
 }
+
+export interface SearchErrorInterface {
+  lastname: string
+  firstname: string
+  middlename: string
+  passpordId: string
+}

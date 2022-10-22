@@ -1,5 +1,48 @@
 <script setup lang="ts">
+const route = useRoute()
 const openSideblockLinks = ref('')
+
+watch(
+  () => route.path,
+  (newVal) => {
+    if (newVal) {
+      if (newVal.startsWith('/app/registration')) {
+        openSideblockLinks.value = 'registration'
+      }
+      if (newVal.startsWith('/app/physician-therapist')) {
+        openSideblockLinks.value = 'physician-therapist'
+      }
+      if (newVal.startsWith('/app/screening')) {
+        openSideblockLinks.value = 'screening'
+      }
+      if (newVal.startsWith('/app/donation')) {
+        openSideblockLinks.value = 'donation'
+      }
+      if (newVal.startsWith('/app/bloodborne-infections-laboratory')) {
+        openSideblockLinks.value = 'bloodborne-infections-laboratory'
+      }
+      if (newVal.startsWith('/app/clinical-biochemical-laboratory')) {
+        openSideblockLinks.value = 'clinical-biochemical-laboratory'
+      }
+      if (newVal.startsWith('/app/buck-laboratory')) {
+        openSideblockLinks.value = 'buck-laboratory'
+      }
+      if (newVal.startsWith('/app/immunological-research-department')) {
+        openSideblockLinks.value = 'immunological-research-department'
+      }
+      if (newVal.startsWith('/app/recycling')) {
+        openSideblockLinks.value = 'recycling'
+      }
+      if (newVal.startsWith('/app/quality-control')) {
+        openSideblockLinks.value = 'quality-control'
+      }
+      if (newVal.startsWith('/app/blood-bank')) {
+        openSideblockLinks.value = 'blood-bank'
+      }
+    }
+  },
+  { immediate: true }
+)
 </script>
 
 <template>
@@ -14,16 +57,6 @@ const openSideblockLinks = ref('')
       </RouterLink>
     </li>
 
-    <!-- registration -->
-    <!-- <li>
-      <RouterLink to="/registration" class="single-link">
-        <span class="icon">
-          <i class="iconify" data-icon="feather:list"></i>
-        </span>
-        {{ $t('Registration') }}
-      </RouterLink>
-    </li> -->
-
     <VCollapseLinks v-model:open="openSideblockLinks" collapse-id="registration">
       <template #header>
         <div class="icon">
@@ -36,10 +69,10 @@ const openSideblockLinks = ref('')
         <i class="iconify" data-icon="feather:minus" aria-hidden="true"></i>
         <span>{{ $t('Unified-donor-register') }}</span>
       </RouterLink>
-      <RouterLink to="/app/registration/register-donors" class="is-submenu mb-3">
+      <!-- <RouterLink to="/app/registration/register-donors" class="is-submenu mb-3">
         <i class="iconify" data-icon="feather:minus" aria-hidden="true"></i>
         <span>{{ $t('Register-donors') }}</span>
-      </RouterLink>
+      </RouterLink> -->
       <RouterLink
         to="/app/registration/donation-diverted-register"
         class="is-submenu mb-3"
@@ -327,5 +360,3 @@ const openSideblockLinks = ref('')
     </VCollapseLinks>
   </div>
 </template>
-
-<style scoped></style>
