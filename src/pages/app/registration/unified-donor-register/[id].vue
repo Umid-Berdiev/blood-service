@@ -1,48 +1,47 @@
 <script setup lang="ts">
-import { ref, computed, reactive, onMounted } from 'vue'
 import { useHead } from '@vueuse/head'
 
 // we import our useApi helper
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { useI18n } from 'vue-i18n'
+import { PatientInterface, TabHeader } from '/@src/utils/interfaces'
+import PatientVisitCardTable from '/@src/components/tables/PatientVisitCardTable.vue'
 
-const { t, locale } = useI18n()
-const applicant = ref<ApplicantInterface>()
-const tabs = reactive<TabHeader[]>([
-  { label: t('Applicant_details'), value: 'details', icon: 'feather:info' },
+const { t } = useI18n()
+const patient: PatientInterface = reactive({})
+const tabs = ref<TabHeader[]>([
+  { label: t('Patient_details'), value: 'details', icon: 'feather:info' },
   {
-    label: t('Statements'),
-    value: 'statements',
+    label: t('Patient_card'),
+    value: 'patient_card',
     icon: 'feather:file-text',
   },
-  // { label: t('Payments'), value: 'payments', icon: 'fas fa-dollar' },
-  // { label: t('Chat'), value: 'chat', icon: 'fas fa-comments' },
 ])
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle(t('Applicant_Info'))
+viewWrapper.setPageTitle(t('Patient_info'))
 
 useHead({
-  title: computed(() => applicant.value?.title ?? 'Loading applicant...'),
+  title: computed(() => t('Patient_info')),
 })
 </script>
 
 <template>
-  <div class="applicant-detail-wrapper">
+  <div class="patient-detail-wrapper">
     <VTabs selected="details" :tabs="tabs">
       <template #tab="{ activeValue }">
         <div v-if="activeValue === 'details'" class="columns mt-5">
           <div class="column">
-            <PatientPersonalInfoForm />
+            <PatientPersonalInfoForm :patient="patient" />
           </div>
           <div class="column">
-            <PatientPassportForm />
+            <PatientPassportForm :patient="patient" />
           </div>
           <div class="column">
-            <PatientAddressForm />
+            <PatientAddressForm :patient="patient" />
           </div>
         </div>
-        <div v-else-if="activeValue === 'statements'" class="mt-5">
-          <!-- <ApplicantStatementsTable /> -->
+        <div v-else-if="activeValue === 'patient_card'" class="mt-5">
+          <PatientVisitCardTable />
         </div>
       </template>
     </VTabs>

@@ -478,5 +478,7 @@
   "District": "District",
   "Region": "Region",
   "Passport_series_number": "Series and number of passport",
-  "Date-of-birth": "Date of birth"
+  "Date-of-birth": "Date of birth",
+  "Patient_card": "Patient card",
+  "Patient_info": "Patient's detailed information"
 }

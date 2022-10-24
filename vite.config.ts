@@ -162,26 +162,16 @@ export default defineConfig({
     }),
 
     /**
-     * This is an internal vite plugin that load markdown files as vue components.
-     *
-     * @see /documentation
-     * @see /vite-plugin-vuero-doc
-     * @see /src/components/partials/documentation/DocumentationItem.vue
-     * @see /src/composable/useMarkdownToc.ts
-     */
-    // VueroDocumentation(),
-
-    /**
      * unplugin-vue-components plugin is responsible of autoloading components
      * documentation and md file are loaded for elements and components sections
      *
      * @see https://github.com/antfu/unplugin-vue-components
      */
     Components({
-      dirs: ['documentation', 'src/components', 'src/layouts'],
-      extensions: ['vue', 'md'],
+      dirs: ['src/layouts', 'src/components'],
+      extensions: ['vue'],
       dts: true,
-      include: [/\.vue$/, /\.vue\?vue/, /\.md$/],
+      include: [/\.vue$/, /\.vue\?vue/],
     }),
 
     /**

@@ -2,9 +2,9 @@
 import { useHead } from '@vueuse/head'
 import { useI18n } from 'vue-i18n'
 import VueScrollTo from 'vue-scrollto'
-import { lazy } from 'zod'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
+import { PatientInterface } from '/@src/utils/interfaces'
 import sleep from '/@src/utils/sleep'
 
 const router = useRouter()
@@ -15,30 +15,14 @@ const { t } = useI18n()
 const currentStep = ref(0)
 const isLoading = ref(false)
 const currentHelp = ref(-1)
-const taxType = ref('')
-const taxStatements = ref('')
 const viewWrapper = useViewWrapper()
-const search = reactive({
-  lastname: '',
-  firstname: '',
-  middlename: '',
-  date_of_birth: new Date(),
-  phone_number: '',
-  passport_series: '',
-  passport_number: '',
-  issued_by: '',
-  when_issued: '',
-  region: '',
-  district: '',
-  work_study_place: '',
-  email: '',
-})
-const errors = reactive({
-  lastname: '',
-  firstname: '',
-  middlename: '',
+
+const patient: PatientInterface = reactive({
+  last_name: '',
+  first_name: '',
+  father_name: '',
   date_of_birth: '',
-  phone_number: '',
+  sex: 'male',
   passport_series: '',
   passport_number: '',
   issued_by: '',
@@ -47,7 +31,30 @@ const errors = reactive({
   district: '',
   work_study_place: '',
   email: '',
+  phone_number: '',
+  phone_home: '',
+  phone_work: '',
 })
+
+const errors = reactive({
+  last_name: '',
+  first_name: '',
+  father_name: '',
+  date_of_birth: '',
+  sex: '',
+  passport_series: '',
+  passport_number: '',
+  issued_by: '',
+  when_issued: '',
+  region: '',
+  district: '',
+  work_study_place: '',
+  email: '',
+  phone_number: '',
+  phone_home: '',
+  phone_work: '',
+})
+
 viewWrapper.setPageTitle(t('Registration'))
 useHead({
   title: t('Registration'),
@@ -78,6 +85,10 @@ const validateStep = async () => {
     isLoading.value = false
   })
 }
+
+async function createPatientData(patient: PatientInterface) {
+  console.log({ patient })
+}
 </script>
 
 <template>
@@ -101,62 +112,7 @@ const validateStep = async () => {
           </h3>
 
           <div class="form-section-inner">
-            <div class="fieldset">
-              <!-- <div class="fieldset-separator"></div> -->
-              <VField :label="$t('Last_name')" required>
-                <VControl>
-                  <VInput
-                    v-model="search.lastname"
-                    type="text"
-                    :placeholder="$t('Last_name')"
-                    @input="errors.lastname = ''"
-                  />
-                  <p class="help has-text-danger">{{ errors.lastname }}</p>
-                </VControl>
-              </VField>
-              <VField :label="$t('First_name')" required>
-                <VControl>
-                  <VInput
-                    v-model="search.firstname"
-                    type="text"
-                    :placeholder="$t('First_name')"
-                  />
-                  <p class="help has-text-danger">{{ errors.firstname }}</p>
-                </VControl>
-              </VField>
-              <VField :label="$t('Middlename')">
-                <VControl>
-                  <VInput
-                    v-model="search.middlename"
-                    type="text"
-                    :placeholder="$t('Middlename')"
-                  />
-                  <p class="help has-text-danger">{{ errors.middlename }}</p>
-                </VControl>
-              </VField>
-              <VDatePicker v-model="search.date_of_birth" color="green" trim-weeks>
-                <template #default="{ inputValue, inputEvents }">
-                  <VField :label="$t('Date-of-birth')" required>
-                    <VControl icon="feather:calendar">
-                      <VInput :value="inputValue" v-on="inputEvents" />
-                      <p class="help has-text-danger">{{ errors.date_of_birth }}</p>
-                    </VControl>
-                  </VField>
-                </template>
-              </VDatePicker>
-              <VField :label="$t('Phone')">
-                <VControl>
-                  <VIMaskInput
-                    v-model="search.phone_number"
-                    class="input"
-                    :options="{
-                      mask: '{+998}(00)000-00-00',
-                      lazy: false,
-                    }"
-                  />
-                </VControl>
-              </VField>
-            </div>
+            <PatientPersonalInfoForm :patient="patient" :errors="errors" />
           </div>
         </div>
 
@@ -177,48 +133,11 @@ const validateStep = async () => {
             </h3>
 
             <div class="form-section-inner">
-              <div class="fieldset">
-                <VField :label="$t('Series')" required>
-                  <VControl>
-                    <VInput
-                      v-model="search.passport_series"
-                      type="text"
-                      :placeholder="$t('Series')"
-                    />
-                    <p class="help has-text-danger">{{ errors.passport_series }}</p>
-                  </VControl>
-                </VField>
-                <VField :label="$t('Number')" required>
-                  <VControl>
-                    <VInput
-                      v-model="search.passport_number"
-                      type="text"
-                      :placeholder="$t('Number')"
-                    />
-                    <p class="help has-text-danger">{{ errors.passport_number }}</p>
-                  </VControl>
-                </VField>
-                <VField :label="$t('Issued_by')">
-                  <VControl>
-                    <VInput
-                      v-model="search.issued_by"
-                      type="text"
-                      :placeholder="$t('Issued_by')"
-                    />
-                    <p class="help has-text-danger">{{ errors.issued_by }}</p>
-                  </VControl>
-                </VField>
-                <VDatePicker v-model="search.when_issued" color="green" trim-weeks>
-                  <template #default="{ inputValue, inputEvents }">
-                    <VField :label="$t('When_issued')">
-                      <VControl icon="feather:calendar">
-                        <VInput :value="inputValue" v-on="inputEvents" />
-                        <p class="help has-text-danger">{{ errors.when_issued }}</p>
-                      </VControl>
-                    </VField>
-                  </template>
-                </VDatePicker>
-              </div>
+              <PatientPassportForm
+                :patient="patient"
+                :errors="errors"
+                @update:patient="createPatientData"
+              />
             </div>
           </div>
         </Transition>
@@ -240,47 +159,7 @@ const validateStep = async () => {
             </h3>
 
             <div class="form-section-inner">
-              <div class="fieldset">
-                <VField :label="$t('Region')" required>
-                  <VControl>
-                    <Multiselect
-                      v-model="search.region"
-                      :options="['Toshkent sh.', 'Samarqand vil.']"
-                      :placeholder="$t('Region')"
-                    />
-                  </VControl>
-                </VField>
-                <VField :label="$t('District')" required>
-                  <VControl>
-                    <VTextarea
-                      v-model="search.district"
-                      rows="2"
-                      :placeholder="$t('District')"
-                    />
-                    <p class="help has-text-danger">{{ errors.district }}</p>
-                  </VControl>
-                </VField>
-                <VField :label="$t('Place_work_study')">
-                  <VControl>
-                    <VTextarea
-                      v-model="search.work_study_place"
-                      rows="2"
-                      :placeholder="$t('Place_work_study')"
-                    />
-                    <p class="help has-text-danger">{{ errors.work_study_place }}</p>
-                  </VControl>
-                </VField>
-                <VField :label="$t('Email')">
-                  <VControl>
-                    <VInput
-                      v-model="search.email"
-                      type="text"
-                      :placeholder="$t('Email')"
-                    />
-                    <p class="help has-text-danger">{{ errors.email }}</p>
-                  </VControl>
-                </VField>
-              </div>
+              <PatientAddressForm :patient="patient" :errors="errors" />
             </div>
           </div>
         </Transition>

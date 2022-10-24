@@ -1,25 +1,30 @@
 <script setup lang="ts">
-const patientPassportData = reactive({
-  passport_series: '',
-  passport_number: '',
-  issued_by: '',
-  when_issued: '',
-})
+import { PatientInterface } from '/@src/utils/interfaces'
 
-const errors = reactive({
-  passport_series: '',
-  passport_number: '',
-  issued_by: '',
-  when_issued: '',
+const props = defineProps<{
+  patient: PatientInterface
+  errors: {
+    passport_series: string
+    passport_number: string
+    issued_by: string
+    when_issued: string
+  }
+}>()
+const emits = defineEmits(['update:patient'])
+const patientPersonalInfoForm = computed({
+  get: () => props.patient,
+  set: () => {
+    emits('update:patient')
+  },
 })
 </script>
 
 <template>
-  <div class="fieldset">
+  <div class="fieldset p-5">
     <VField :label="$t('Series')" required>
       <VControl>
         <VInput
-          v-model="patientPassportData.passport_series"
+          v-model="patientPersonalInfoForm.passport_series"
           type="text"
           :placeholder="$t('Series')"
         />
@@ -29,7 +34,7 @@ const errors = reactive({
     <VField :label="$t('Number')" required>
       <VControl>
         <VInput
-          v-model="patientPassportData.passport_number"
+          v-model="patientPersonalInfoForm.passport_number"
           type="text"
           :placeholder="$t('Number')"
         />
@@ -39,14 +44,14 @@ const errors = reactive({
     <VField :label="$t('Issued_by')">
       <VControl>
         <VInput
-          v-model="patientPassportData.issued_by"
+          v-model="patientPersonalInfoForm.issued_by"
           type="text"
           :placeholder="$t('Issued_by')"
         />
         <p class="help has-text-danger">{{ errors.issued_by }}</p>
       </VControl>
     </VField>
-    <VDatePicker v-model="patientPassportData.when_issued" color="green" trim-weeks>
+    <VDatePicker v-model="patientPersonalInfoForm.when_issued" color="green" trim-weeks>
       <template #default="{ inputValue, inputEvents }">
         <VField :label="$t('When_issued')">
           <VControl icon="feather:calendar">

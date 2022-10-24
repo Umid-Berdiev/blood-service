@@ -1,9 +1,3 @@
-declare module '*.md' {
-  import { defineComponent } from 'vue'
-  const Component: ReturnType<typeof defineComponent>
-  export default Component
-}
-
 // this is a temporary fix for the alpha.6 v-calendar version
 declare module 'v-calendar' {
   import { DefineComponent } from 'vue'

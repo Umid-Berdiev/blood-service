@@ -478,5 +478,7 @@
   "District": "Район",
   "Region": "Область",
   "Passport_series_number": "Серия и номер паспорта",
-  "Date-of-birth": "Дата рождения"
+  "Date-of-birth": "Дата рождения",
+  "Patient_card": "Карта пациента",
+  "Patient_info": "Детальная информация о пациенте"
 }

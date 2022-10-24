@@ -5,16 +5,16 @@ import { useNotyf } from '/@src/composable/useNotyf'
 import { useMainStore } from '/@src/stores/main'
 
 import { useViewWrapper } from '/@src/stores/viewWrapper'
-import { fetchList, removeById } from '/@src/utils/api/employees'
+import { fetchList } from '/@src/utils/api/employees'
 
 const router = useRouter()
 const notif = useNotyf()
 const { t } = useI18n()
 const mainStore = useMainStore()
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle(t('Users_List'))
+viewWrapper.setPageTitle(t('Patient_cards_list'))
 useHead({
-  title: `${t('Users')} - ${mainStore.app.name}`,
+  title: `${t('Patient_cards')} - ${mainStore.app.name}`,
 })
 
 const data = reactive({
@@ -28,6 +28,7 @@ const data = reactive({
 })
 
 const selectedId = ref()
+const isFormModalOpen = ref(false)
 const currentPage = computed({
   get: () => {
     return data.pagination.current_page
@@ -108,7 +109,7 @@ async function fetchData(page: number = 1) {
 
 function onEdit(rowId: number | null) {
   selectedId.value = rowId
-  router.push(`/app/users/${rowId}`)
+  isFormModalOpen.value = true
 }
 
 async function onRemove(id: number) {
@@ -116,30 +117,32 @@ async function onRemove(id: number) {
   mainStore.$patch({ confirmModalState: true })
 }
 
-async function handleRemoveAction() {
-  await removeById(selectedId.value)
+// async function handleRemoveAction() {
+//   await removeById(selectedId.value)
+//   fetchData()
+// }
+
+function updateList() {
   fetchData()
+  notif.success()
+  selectedId.value = undefined
 }
 </script>
 
 <template>
   <div class="page-content-inner">
-    <VBreadcrumb
-      with-icons
-      separator="bullet"
-      :items="[
-        {
-          label: 'Vuero',
-          hideLabel: true,
-          icon: 'feather:home',
-          to: { name: '/app' },
-        },
-        {
-          label: $t('Users'),
-          to: { name: '/app/users/' },
-        },
-      ]"
-    />
+    <VFlex>
+      <VButton
+        color="primary"
+        rounded
+        outlined
+        icon="feather:plus"
+        class="ml-auto"
+        @click="onEdit"
+      >
+        {{ $t('Add') }}
+      </VButton>
+    </VFlex>
 
     <div class="columns">
       <div class="column is-12">
@@ -276,6 +279,12 @@ async function handleRemoveAction() {
         </VFlexTableWrapper>
       </div>
     </div>
-    <ConfirmActionModal @confirm-action="handleRemoveAction" />
+    <!-- <ConfirmActionModal @confirm-action="handleRemoveAction" /> -->
+    <PatientVisitCardFormModal
+      v-model="isFormModalOpen"
+      :card-id="selectedId"
+      @update:list="updateList"
+      @close="selectedId = undefined"
+    />
   </div>
 </template>

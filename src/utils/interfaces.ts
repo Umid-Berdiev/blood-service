@@ -77,3 +77,49 @@ export interface SearchErrorInterface {
   middlename: string
   passpordId: string
 }
+
+export interface RegionInterface {
+  name: {
+    uz: string
+    ru: string
+    en: string
+  }
+  soato: number
+}
+export interface DistrictInterface {
+  name: {
+    uz: string
+    ru: string
+    en: string
+  }
+  soato: number
+  region_id: number
+}
+
+export interface PatientInterface {
+  id?: number
+  last_name: string
+  first_name: string
+  father_name: string
+  birth_date: Date
+  sex: 'male' | 'female'
+  phone_number: string
+  phone_work: string
+  phone_home: string
+  passport_series: string
+  passport_number: string
+  issued_by: string
+  when_issued: Date
+  region_id: number
+  region: RegionInterface
+  district_id: number
+  district: DistrictInterface
+  work_study_place: string
+  email: string
+}
+
+export interface TabHeader {
+  label: string
+  value: string
+  icon: string
+}

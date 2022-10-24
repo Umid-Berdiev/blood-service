@@ -26,23 +26,28 @@ useHead({
   title: t('Advanced_Search'),
 })
 
-const data = reactive({
+const dataApi = reactive({
   pagination: {
     current_page: 1,
-    per_page: 10,
-    total: 10,
+    per_page: 5,
+    total: 5,
     total_pages: 1,
   },
   result: [],
 })
 const currentPage = computed({
   get: () => {
-    return data.pagination.current_page
+    return dataApi.pagination.current_page
   },
   set: async (page) => {
-    await fetchData(page)
+    currentFilterData.page = page
+    await handleSearch(currentFilterData)
   },
 })
+const currentFilterData = reactive({
+  page: 1,
+})
+
 const columns = {
   orderNumber: {
     format: (value: any, row: any, index: number) => `${index + 1}`,
@@ -76,9 +81,10 @@ const incomingCallerId = ref<number>()
 
 const handleSearch = async (filterForm: any) => {
   try {
+    Object.assign(currentFilterData, filterForm)
     isLoading.value = true
-    const res = await fetchList({ page: 1, ...filterForm })
-    Object.assign(data, res)
+    const res = await fetchList(filterForm)
+    Object.assign(dataApi, res)
   } catch (error: any) {
     Object.assign(errors, error.response?.data?.errors)
   } finally {
@@ -97,10 +103,10 @@ async function fetchData(page: number = 1) {
     // async fetch data to our server
     const res = await fetchList({
       page,
-      per_page: data.pagination.per_page,
+      per_page: dataApi.pagination.per_page,
     })
 
-    Object.assign(data, res)
+    Object.assign(dataApi, res)
   } catch (error: any) {
     notif.error(t(error.response?.data.error.message))
   } finally {
@@ -110,7 +116,7 @@ async function fetchData(page: number = 1) {
 
 async function clearFilterForm() {
   // await fetchData()
-  data.result = []
+  dataApi.result = []
 }
 
 function addPatient() {
@@ -141,9 +147,9 @@ function onView(rowId: string | number) {
         <VFlexTableWrapper
           class="mt-4"
           :columns="columns"
-          :data="data.result"
-          :limit="data.pagination.per_page"
-          :total="data.pagination.total"
+          :data="dataApi.result"
+          :limit="dataApi.pagination.per_page"
+          :total="dataApi.pagination.total"
         >
           <!--
             Here we retrieve the internal wrapperState.
@@ -157,7 +163,7 @@ function onView(rowId: string | number) {
               </template>
 
               <template #right>
-                <PerPageSelect v-model="data.pagination.per_page" />
+                <PerPageSelect v-model="dataApi.pagination.per_page" />
               </template>
             </VFlexTableToolbar> -->
 
@@ -165,7 +171,7 @@ function onView(rowId: string | number) {
               The VFlexTable "data" and "columns" props
               will be inherited from parent VFlexTableWrapper
             -->
-            <VFlexTable rounded :no-header="!isLoading && data.result.length === 0">
+            <VFlexTable rounded :no-header="!isLoading && dataApi.result.length === 0">
               <template #header-column="{ column }">
                 <span
                   v-if="column.key === 'orderNumber'"
@@ -181,7 +187,7 @@ function onView(rowId: string | number) {
                 -->
                 <div v-if="isLoading" class="flex-list-inner">
                   <div
-                    v-for="key in data.pagination.per_page"
+                    v-for="key in dataApi.pagination.per_page"
                     :key="key"
                     class="flex-table-item"
                   >
@@ -201,7 +207,7 @@ function onView(rowId: string | number) {
                 </div>
 
                 <!-- This is the empty state -->
-                <div v-if="data.result.length === 0" class="flex-list-inner">
+                <div v-if="dataApi.result.length === 0" class="flex-list-inner">
                   <VPlaceholderSection
                     title="No matches"
                     subtitle="There is no data that match your query."
@@ -251,11 +257,11 @@ function onView(rowId: string | number) {
 
             <!--Table Pagination-->
             <VFlexPagination
-              v-if="data.result.length"
+              v-if="dataApi.result.length"
               v-model:current-page="currentPage"
               class="mt-5"
-              :item-per-page="data.pagination.per_page"
-              :total-items="data.pagination.total"
+              :item-per-page="dataApi.pagination.per_page"
+              :total-items="dataApi.pagination.total"
               no-router
             />
           </template>
