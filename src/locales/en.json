@@ -480,5 +480,20 @@
   "Passport_series_number": "Series and number of passport",
   "Date-of-birth": "Date of birth",
   "Patient_card": "Patient card",
-  "Patient_info": "Patient's detailed information"
+  "Screening": "Screening",
+  "Sex": "Sex",
+  "Male": "Male",
+  "Female": "Female",
+  "Series": "Series",
+  "Number": "Number",
+  "Issued_by": "Issued by",
+  "When_issued": "When issued",
+  "Phone_home": "Phone home",
+  "Phone_work": "Phone work",
+  "Phone_mobile": "Phone mobile",
+  "Patient_cards_list": "Patient visit cards list",
+  "Patient_cards": "Patient visit cards",
+  "Step": "Step",
+  "Patient_details": "Patient's information in details",
+  "Patient_info": "Patient's information"
 }

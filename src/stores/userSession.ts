@@ -2,6 +2,7 @@ import { acceptHMRUpdate, defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { useStorage } from '@vueuse/core'
 import { useApi } from '../composable/useApi'
+import { login, logout } from '/@src/utils/api/auth'
 
 export type UserData = Record<string, any> | null
 
@@ -32,17 +33,10 @@ export const useUserSession = defineStore('userSession', () => {
 
   async function loginUser(payload: any) {
     try {
-      const { data } = await api({
-        url: `/api/admin/login`,
-        method: 'post',
-        headers: {
-          Language: 'uz',
-        },
-        data: payload,
-      })
+      const data = await login(payload)
 
-      setUser(data.user)
-      setToken(data.token)
+      setUser(data.result.user)
+      setToken(data.result.token)
     } catch (error) {
       throw error
     }
@@ -50,10 +44,7 @@ export const useUserSession = defineStore('userSession', () => {
 
   async function logoutUser() {
     try {
-      await api({
-        url: '/api/logout',
-        method: 'post',
-      })
+      await logout()
       token.value = ''
       user.value = null
     } catch (error) {
@@ -64,9 +55,9 @@ export const useUserSession = defineStore('userSession', () => {
   async function fetchProfile() {
     try {
       const { data } = await api({
-        url: '/api/admin/profile',
+        url: '/users/profile',
       })
-      setUser(data.data)
+      setUser(data.result)
     } catch (error) {
       throw error
     }
@@ -75,7 +66,7 @@ export const useUserSession = defineStore('userSession', () => {
   async function updateProfile(payload: FormData) {
     try {
       const { data } = await api({
-        url: '/api/admin/profile/update',
+        url: '/users/profile',
         method: 'POST',
         data: payload,
       })
@@ -89,7 +80,7 @@ export const useUserSession = defineStore('userSession', () => {
   async function updateProfilePassword(payload: any) {
     try {
       const { data } = await api({
-        url: '/api/admin/profile/password',
+        url: '/users/profile/password',
         method: 'PUT',
         data: payload,
       })
@@ -99,6 +90,7 @@ export const useUserSession = defineStore('userSession', () => {
       throw error
     }
   }
+
   return {
     user,
     token,

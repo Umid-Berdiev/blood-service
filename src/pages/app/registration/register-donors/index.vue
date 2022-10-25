@@ -6,6 +6,7 @@ import { useNotyf } from '/@src/composable/useNotyf'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { PatientInterface } from '/@src/utils/interfaces'
 import sleep from '/@src/utils/sleep'
+import { createPatient } from '/@src/utils/api/patient'
 
 const router = useRouter()
 const notyf = useNotyf()
@@ -21,14 +22,14 @@ const patient: PatientInterface = reactive({
   last_name: '',
   first_name: '',
   father_name: '',
-  date_of_birth: '',
+  birth_date: new Date(),
   sex: 'male',
   passport_series: '',
   passport_number: '',
   issued_by: '',
-  when_issued: '',
-  region: '',
-  district: '',
+  when_issued: new Date(),
+  region_id: null,
+  district_id: null,
   work_study_place: '',
   email: '',
   phone_number: '',
@@ -40,14 +41,14 @@ const errors = reactive({
   last_name: '',
   first_name: '',
   father_name: '',
-  date_of_birth: '',
+  birth_date: '',
   sex: '',
   passport_series: '',
   passport_number: '',
   issued_by: '',
   when_issued: '',
-  region: '',
-  district: '',
+  region_id: '',
+  district_id: '',
   work_study_place: '',
   email: '',
   phone_number: '',
@@ -67,17 +68,15 @@ const validateStep = async () => {
     }
 
     isLoading.value = true
+    const res = await createPatient(patient)
     notyf.success('New patient data is successfully stored!')
     await sleep(1000)
 
-    router.push({
-      name: '/app/registration/unified-donor-register',
-    })
-    return
+    router.push(`/app/registration/unified-donor-register/${res.id}`)
   }
 
   isLoading.value = true
-  await sleep(400)
+  await sleep(1000)
   currentStep.value += 1
 
   nextTick(() => {
@@ -86,8 +85,8 @@ const validateStep = async () => {
   })
 }
 
-async function createPatientData(patient: PatientInterface) {
-  console.log({ patient })
+function clearError(error: string) {
+  errors[error] = ''
 }
 </script>
 
@@ -112,7 +111,11 @@ async function createPatientData(patient: PatientInterface) {
           </h3>
 
           <div class="form-section-inner">
-            <PatientPersonalInfoForm :patient="patient" :errors="errors" />
+            <PatientPersonalInfoForm
+              :patient="patient"
+              :errors="errors"
+              @editing="clearError"
+            />
           </div>
         </div>
 
@@ -136,7 +139,7 @@ async function createPatientData(patient: PatientInterface) {
               <PatientPassportForm
                 :patient="patient"
                 :errors="errors"
-                @update:patient="createPatientData"
+                @editing="clearError"
               />
             </div>
           </div>
@@ -159,14 +162,25 @@ async function createPatientData(patient: PatientInterface) {
             </h3>
 
             <div class="form-section-inner">
-              <PatientAddressForm :patient="patient" :errors="errors" />
+              <PatientAddressForm
+                :patient="patient"
+                :errors="errors"
+                @editing="clearError"
+              />
             </div>
           </div>
         </Transition>
 
         <div class="navigation-buttons">
           <div class="buttons is-right">
-            <VButton type="submit" color="primary" bold :loading="isLoading" tabindex="0">
+            <VButton
+              type="submit"
+              color="primary"
+              bold
+              :loading="isLoading"
+              :disabled="isLoading"
+              tabindex="0"
+            >
               {{ currentStep == 2 ? $t('Save') : $t('Continue') }}
             </VButton>
           </div>
@@ -324,70 +338,6 @@ async function createPatientData(patient: PatientInterface) {
                   <i aria-hidden="true" class="iconify" data-icon="feather:check"></i>
                   <span>Some nice list item</span>
                 </li>
-                <li>
-                  <i aria-hidden="true" class="iconify" data-icon="feather:check"></i>
-                  <span>Some nice list item</span>
-                </li>
-                <li>
-                  <i aria-hidden="true" class="iconify" data-icon="feather:check"></i>
-                  <span>Some nice list item</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div
-            v-if="currentHelp === 3"
-            id="help-section-3"
-            class="form-help-inner is-active"
-          >
-            <button
-              class="close-help-button"
-              tabindex="0"
-              @keydown.space.prevent="currentHelp = -1"
-              @click="currentHelp = -1"
-            >
-              <i aria-hidden="true" class="iconify" data-icon="feather:x"></i>
-            </button>
-            <h3>Options</h3>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quod proximum
-              fuit non vidit. Quantum Aristoxeni ingenium consumptum videmus in musicis?
-              An eiusdem modi? Quae similitudo in genere.
-            </p>
-            <div class="list-wrap">
-              <ul>
-                <li>
-                  <i aria-hidden="true" class="iconify" data-icon="feather:check"></i>
-                  <span>Some nice list item</span>
-                </li>
-                <li>
-                  <i aria-hidden="true" class="iconify" data-icon="feather:check"></i>
-                  <span>Some nice list item</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div
-            v-if="currentHelp === 4"
-            id="help-section-4"
-            class="form-help-inner is-active"
-          >
-            <button
-              class="close-help-button"
-              tabindex="0"
-              @keydown.space.prevent="currentHelp = -1"
-              @click="currentHelp = -1"
-            >
-              <i aria-hidden="true" class="iconify" data-icon="feather:x"></i>
-            </button>
-            <h3>Validation</h3>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quod proximum
-              fuit non vidit. Quantum Aristoxeni ingenium consumptum videmus in musicis?
-              An eiusdem modi? Quae similitudo in genere.
-            </p>
-            <div class="list-wrap">
-              <ul>
                 <li>
                   <i aria-hidden="true" class="iconify" data-icon="feather:check"></i>
                   <span>Some nice list item</span>

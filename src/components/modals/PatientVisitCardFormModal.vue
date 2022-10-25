@@ -7,13 +7,10 @@ import {
   fetchVisitCardById,
 } from '/@src/utils/api/patient'
 
-const props = defineProps({
-  modelValue: Boolean,
-  roleId: {
-    type: Number,
-    default: null,
-  },
-})
+const props = defineProps<{
+  modelValue: boolean
+  cardId: number | null
+}>()
 
 const emits = defineEmits<{
   (e: 'update:modelValue', modelValue: boolean): void

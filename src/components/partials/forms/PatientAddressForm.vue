@@ -1,51 +1,91 @@
 <script setup lang="ts">
-import { PatientInterface } from '/@src/utils/interfaces'
-
+import { PatientInterface, RegionInterface } from '/@src/utils/interfaces'
+import { fetchDistricts, fetchRegions } from '/@src/utils/api/additional'
 const props = defineProps<{
   patient: PatientInterface
   errors: {
-    district: string
+    region: RegionInterface
+    region_id: string
+    district_id: string
     work_study_place: string
     email: string
   }
 }>()
-const patientAddressData = reactive({
-  region: '',
-  district: '',
-  work_study_place: '',
-  email: '',
-  phone_number: '',
-  phone_home: '',
-  phone_work: '',
+const emits = defineEmits(['update:patient', 'editing'])
+const form = computed({
+  get() {
+    return props.patient
+  },
+  set(val) {
+    emits('update:patient', val)
+  },
 })
+const regions = ref([])
+const districts = ref([])
+
+onMounted(async () => {
+  const res = await fetchRegions()
+  regions.value = res.result
+})
+
+watch(
+  () => form.value.region_id,
+  async function (newVal) {
+    if (newVal) {
+      form.value.district_id = null
+      const res = await fetchDistricts(newVal)
+      districts.value = res.result
+    }
+  },
+  { immediate: true }
+)
+
+async function fetchDistrictListByRegionId(region_id: number) {
+  const res = fetchDistrictList(region_id)
+}
 </script>
 <template>
   <div class="fieldset p-5">
-    <VField :label="$t('Region')" required>
+    <VField v-slot="{ id }" :label="$t('Region')" required>
       <VControl>
         <Multiselect
-          v-model="patientAddressData.region"
-          :options="['Toshkent sh.', 'Samarqand vil.']"
+          v-model="form.region_id"
+          :attrs="{ id }"
+          label="name"
+          value-prop="id"
+          :searchable="true"
+          track-by="name"
+          :options="regions"
           :placeholder="$t('Region')"
+          @input="$emit('editing', 'region_id')"
         />
+        <p class="help has-text-danger">{{ errors.region_id }}</p>
       </VControl>
     </VField>
-    <VField :label="$t('District')" required>
+    <VField v-slot="{ id }" :label="$t('District')" required>
       <VControl>
         <Multiselect
-          v-model="patientAddressData.district"
-          :options="['Toshkent sh.', 'Samarqand vil.']"
+          v-model="form.district_id"
+          :attrs="{ id }"
+          label="name"
+          value-prop="id"
+          :searchable="true"
+          track-by="name"
+          :options="districts"
           :placeholder="$t('District')"
+          :disabled="!form.region_id"
+          @input="$emit('editing', 'district_id')"
         />
-        <p class="help has-text-danger">{{ errors.district }}</p>
+        <p class="help has-text-danger">{{ errors.district_id }}</p>
       </VControl>
     </VField>
     <VField :label="$t('Place_work_study')">
       <VControl>
         <VTextarea
-          v-model="patientAddressData.work_study_place"
+          v-model="form.work_study_place"
           rows="2"
           :placeholder="$t('Place_work_study')"
+          @input="$emit('editing', 'work_study_place')"
         />
         <p class="help has-text-danger">{{ errors.work_study_place }}</p>
       </VControl>
@@ -53,9 +93,10 @@ const patientAddressData = reactive({
     <VField :label="$t('Email')">
       <VControl>
         <VInput
-          v-model="patientAddressData.email"
+          v-model="form.email"
           type="text"
           :placeholder="$t('Email')"
+          @input="$emit('editing', 'email')"
         />
         <p class="help has-text-danger">{{ errors.email }}</p>
       </VControl>
@@ -63,7 +104,7 @@ const patientAddressData = reactive({
     <VField :label="$t('Phone_mobile')">
       <VControl>
         <VIMaskInput
-          v-model="patientAddressData.phone_number"
+          v-model="form.phone_number"
           class="input"
           :options="{
             mask: '{998}(00)000-00-00',
@@ -76,7 +117,7 @@ const patientAddressData = reactive({
     <VField :label="$t('Phone_home')">
       <VControl>
         <VIMaskInput
-          v-model="patientAddressData.phone_home"
+          v-model="form.phone_home"
           class="input"
           :options="{
             mask: '{998}(00)000-00-00',
@@ -89,7 +130,7 @@ const patientAddressData = reactive({
     <VField :label="$t('Phone_work')">
       <VControl>
         <VIMaskInput
-          v-model="patientAddressData.phone_work"
+          v-model="form.phone_work"
           class="input"
           :options="{
             mask: '{998}(00)000-00-00',

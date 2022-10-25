@@ -17,7 +17,7 @@ useHead({
   title: `${t('Patient_cards')} - ${mainStore.app.name}`,
 })
 
-const data = reactive({
+const apiData = reactive({
   pagination: {
     current_page: 1,
     per_page: 10,
@@ -27,11 +27,11 @@ const data = reactive({
   result: [],
 })
 
-const selectedId = ref()
+const selectedId = ref<number | null>(null)
 const isFormModalOpen = ref(false)
 const currentPage = computed({
   get: () => {
-    return data.pagination.current_page
+    return apiData.pagination.current_page
   },
   set: async (page) => {
     await fetchData(page)
@@ -79,10 +79,10 @@ const searchInput = computed({
 })
 const incomingCallerId = ref<number>()
 
-await fetchData()
+// await fetchData()
 
 watch(
-  () => data.pagination.per_page,
+  () => apiData.pagination.per_page,
   async () => {
     await fetchData()
   }
@@ -93,13 +93,13 @@ async function fetchData(page: number = 1) {
   try {
     isLoading.value = true
 
-    // async fetch data to our server
+    // async fetch apiData to our server
     const res = await fetchList({
       page,
-      per_page: data.pagination.per_page,
+      per_page: apiData.pagination.per_page,
     })
 
-    Object.assign(data, res)
+    Object.assign(apiData, res)
   } catch (error: any) {
     notif.error(t(error.response?.data.error.message))
   } finally {
@@ -125,7 +125,7 @@ async function onRemove(id: number) {
 function updateList() {
   fetchData()
   notif.success()
-  selectedId.value = undefined
+  selectedId.value = null
 }
 </script>
 
@@ -149,17 +149,18 @@ function updateList() {
         <VFlexTableWrapper
           class="mt-4"
           :columns="columns"
-          :data="data.result"
-          :limit="data.pagination.per_page"
-          :total="data.pagination.total"
+          :data="apiData.result"
+          :limit="apiData.pagination.per_page"
+          :total="apiData.pagination.total"
         >
           <!--
             Here we retrieve the internal wrapperState.
             Note that we can not destructure it
           -->
           <template #default="wrapperState">
+            {{ wrapperState }}
             <!-- We can place any content inside the default slot-->
-            <VFlexTableToolbar>
+            <!-- <VFlexTableToolbar>
               <template #left>
                 <SearchInput v-model="searchInput" />
               </template>
@@ -167,13 +168,13 @@ function updateList() {
               <template #right>
                 <PerPageSelect v-model="data.pagination.per_page" />
               </template>
-            </VFlexTableToolbar>
+            </VFlexTableToolbar> -->
 
             <!--
               The VFlexTable "data" and "columns" props
               will be inherited from parent VFlexTableWrapper
             -->
-            <VFlexTable rounded :no-header="!isLoading && data.result.length === 0">
+            <VFlexTable rounded :no-header="!isLoading && apiData.result.length === 0">
               <template #header-column="{ column }">
                 <span
                   v-if="column.key === 'orderNumber'"
@@ -189,7 +190,7 @@ function updateList() {
                 -->
                 <div v-if="isLoading" class="flex-list-inner">
                   <div
-                    v-for="key in data.pagination.per_page"
+                    v-for="key in apiData.pagination.per_page"
                     :key="key"
                     class="flex-table-item"
                   >
@@ -216,7 +217,7 @@ function updateList() {
                 </div>
 
                 <!-- This is the empty state -->
-                <div v-else-if="data.result.length === 0" class="flex-list-inner">
+                <div v-else-if="apiData.result.length === 0" class="flex-list-inner">
                   <VPlaceholderSection
                     title="No matches"
                     subtitle="There is no data that match your query."
@@ -269,10 +270,11 @@ function updateList() {
 
             <!--Table Pagination-->
             <VFlexPagination
+              v-if="apiData.result.length"
               v-model:current-page="currentPage"
               class="mt-5"
-              :item-per-page="data.pagination.per_page"
-              :total-items="data.pagination.total"
+              :item-per-page="apiData.pagination.per_page"
+              :total-items="apiData.pagination.total"
               no-router
             />
           </template>
@@ -284,7 +286,7 @@ function updateList() {
       v-model="isFormModalOpen"
       :card-id="selectedId"
       @update:list="updateList"
-      @close="selectedId = undefined"
+      @close="selectedId = null"
     />
   </div>
 </template>

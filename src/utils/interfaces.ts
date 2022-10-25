@@ -110,10 +110,10 @@ export interface PatientInterface {
   passport_number: string
   issued_by: string
   when_issued: Date
-  region_id: number
-  region: RegionInterface
-  district_id: number
-  district: DistrictInterface
+  region_id: number | null
+  region?: RegionInterface
+  district_id: number | null
+  district?: DistrictInterface
   work_study_place: string
   email: string
 }

@@ -11,10 +11,12 @@ const props = defineProps<{
   }
 }>()
 const emits = defineEmits(['update:patient'])
-const patientPersonalInfoForm = computed({
-  get: () => props.patient,
-  set: () => {
-    emits('update:patient')
+const form = computed({
+  get() {
+    return props.patient
+  },
+  set(val) {
+    emits('update:patient', val)
   },
 })
 </script>
@@ -23,35 +25,28 @@ const patientPersonalInfoForm = computed({
   <div class="fieldset p-5">
     <VField :label="$t('Series')" required>
       <VControl>
-        <VInput
-          v-model="patientPersonalInfoForm.passport_series"
-          type="text"
-          :placeholder="$t('Series')"
-        />
+        <VInput v-model="form.passport_series" type="text" :placeholder="$t('Series')" />
         <p class="help has-text-danger">{{ errors.passport_series }}</p>
       </VControl>
     </VField>
     <VField :label="$t('Number')" required>
       <VControl>
-        <VInput
-          v-model="patientPersonalInfoForm.passport_number"
-          type="text"
-          :placeholder="$t('Number')"
-        />
+        <VInput v-model="form.passport_number" type="text" :placeholder="$t('Number')" />
         <p class="help has-text-danger">{{ errors.passport_number }}</p>
       </VControl>
     </VField>
     <VField :label="$t('Issued_by')">
       <VControl>
-        <VInput
-          v-model="patientPersonalInfoForm.issued_by"
-          type="text"
-          :placeholder="$t('Issued_by')"
-        />
+        <VInput v-model="form.issued_by" type="text" :placeholder="$t('Issued_by')" />
         <p class="help has-text-danger">{{ errors.issued_by }}</p>
       </VControl>
     </VField>
-    <VDatePicker v-model="patientPersonalInfoForm.when_issued" color="green" trim-weeks>
+    <VDatePicker
+      v-model="form.when_issued"
+      color="green"
+      trim-weeks
+      :popover="{ visibility: 'click' }"
+    >
       <template #default="{ inputValue, inputEvents }">
         <VField :label="$t('When_issued')">
           <VControl icon="feather:calendar">

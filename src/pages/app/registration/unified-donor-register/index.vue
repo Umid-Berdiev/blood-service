@@ -124,7 +124,7 @@ function addPatient() {
 }
 
 function onView(rowId: string | number) {
-  router.push('/app/registration/unified-donor-register/' + rowId)
+  router.push(`/app/registration/unified-donor-register/${rowId}`)
 }
 </script>
 

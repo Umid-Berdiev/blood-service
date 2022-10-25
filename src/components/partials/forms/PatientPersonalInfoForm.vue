@@ -5,14 +5,20 @@ const props = defineProps<{
   patient: PatientInterface
   errors: {
     last_name: string
+    first_name: string
+    father_name: string
+    birth_date: string
+    sex: string
   }
 }>()
-const patientData = reactive({
-  last_name: '',
-  first_name: '',
-  father_name: '',
-  birth_date: new Date(),
-  sex: 'male',
+const emits = defineEmits(['update:patient', 'editing'])
+const form = computed({
+  get() {
+    return props.patient
+  },
+  set(val) {
+    emits('update:patient', val)
+  },
 })
 </script>
 
@@ -22,44 +28,50 @@ const patientData = reactive({
     <VField :label="$t('Last_name')" required>
       <VControl>
         <VInput
-          v-model="patientData.lastname"
+          v-model="form.last_name"
           type="text"
           :placeholder="$t('Last_name')"
           @input="$emit('editing', 'last_name')"
         />
-        <p class="help has-text-danger">{{ errors.lastname }}</p>
+        <p class="help has-text-danger">{{ errors.last_name }}</p>
       </VControl>
     </VField>
     <VField :label="$t('First_name')" required>
       <VControl>
         <VInput
-          v-model="patientData.firstname"
+          v-model="form.first_name"
           type="text"
           :placeholder="$t('First_name')"
+          @input="$emit('editing', 'first_name')"
         />
-        <p class="help has-text-danger">{{ errors.firstname }}</p>
+        <p class="help has-text-danger">{{ errors.first_name }}</p>
       </VControl>
     </VField>
     <VField :label="$t('Middlename')">
       <VControl>
         <VInput
-          v-model="patientData.father_name"
+          v-model="form.father_name"
           type="text"
           :placeholder="$t('Middlename')"
+          @input="$emit('editing', 'father_name')"
         />
         <p class="help has-text-danger">{{ errors.father_name }}</p>
       </VControl>
     </VField>
     <VDatePicker
-      v-model="patientData.birth_date"
+      v-model="form.birth_date"
       color="green"
       trim-weeks
-      popover.visibility="hidden"
+      :popover="{ visibility: 'click' }"
     >
       <template #default="{ inputValue, inputEvents }">
         <VField :label="$t('Date-of-birth')" required>
           <VControl icon="feather:calendar">
-            <VInput :value="inputValue" v-on="inputEvents" />
+            <VInput
+              :value="inputValue"
+              v-on="inputEvents"
+              @input="$emit('editing', 'birth_date')"
+            />
             <p class="help has-text-danger">{{ errors.birth_date }}</p>
           </VControl>
         </VField>
@@ -67,8 +79,18 @@ const patientData = reactive({
     </VDatePicker>
     <VField :label="$t('Sex')">
       <VControl>
-        <VRadio v-model="patientData.sex" value="male" :label="$t('Male')" />
-        <VRadio v-model="patientData.sex" value="female" :label="$t('Female')" />
+        <VRadio
+          v-model="form.sex"
+          value="male"
+          :label="$t('Male')"
+          @input="$emit('editing', 'sex')"
+        />
+        <VRadio
+          v-model="form.sex"
+          value="female"
+          :label="$t('Female')"
+          @input="$emit('editing', 'sex')"
+        />
         <p class="help has-text-danger">{{ errors.sex }}</p>
       </VControl>
     </VField>

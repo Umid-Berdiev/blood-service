@@ -1,3 +1,16 @@
+<script setup lang="ts">
+import { useUserSession } from '/@src/stores/userSession'
+
+const router = useRouter()
+const { logoutUser, user } = useUserSession()
+
+async function logoutAction() {
+  await logoutUser()
+  router.push('/')
+  // location.replace('/')
+}
+</script>
+
 <template>
   <VDropdown right spaced class="user-dropdown profile-dropdown">
     <template #button="{ toggle }">
@@ -8,7 +21,8 @@
         @keydown.space.prevent="toggle"
         @click="toggle"
       >
-        <VAvatar picture="/images/avatars/svg/vuero-1.svg" />
+        <p class="is-size-4 has-text-primary is-uppercase">{{ user?.username }}</p>
+        <!-- <VAvatar picture="/images/avatars/svg/vuero-1.svg" /> -->
       </a>
     </template>
 
@@ -17,52 +31,19 @@
         <VAvatar size="large" picture="/images/avatars/svg/vuero-1.svg" />
 
         <div class="meta">
-          <span>Erik Kovalsky</span>
-          <span>Product Manager</span>
+          <span>{{ user?.email }}</span>
+          <br />
+          <span>{{ 'Product Manager' }}</span>
         </div>
       </div>
-
+      <br />
       <a href="#" role="menuitem" class="dropdown-item is-media">
         <div class="icon">
           <i aria-hidden="true" class="lnil lnil-user-alt"></i>
         </div>
-        <div class="meta">
+        <div class="meta has-text-left">
           <span>Profile</span>
           <span>View your profile</span>
-        </div>
-      </a>
-
-      <hr class="dropdown-divider" />
-
-      <a href="#" role="menuitem" class="dropdown-item is-media">
-        <div class="icon">
-          <i aria-hidden="true" class="lnil lnil-briefcase"></i>
-        </div>
-        <div class="meta">
-          <span>Projects</span>
-          <span>All my projects</span>
-        </div>
-      </a>
-
-      <a href="#" role="menuitem" class="dropdown-item is-media">
-        <div class="icon">
-          <i aria-hidden="true" class="lnil lnil-users-alt"></i>
-        </div>
-        <div class="meta">
-          <span>Team</span>
-          <span>Manage your team</span>
-        </div>
-      </a>
-
-      <hr class="dropdown-divider" />
-
-      <a href="#" role="menuitem" class="dropdown-item is-media">
-        <div class="icon">
-          <i aria-hidden="true" class="lnil lnil-cog"></i>
-        </div>
-        <div class="meta">
-          <span>Settings</span>
-          <span>Account settings</span>
         </div>
       </a>
 
@@ -76,8 +57,9 @@
           role="menuitem"
           raised
           fullwidth
+          @click="logoutAction"
         >
-          Logout
+          {{ $t('Logout') }}
         </VButton>
       </div>
     </template>
