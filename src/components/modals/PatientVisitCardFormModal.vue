@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { reactive, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import {
   createVisitCard,
   updateVisitCardById,
   fetchVisitCardById,
 } from '/@src/utils/api/patient'
+import { PatientVisitCardInterface } from '/@src/utils/interfaces'
 
 const props = defineProps<{
   modelValue: boolean
@@ -20,45 +20,46 @@ const emits = defineEmits<{
 const { t } = useI18n()
 const title = ref(t('Add'))
 const isLoading = ref(false)
-const form = reactive({
-  visit_type: '',
-  directed_by: 'Healthcare facilities',
-  healthcare_facility: '',
+const form: PatientVisitCardInterface = reactive({
+  visit_type: 'gratuitous',
+  directed_by: 'medical_organization',
+  medical_organization: '',
   public_organization: '',
   personalized_donation: '',
   mobile_team: '',
 })
 const visitTypes = ref(['gratuitous', 'chargeable'])
-const directors = ref(['Healthcare facilities', 'Public organizations', 'Independently'])
+const directors = ref([
+  { value: 'medical_organization', label: 'Healthcare facilities' },
+  { value: 'public_organization', label: 'Public organizations' },
+  { value: 'independently', label: 'Independently' },
+])
+const medicalOrganizations = ref(['Poliklinika #1', 'Red Half Moon Society'])
 const errors = reactive({
   visit_type: '',
-  directed_by: 'Healthcare facilities',
-  healthcare_facility: '',
+  directed_by: '',
+  medical_organization: '',
   public_organization: '',
   personalized_donation: '',
   mobile_team: '',
 })
 const personalizedDonationCheckbox = ref(false)
 const mobileTeamCheckbox = ref(false)
-watch(
-  () => props.roleId,
-  async (newVal) => {
-    if (newVal) {
-      title.value = t('Edit')
-      const res = await fetchById(Number(props.roleId))
-      Object.assign(name, res.name)
-      Object.assign(description, res.description)
-    }
-  },
-  { deep: true, immediate: true }
-)
+
+watchEffect(async () => {
+  if (Number(props.cardId)) {
+    title.value = t('Edit')
+    const res = await fetchVisitCardById(Number(props.cardId))
+    Object.assign(form, res)
+  }
+})
 
 async function onSubmit() {
   try {
     isLoading.value = true
-    props.roleId
-      ? await updateById(props.roleId, { name, description })
-      : await create({ name, description })
+    props.cardId
+      ? await updateVisitCardById(props.cardId, form)
+      : await createVisitCard(form)
     emits('update:list')
     onClose()
   } catch (error: any) {
@@ -112,28 +113,28 @@ function clearErrors() {
               v-for="(item, dirIndex) in directors"
               :key="dirIndex"
               v-model="form.directed_by"
-              :value="item"
-              :label="item"
+              :value="item.value"
+              :label="item.label"
               color="primary"
             />
           </VControl>
         </VField>
         <VField
-          v-if="form.directed_by === 'Healthcare facilities'"
+          v-if="form.directed_by === 'medical_organization'"
           :label="$t('Healthcare_facilities_list')"
           required
         >
           <VControl>
             <Multiselect
-              v-model="form.healthcare_facility"
-              :options="visitTypes"
-              :placeholder="$t('Visit_type')"
+              v-model="form.medical_organization"
+              :options="medicalOrganizations"
+              :placeholder="$t('Medical_organizations_list')"
             />
-            <p class="help has-text-danger">{{ errors.healthcare_facility }}</p>
+            <p class="help has-text-danger">{{ errors.medical_organization }}</p>
           </VControl>
         </VField>
         <VField
-          v-if="form.directed_by === 'Public organizations'"
+          v-if="form.directed_by === 'public_organization'"
           :label="$t('Public_organization_title')"
           required
         >

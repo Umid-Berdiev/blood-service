@@ -55,7 +55,7 @@ const props = defineProps<{
       </div>
       <div class="msg is-image">
         <div class="image-container">
-          <VPhotosSwipe
+          <!-- <VPhotosSwipe
             v-if="props.message.content.image_url"
             :items="[
               {
@@ -67,7 +67,7 @@ const props = defineProps<{
               },
             ]"
             thumbnail-radius="full"
-          />
+          /> -->
           <div class="image-overlay"></div>
           <div class="image-actions">
             <div class="actions-inner">

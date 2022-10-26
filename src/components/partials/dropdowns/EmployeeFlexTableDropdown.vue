@@ -1,7 +1,6 @@
 <script setup lang="ts">
 const emits = defineEmits<{
   (e: 'edit'): void
-  (e: 'update:password'): void
   (e: 'remove'): void
 }>()
 </script>
@@ -25,25 +24,6 @@ const emits = defineEmits<{
         </div>
         <div class="meta">
           <span>{{ $t('Edit') }}</span>
-        </div>
-      </a>
-
-      <a
-        role="menuitem"
-        href="#"
-        class="dropdown-item is-media"
-        @click.prevent="
-          () => {
-            emits('update:password')
-            close()
-          }
-        "
-      >
-        <div class="icon">
-          <i class="lnir lnir-key" aria-hidden="true"></i>
-        </div>
-        <div class="meta">
-          <span>{{ $t('Change_password') }}</span>
         </div>
       </a>
 

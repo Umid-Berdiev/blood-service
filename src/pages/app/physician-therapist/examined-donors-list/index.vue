@@ -15,7 +15,7 @@ const viewWrapper = useViewWrapper()
 
 viewWrapper.setPageTitle(t('Users_List'))
 useHead({
-  title: `${t('Users')} - ${mainStore.app.name}`,
+  title: `${t('Examined-donor-register')} - ${mainStore.app.name}`,
 })
 
 const apiData = reactive({
@@ -136,8 +136,12 @@ async function handleRemoveAction() {
           to: { name: '/app/dashboard' },
         },
         {
-          label: $t('Users'),
-          to: { name: '/app/users/' },
+          label: $t('Physician-therapist'),
+          // to: { name: '/app/users/' },
+        },
+        {
+          label: $t('Examined-donor-register'),
+          to: { name: '/app/physician-therapist/examined-donors-list/' },
         },
       ]"
     />

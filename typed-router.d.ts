@@ -10,6 +10,9 @@ import type {
   RouteLocationResolvedTypedList,
   RouteLocationNormalizedTypedList,
   RouteLocationNormalizedLoadedTypedList,
+  RouteLocationAsString,
+  RouteLocationAsRelativeTypedList,
+  RouteLocationAsPathTypedList,
 
   // helper types
   // route definitions
@@ -36,14 +39,18 @@ declare module 'vue-router/auto/routes' {
     '/[...all]': RouteRecordInfo<'/[...all]', '/:all(.*)', { all: ParamValue<true> }, { all: ParamValue<false> }>,
     '/app': RouteRecordInfo<'/app', '/app', Record<never, never>, Record<never, never>>,
     '/app/dashboard': RouteRecordInfo<'/app/dashboard', '/app/dashboard', Record<never, never>, Record<never, never>>,
+    '/app/physician-therapist/donors-for-examination/': RouteRecordInfo<'/app/physician-therapist/donors-for-examination/', '/app/physician-therapist/donors-for-examination', Record<never, never>, Record<never, never>>,
+    '/app/physician-therapist/donors-for-examination/[id]': RouteRecordInfo<'/app/physician-therapist/donors-for-examination/[id]', '/app/physician-therapist/donors-for-examination/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
+    '/app/physician-therapist/examined-donors-list/': RouteRecordInfo<'/app/physician-therapist/examined-donors-list/', '/app/physician-therapist/examined-donors-list', Record<never, never>, Record<never, never>>,
+    '/app/physician-therapist/examined-donors-list/[id]': RouteRecordInfo<'/app/physician-therapist/examined-donors-list/[id]', '/app/physician-therapist/examined-donors-list/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/app/registration/donation-diverted-register': RouteRecordInfo<'/app/registration/donation-diverted-register', '/app/registration/donation-diverted-register', Record<never, never>, Record<never, never>>,
-    '/app/registration/register-donors/': RouteRecordInfo<'/app/registration/register-donors/', '/app/registration/register-donors/', Record<never, never>, Record<never, never>>,
-    '/app/registration/unified-donor-register/': RouteRecordInfo<'/app/registration/unified-donor-register/', '/app/registration/unified-donor-register/', Record<never, never>, Record<never, never>>,
+    '/app/registration/register-donors/': RouteRecordInfo<'/app/registration/register-donors/', '/app/registration/register-donors', Record<never, never>, Record<never, never>>,
+    '/app/registration/unified-donor-register/': RouteRecordInfo<'/app/registration/unified-donor-register/', '/app/registration/unified-donor-register', Record<never, never>, Record<never, never>>,
     '/app/registration/unified-donor-register/[id]': RouteRecordInfo<'/app/registration/unified-donor-register/[id]', '/app/registration/unified-donor-register/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
-    '/app/roles/': RouteRecordInfo<'/app/roles/', '/app/roles/', Record<never, never>, Record<never, never>>,
-    '/app/roles/[id]/': RouteRecordInfo<'/app/roles/[id]/', '/app/roles/:id/', { id: ParamValue<true> }, { id: ParamValue<false> }>,
+    '/app/roles/': RouteRecordInfo<'/app/roles/', '/app/roles', Record<never, never>, Record<never, never>>,
+    '/app/roles/[id]/': RouteRecordInfo<'/app/roles/[id]/', '/app/roles/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/app/roles/[id]/permissions': RouteRecordInfo<'/app/roles/[id]/permissions', '/app/roles/:id/permissions', { id: ParamValue<true> }, { id: ParamValue<false> }>,
-    '/app/users/': RouteRecordInfo<'/app/users/', '/app/users/', Record<never, never>, Record<never, never>>,
+    '/app/users/': RouteRecordInfo<'/app/users/', '/app/users', Record<never, never>, Record<never, never>>,
     '/app/users/[id]': RouteRecordInfo<'/app/users/[id]', '/app/users/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/auth': RouteRecordInfo<'/auth', '/auth', Record<never, never>, Record<never, never>>,
     '/auth/login': RouteRecordInfo<'/auth/login', '/auth/login', Record<never, never>, Record<never, never>>,
@@ -83,6 +90,14 @@ declare module 'vue-router/auto' {
    * Type safe version of `RouteLocation` . Allows passing the name of the route to be passed as a generic.
    */
   export type RouteLocation<Name extends keyof RouteNamedMap = keyof RouteNamedMap> = RouteLocationTypedList<RouteNamedMap>[Name]
+
+  /**
+   * Type safe version of `RouteLocationRaw` . Allows passing the name of the route to be passed as a generic.
+   */
+  export type RouteLocationRaw<Name extends keyof RouteNamedMap = keyof RouteNamedMap> =
+    | RouteLocationAsString<RouteNamedMap>
+    | RouteLocationAsRelativeTypedList<RouteNamedMap>[Name]
+    | RouteLocationAsPathTypedList<RouteNamedMap>[Name]
 
   /**
    * Generate a type safe params for a route location. Requires the name of the route to be passed as a generic.

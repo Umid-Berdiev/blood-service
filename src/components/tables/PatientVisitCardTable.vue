@@ -138,7 +138,7 @@ function updateList() {
         outlined
         icon="feather:plus"
         class="ml-auto"
-        @click="onEdit"
+        @click="onEdit(null)"
       >
         {{ $t('Add') }}
       </VButton>

@@ -15,7 +15,7 @@ const viewWrapper = useViewWrapper()
 
 viewWrapper.setPageTitle(t('Users_List'))
 useHead({
-  title: `${t('Users')} - ${mainStore.app.name}`,
+  title: `${t('Donors-list-for-examination')} - ${mainStore.app.name}`,
 })
 
 const apiData = reactive({
@@ -44,27 +44,33 @@ const columns = {
   },
   name: {
     label: 'Fullname',
-    media: true,
-    grow: true,
+    // grow: true,
+    sortable: true,
+  },
+  username: {
+    label: 'Username',
+    // grow: true,
     sortable: true,
   },
   email: {
     label: 'Email',
+    // grow: true,
     sortable: true,
   },
-  role: {
-    label: 'Role',
+  phone: {
+    label: 'Phone',
+    // grow: true,
     sortable: true,
   },
-  department: {
-    label: 'Department',
-    grow: true,
+  website: {
+    label: 'Website',
+    // grow: true,
     sortable: true,
   },
-  actions: {
-    label: '',
-    align: 'end',
-  },
+  // actions: {
+  //   label: '',
+  //   align: 'end',
+  // },
 } as const
 const isLoading = ref<boolean>(false)
 const searchInput = computed({
@@ -78,8 +84,19 @@ const searchInput = computed({
   },
 })
 const incomingCallerId = ref<number>()
+const donorStatuses = ref(['donors-for-examination', 'rejected'])
+const selectedDonorStatus = ref('')
 
 // await fetchData()
+
+watch(
+  () => selectedDonorStatus.value,
+  async (newVal) => {
+    if (newVal) {
+      await fetchData()
+    } else apiData.result = []
+  }
+)
 
 watch(
   () => apiData.pagination.per_page,
@@ -94,12 +111,14 @@ async function fetchData(page: number = 1) {
     isLoading.value = true
 
     // async fetch apiData to our server
-    const res = await fetchList({
-      page,
-      per_page: apiData.pagination.per_page,
-    })
+    // const res = await fetchList({
+    //   page,
+    //   per_page: apiData.pagination.per_page,
+    // })
+    const res = await fetch('https://jsonplaceholder.typicode.com/users')
 
-    Object.assign(apiData, res)
+    apiData.result = await res.json()
+    // Object.assign(apiData, res)
   } catch (error: any) {
     notif.error(t(error.response?.data?.error?.message))
   } finally {
@@ -125,22 +144,42 @@ async function handleRemoveAction() {
 
 <template>
   <div class="page-content-inner">
-    <VBreadcrumb
-      with-icons
-      separator="bullet"
-      :items="[
-        {
-          label: mainStore.app.name,
-          hideLabel: true,
-          icon: 'feather:home',
-          to: { name: '/app/dashboard' },
-        },
-        {
-          label: $t('Users'),
-          to: { name: '/app/users/' },
-        },
-      ]"
-    />
+    <VFlex justify-content="space-between" flex-wrap="wrap">
+      <VFlexItem>
+        <VBreadcrumb
+          with-icons
+          separator="bullet"
+          :items="[
+            {
+              label: mainStore.app.name,
+              hideLabel: true,
+              icon: 'feather:home',
+              to: { name: '/app/dashboard' },
+            },
+            {
+              label: $t('Physician-therapist'),
+              // to: { name: '/app/users/' },
+            },
+            {
+              label: $t('Donors-list-for-examination'),
+              to: { name: '/app/physician-therapist/donors-for-examination/' },
+            },
+          ]"
+        />
+      </VFlexItem>
+      <VFlexItem>
+        <VField v-slot="{ id }" class="is-curved-select" style="width: 15rem">
+          <VControl>
+            <Multiselect
+              v-model="selectedDonorStatus"
+              :attrs="{ id }"
+              :options="donorStatuses"
+              placeholder="Select an option"
+            />
+          </VControl>
+        </VField>
+      </VFlexItem>
+    </VFlex>
 
     <div class="columns">
       <div class="column is-12">
@@ -192,24 +231,27 @@ async function handleRemoveAction() {
                     class="flex-table-item"
                   >
                     <VFlexTableCell :column="{ grow: true, media: true }">
-                      <VPlaceloadAvatar size="medium" />
+                      <!-- <VPlaceloadAvatar size="medium" /> -->
 
                       <VPlaceloadText
                         :lines="2"
-                        width="60%"
+                        width="100%"
                         last-line-width="20%"
                         class="mx-2"
                       />
                     </VFlexTableCell>
-                    <VFlexTableCell>
-                      <VPlaceload width="60%" class="mx-1" />
-                    </VFlexTableCell>
-                    <VFlexTableCell>
+                    <!-- <VFlexTableCell
+                      v-for="(column, columnIndex) in columns"
+                      :key="columnIndex"
+                    >
+                      <VPlaceload class="mx-1" />
+                    </VFlexTableCell> -->
+                    <!-- <VFlexTableCell>
                       <VPlaceload width="60%" class="mx-1" />
                     </VFlexTableCell>
                     <VFlexTableCell :column="{ align: 'end' }">
                       <VPlaceload width="45%" class="mx-1" />
-                    </VFlexTableCell>
+                    </VFlexTableCell> -->
                   </div>
                 </div>
 
@@ -244,24 +286,26 @@ async function handleRemoveAction() {
               </template>
 
               <!-- This is the body cell slot -->
-              <template #body-cell="{ row, column }">
+              <template #body-cell="{ row, column, value }">
                 <template v-if="column.key === 'name'">
-                  <VAvatar size="medium" :picture="row.avatar" />
-                  <div>
-                    <span class="dark-text">{{ row.firstname }} {{ row.lastname }}</span>
-                  </div>
+                  <!-- <VAvatar size="medium" :picture="row.avatar" /> -->
+                  <RouterLink
+                    :to="`/app/physician-therapist/donors-for-examination/${row.id}`"
+                  >
+                    {{ value }}
+                  </RouterLink>
                 </template>
-                <template v-if="column.key === 'role'">
+                <!-- <template v-if="column.key === 'role'">
                   <div>
                     <span class="dark-text">{{ row.role.name }}</span>
                   </div>
-                </template>
-                <template v-if="column.key === 'actions'">
+                </template> -->
+                <!-- <template v-if="column.key === 'actions'">
                   <EmployeeFlexTableDropdown
                     @edit="onEdit(row.id)"
                     @remove="onRemove(row.id)"
                   />
-                </template>
+                </template> -->
               </template>
             </VFlexTable>
 

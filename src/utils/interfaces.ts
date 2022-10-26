@@ -122,4 +122,21 @@ export interface TabHeader {
   label: string
   value: string
   icon: string
+  to?: string
+}
+
+export type PatientVisitType = 'gratuitous' | 'chargeable'
+
+export type PatientDirectorType =
+  | 'medical_organization'
+  | 'public_organization'
+  | 'independently'
+
+export interface PatientVisitCardInterface {
+  visit_type: PatientVisitType
+  directed_by: PatientDirectorType
+  medical_organization: object | null
+  public_organization: string | null
+  personalized_donation: string
+  mobile_team: string
 }

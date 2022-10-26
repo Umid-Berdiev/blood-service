@@ -1,6 +1,7 @@
 <script lang="ts">
-import 'photoswipe/dist/photoswipe.css'
-import 'photoswipe/dist/default-skin/default-skin.css'
+// import 'photoswipe/dist/photoswipe.css'
+// import 'photoswipe/dist/default-skin/default-skin.css'
+import 'photoswipe/style.css'
 
 let instances = 0
 </script>

@@ -8,10 +8,12 @@ import FilterForm from '/@src/components/pages/registration/FilterForm.vue'
 import sleep from '/@src/utils/sleep'
 import { SearchErrorInterface } from '/@src/utils/interfaces'
 import { fetchList } from '/@src/utils/api/employees'
+import { useMainStore } from '/@src/stores/main'
 
-const { t } = useI18n()
 const router = useRouter()
 const notyf = useNotyf()
+const { t } = useI18n()
+const mainStore = useMainStore()
 const isLoading = ref(false)
 const errors: SearchErrorInterface = reactive({
   lastname: '',
@@ -23,7 +25,7 @@ const viewWrapper = useViewWrapper()
 
 viewWrapper.setPageTitle(t('Advanced_Search'))
 useHead({
-  title: t('Advanced_Search'),
+  title: `${t('Donation-diverted-register')} - ${mainStore.app.name}`,
 })
 
 const data = reactive({
@@ -119,7 +121,27 @@ function addPatient() {
 </script>
 
 <template>
-  <div>
+  <div class="page-content-inner">
+    <VBreadcrumb
+      with-icons
+      separator="bullet"
+      :items="[
+        {
+          label: mainStore.app.name,
+          hideLabel: true,
+          icon: 'feather:home',
+          to: { name: '/app/dashboard' },
+        },
+        {
+          label: $t('Registration'),
+          // to: { name: '/app/registration/unified-donor-register/' },
+        },
+        {
+          label: $t('Donation-diverted-register'),
+          to: { name: '/app/registration/donation-diverted-register' },
+        },
+      ]"
+    />
     <div class="columns is-justify-content-center">
       <div class="column">
         <TableActionsBlock title="" add-disabled />
@@ -206,12 +228,12 @@ function addPatient() {
                     <template #image>
                       <img
                         class="light-image"
-                        src="/@src/assets/illustrations/placeholders/search-4.svg"
+                        src="/@src/assets/illustrations/placeholders/search-7.svg"
                         alt=""
                       />
                       <img
                         class="dark-image"
-                        src="/@src/assets/illustrations/placeholders/search-4-dark.svg"
+                        src="/@src/assets/illustrations/placeholders/search-7-dark.svg"
                         alt=""
                       />
                     </template>

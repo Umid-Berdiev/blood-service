@@ -32,4 +32,3 @@ const list = [5, 10, 25, 50]
     </VControl>
   </VField>
 </template>
-

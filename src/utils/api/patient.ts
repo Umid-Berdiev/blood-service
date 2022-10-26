@@ -29,10 +29,10 @@ export async function createPatient(payload: any) {
   }
 }
 
-export async function updatePatientById(payload: any) {
+export async function updatePatientById(id: number, payload: any) {
   try {
     const { data } = await api({
-      url: '',
+      url: `${id}`,
       method: 'PUT',
       data: payload,
     })
@@ -82,10 +82,10 @@ export async function createVisitCard(payload: any) {
   }
 }
 
-export async function updateVisitCardById(payload: any) {
+export async function updateVisitCardById(id: number, payload: any) {
   try {
     const { data } = await api({
-      url: '',
+      url: `${id}`,
       method: 'PUT',
       data: payload,
     })

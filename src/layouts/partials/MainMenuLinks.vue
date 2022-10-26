@@ -92,14 +92,14 @@ watch(
         <i aria-hidden="true" class="iconify" data-icon="feather:chevron-right"></i>
       </template>
       <RouterLink
-        to="/app/physician-therapist/donors-list-for-examination"
+        to="/app/physician-therapist/donors-for-examination"
         class="is-submenu mb-3"
       >
         <i class="iconify" data-icon="feather:minus" aria-hidden="true"></i>
         <span>{{ $t('Donors-list-for-examination') }}</span>
       </RouterLink>
       <RouterLink
-        to="/app/physician-therapist/examined-donor-register"
+        to="/app/physician-therapist/examined-donors-list"
         class="is-submenu mb-3"
       >
         <i class="iconify" data-icon="feather:minus" aria-hidden="true"></i>

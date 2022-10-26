@@ -495,5 +495,15 @@
   "Patient_cards": "Patient visit cards",
   "Step": "Step",
   "Patient_details": "Patient's information in details",
-  "Patient_info": "Patient's information"
+  "Patient_info": "Patient's information",
+  "Visit_type": "Visit type",
+  "Directed_by": "Directed by",
+  "Healthcare_facilities_list": "Healthcare facilities list",
+  "Personalized_donation": "Personalized donation",
+  "Mobile_team": "Mobile team",
+  "Send_for_examination": "Send for examination",
+  "Medical_organizations_list": "Medical organizations list",
+  "Public_organization_title": "Public organization title",
+  "": "",
+  "": ""
 }

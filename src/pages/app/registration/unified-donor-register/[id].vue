@@ -47,16 +47,23 @@ const errors = reactive({
   phone_work: '',
 })
 
+const paramsID = (route.params?.id as number) || null
 const tabs = ref<TabHeader[]>([
-  { label: t('Patient_details'), value: 'details', icon: 'feather:info' },
+  {
+    label: t('Patient_details'),
+    value: '#details',
+    icon: 'feather:info',
+    to: `/app/registration/unified-donor-register/${paramsID}#details`,
+  },
   {
     label: t('Patient_card'),
-    value: 'patient_visit_cards',
+    value: '#patient_visit_cards',
     icon: 'feather:file-text',
+    to: `/app/registration/unified-donor-register/${paramsID}#patient_visit_cards`,
   },
 ])
 
-const selectedTab = ref(route.hash || 'details')
+const selectedTab = ref(route.hash || '#details')
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle(t('Patient_info'))
 
@@ -73,7 +80,7 @@ function clearError(error: string) {
   <div class="patient-detail-wrapper">
     <VTabs :selected="selectedTab" :tabs="tabs">
       <template #tab="{ activeValue }">
-        <form v-if="activeValue === 'details'" class="columns mt-5">
+        <form v-if="activeValue === '#details'" class="columns mt-5">
           <div class="column">
             <PatientPersonalInfoForm
               :patient="patient"
@@ -96,7 +103,7 @@ function clearError(error: string) {
             />
           </div>
         </form>
-        <div v-else-if="activeValue === 'patient_visit_cards'" class="mt-5">
+        <div v-else-if="activeValue === '#patient_visit_cards'" class="mt-5">
           <PatientVisitCardTable />
         </div>
       </template>
