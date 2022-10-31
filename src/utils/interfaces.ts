@@ -98,11 +98,13 @@ export interface DistrictInterface {
 
 export interface PatientInterface {
   id?: number
+  pinfl: number
+  patient_category_id: number | null
   last_name: string
   first_name: string
   father_name: string
   birth_date: Date
-  sex: 'male' | 'female'
+  gender: 'male' | 'female'
   phone_number: string
   phone_work: string
   phone_home: string
@@ -114,7 +116,9 @@ export interface PatientInterface {
   region?: RegionInterface
   district_id: number | null
   district?: DistrictInterface
+  address: string
   work_study_place: string
+  avatar: string
   email: string
 }
 
@@ -133,10 +137,35 @@ export type PatientDirectorType =
   | 'independently'
 
 export interface PatientVisitCardInterface {
+  patient_id: number | string | null
   visit_type: PatientVisitType
   directed_by: PatientDirectorType
   medical_organization: object | null
   public_organization: string | null
   personalized_donation: string
   mobile_team: string
+  is_personalized_donation: boolean
+  is_mobile_team: boolean
+}
+
+export interface ApiLinkInterface {
+  url: null | string
+  label: string
+  active: boolean
+}
+
+export interface ApiDataInterface {
+  data: []
+  current_page: number
+  per_page: number
+  total: number
+  first_page_url?: string
+  from?: number
+  last_page?: number
+  last_page_url?: string
+  links?: ApiLinkInterface[]
+  next_page_url?: string
+  path?: string
+  prev_page_url?: null | string
+  to?: number
 }

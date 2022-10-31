@@ -5,8 +5,10 @@ import { useNotyf } from '/@src/composable/useNotyf'
 import { useMainStore } from '/@src/stores/main'
 
 import { useViewWrapper } from '/@src/stores/viewWrapper'
-import { fetchList } from '/@src/utils/api/employees'
+import { visitcardsList } from '/@src/utils/api/patient'
+import { ApiDataInterface } from '/@src/utils/interfaces'
 
+const route = useRoute()
 const router = useRouter()
 const notif = useNotyf()
 const { t } = useI18n()
@@ -17,21 +19,19 @@ useHead({
   title: `${t('Patient_cards')} - ${mainStore.app.name}`,
 })
 
-const apiData = reactive({
-  pagination: {
-    current_page: 1,
-    per_page: 10,
-    total: 10,
-    total_pages: 1,
-  },
-  result: [],
+const apiData: ApiDataInterface = reactive({
+  current_page: 1,
+  per_page: 10,
+  total: 10,
+  data: [],
 })
 
 const selectedId = ref<number | null>(null)
+const patientID = route.params?.id || null
 const isFormModalOpen = ref(false)
 const currentPage = computed({
   get: () => {
-    return apiData.pagination.current_page
+    return apiData.current_page
   },
   set: async (page) => {
     await fetchData(page)
@@ -42,23 +42,38 @@ const columns = {
     format: (value: any, row: any, index: number) => `${index + 1}`,
     cellClass: 'is-flex-grow-0',
   },
-  name: {
-    label: 'Fullname',
-    media: true,
-    grow: true,
+  visit_type: {
+    label: t('Visit_type'),
+    // grow: true,
     sortable: true,
   },
-  email: {
-    label: 'Email',
+  directed_by: {
+    label: t('Directed_by'),
+    // grow: true,
     sortable: true,
   },
-  role: {
-    label: 'Role',
+  medical_organization: {
+    label: t('Healthcare_facilities'),
     sortable: true,
   },
-  department: {
-    label: 'Department',
-    grow: true,
+  public_organization: {
+    label: t('Public_organizations'),
+    // grow: true,
+    sortable: true,
+  },
+  independently: {
+    label: t('Independently'),
+    // grow: true,
+    sortable: true,
+  },
+  is_personalized_donation: {
+    label: t('Personalized_donation'),
+    // grow: true,
+    sortable: true,
+  },
+  is_mobile_team: {
+    label: t('Mobile_team'),
+    // grow: true,
     sortable: true,
   },
   actions: {
@@ -67,22 +82,12 @@ const columns = {
   },
 } as const
 const isLoading = ref<boolean>(false)
-const searchInput = computed({
-  get(): string {
-    return ''
-  },
-  async set(v: string) {
-    console.log(v)
-
-    // await onSearch(v)
-  },
-})
 const incomingCallerId = ref<number>()
 
-// await fetchData()
+await fetchData()
 
 watch(
-  () => apiData.pagination.per_page,
+  () => apiData.per_page,
   async () => {
     await fetchData()
   }
@@ -94,14 +99,15 @@ async function fetchData(page: number = 1) {
     isLoading.value = true
 
     // async fetch apiData to our server
-    const res = await fetchList({
+    const res = await visitcardsList({
       page,
-      per_page: apiData.pagination.per_page,
+      per_page: apiData.per_page,
+      patient_id: patientID,
     })
 
-    Object.assign(apiData, res)
+    Object.assign(apiData, res.result)
   } catch (error: any) {
-    notif.error(t(error.response?.data.error.message))
+    notif.error(t(error.message))
   } finally {
     isLoading.value = false
   }
@@ -124,7 +130,6 @@ async function onRemove(id: number) {
 
 function updateList() {
   fetchData()
-  notif.success()
   selectedId.value = null
 }
 </script>
@@ -149,16 +154,16 @@ function updateList() {
         <VFlexTableWrapper
           class="mt-4"
           :columns="columns"
-          :data="apiData.result"
-          :limit="apiData.pagination.per_page"
-          :total="apiData.pagination.total"
+          :data="apiData.data"
+          :limit="apiData.per_page"
+          :total="apiData.total"
         >
           <!--
             Here we retrieve the internal wrapperState.
             Note that we can not destructure it
           -->
           <template #default="wrapperState">
-            {{ wrapperState }}
+            <!-- {{ wrapperState }} -->
             <!-- We can place any content inside the default slot-->
             <!-- <VFlexTableToolbar>
               <template #left>
@@ -166,7 +171,7 @@ function updateList() {
               </template>
 
               <template #right>
-                <PerPageSelect v-model="data.pagination.per_page" />
+                <PerPageSelect v-model="data.per_page" />
               </template>
             </VFlexTableToolbar> -->
 
@@ -174,7 +179,7 @@ function updateList() {
               The VFlexTable "data" and "columns" props
               will be inherited from parent VFlexTableWrapper
             -->
-            <VFlexTable rounded :no-header="!isLoading && apiData.result.length === 0">
+            <VFlexTable rounded :no-header="!isLoading && apiData.data.length === 0">
               <template #header-column="{ column }">
                 <span
                   v-if="column.key === 'orderNumber'"
@@ -189,35 +194,15 @@ function updateList() {
                   when the fetchData function is running
                 -->
                 <div v-if="isLoading" class="flex-list-inner">
-                  <div
-                    v-for="key in apiData.pagination.per_page"
-                    :key="key"
-                    class="flex-table-item"
-                  >
-                    <VFlexTableCell :column="{ grow: true, media: true }">
-                      <VPlaceloadAvatar size="medium" />
-
-                      <VPlaceloadText
-                        :lines="2"
-                        width="60%"
-                        last-line-width="20%"
-                        class="mx-2"
-                      />
-                    </VFlexTableCell>
+                  <div v-for="key in apiData.per_page" :key="key" class="flex-table-item">
                     <VFlexTableCell>
-                      <VPlaceload width="60%" class="mx-1" />
-                    </VFlexTableCell>
-                    <VFlexTableCell>
-                      <VPlaceload width="60%" class="mx-1" />
-                    </VFlexTableCell>
-                    <VFlexTableCell :column="{ align: 'end' }">
-                      <VPlaceload width="45%" class="mx-1" />
+                      <VPlaceloadText :lines="2" last-line-width="70%" class="mx-2" />
                     </VFlexTableCell>
                   </div>
                 </div>
 
                 <!-- This is the empty state -->
-                <div v-else-if="apiData.result.length === 0" class="flex-list-inner">
+                <div v-else-if="apiData.data.length === 0" class="flex-list-inner">
                   <VPlaceholderSection
                     title="No matches"
                     subtitle="There is no data that match your query."
@@ -247,17 +232,26 @@ function updateList() {
               </template>
 
               <!-- This is the body cell slot -->
-              <template #body-cell="{ row, column }">
-                <template v-if="column.key === 'name'">
-                  <VAvatar size="medium" :picture="row.avatar" />
-                  <div>
-                    <span class="dark-text">{{ row.firstname }} {{ row.lastname }}</span>
-                  </div>
+              <template #body-cell="{ row, column, value }">
+                <template v-if="column.key === 'visit_type'">
+                  <span class="dark-text">{{ $t(value) }}</span>
                 </template>
-                <template v-if="column.key === 'role'">
-                  <div>
-                    <span class="dark-text">{{ row.role.name }}</span>
-                  </div>
+                <template v-if="column.key === 'directed_by'">
+                  <span class="dark-text">{{ $t(value) }}</span>
+                </template>
+                <template v-if="column.key === 'independently'">
+                  <VIcon
+                    v-if="row.directed_by === 'independently'"
+                    class="has-text-primary"
+                    icon="feather:check"
+                  />
+                  <VIcon v-else class="has-text-danger" icon="feather:minus" />
+                </template>
+                <template v-if="column.key === 'is_personalized_donation'">
+                  <span>{{ row.personalized_donation }}</span>
+                </template>
+                <template v-if="column.key === 'is_mobile_team'">
+                  <span>{{ row.mobile_team }}</span>
                 </template>
                 <template v-if="column.key === 'actions'">
                   <EmployeeFlexTableDropdown
@@ -270,11 +264,11 @@ function updateList() {
 
             <!--Table Pagination-->
             <VFlexPagination
-              v-if="apiData.result.length"
+              v-if="apiData.data.length"
               v-model:current-page="currentPage"
               class="mt-5"
-              :item-per-page="apiData.pagination.per_page"
-              :total-items="apiData.pagination.total"
+              :item-per-page="apiData.per_page"
+              :total-items="apiData.total"
               no-router
             />
           </template>

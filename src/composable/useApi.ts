@@ -22,6 +22,7 @@ export function createApi() {
         ...config.headers,
         Authorization: `Bearer ${userSession.token}`,
         Language: useStorage('locale', 'uz').value,
+        Accept: 'application/json',
       }
     }
 

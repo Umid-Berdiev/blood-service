@@ -43,7 +43,7 @@ declare module 'vue-router/auto/routes' {
     '/app/physician-therapist/donors-for-examination/[id]': RouteRecordInfo<'/app/physician-therapist/donors-for-examination/[id]', '/app/physician-therapist/donors-for-examination/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/app/physician-therapist/examined-donors-list/': RouteRecordInfo<'/app/physician-therapist/examined-donors-list/', '/app/physician-therapist/examined-donors-list', Record<never, never>, Record<never, never>>,
     '/app/physician-therapist/examined-donors-list/[id]': RouteRecordInfo<'/app/physician-therapist/examined-donors-list/[id]', '/app/physician-therapist/examined-donors-list/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
-    '/app/registration/donation-diverted-register': RouteRecordInfo<'/app/registration/donation-diverted-register', '/app/registration/donation-diverted-register', Record<never, never>, Record<never, never>>,
+    '/app/registration/donation-diverted-register/': RouteRecordInfo<'/app/registration/donation-diverted-register/', '/app/registration/donation-diverted-register', Record<never, never>, Record<never, never>>,
     '/app/registration/register-donors/': RouteRecordInfo<'/app/registration/register-donors/', '/app/registration/register-donors', Record<never, never>, Record<never, never>>,
     '/app/registration/unified-donor-register/': RouteRecordInfo<'/app/registration/unified-donor-register/', '/app/registration/unified-donor-register', Record<never, never>, Record<never, never>>,
     '/app/registration/unified-donor-register/[id]': RouteRecordInfo<'/app/registration/unified-donor-register/[id]', '/app/registration/unified-donor-register/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,

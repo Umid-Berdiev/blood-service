@@ -2,10 +2,22 @@ import { useApi } from '/@src/composable/useApi'
 
 const api = useApi()
 
-export async function patientList(payload: any) {
+export async function patientCategoriesList() {
   try {
     const { data } = await api({
-      url: '',
+      url: '/patients/categories',
+    })
+
+    return data
+  } catch (error) {
+    throw error
+  }
+}
+
+export async function patientsList(payload: any) {
+  try {
+    const { data } = await api({
+      url: '/patients',
       params: payload,
     })
 
@@ -18,7 +30,7 @@ export async function patientList(payload: any) {
 export async function createPatient(payload: any) {
   try {
     const { data } = await api({
-      url: '',
+      url: '/patients',
       method: 'POST',
       data: payload,
     })
@@ -32,7 +44,7 @@ export async function createPatient(payload: any) {
 export async function updatePatientById(id: number, payload: any) {
   try {
     const { data } = await api({
-      url: `${id}`,
+      url: `/patients/${id}`,
       method: 'PUT',
       data: payload,
     })
@@ -46,7 +58,7 @@ export async function updatePatientById(id: number, payload: any) {
 export async function fetchPatientById(id: number | string) {
   try {
     const { data } = await api({
-      url: `${id}`,
+      url: `/patients/${id}`,
     })
 
     return data
@@ -55,10 +67,11 @@ export async function fetchPatientById(id: number | string) {
   }
 }
 
-export async function visitCardList(payload: any) {
+export async function visitcardsList(payload: any) {
   try {
     const { data } = await api({
-      url: '',
+      url: `/patients/${payload.patient_id}/visit-cards`,
+      // url: '/visit-cards',
       params: payload,
     })
 
@@ -68,10 +81,11 @@ export async function visitCardList(payload: any) {
   }
 }
 
-export async function createVisitCard(payload: any) {
+export async function createVisitcard(payload: any) {
   try {
     const { data } = await api({
-      url: '',
+      url: `/patients/${payload.patient_id}/visit-cards`,
+      // url: '/visit-cards',
       method: 'POST',
       data: payload,
     })
@@ -82,10 +96,11 @@ export async function createVisitCard(payload: any) {
   }
 }
 
-export async function updateVisitCardById(id: number, payload: any) {
+export async function updateVisitcardById(id: number, payload: any) {
   try {
     const { data } = await api({
-      url: `${id}`,
+      url: `/patients/${payload.patient_id}/visit-cards/${id}`,
+      // url: `/visit-cards/${id}`,
       method: 'PUT',
       data: payload,
     })
@@ -96,10 +111,14 @@ export async function updateVisitCardById(id: number, payload: any) {
   }
 }
 
-export async function fetchVisitCardById(id: number | string) {
+export async function fetchVisitcardById(
+  id: number | string,
+  patient_id: number | string
+) {
   try {
     const { data } = await api({
-      url: `${id}`,
+      url: `/patients/${patient_id}/visit-cards/${id}`,
+      // url: `/visit-cards/${id}`,
     })
 
     return data

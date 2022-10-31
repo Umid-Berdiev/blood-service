@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { PatientInterface, RegionInterface } from '/@src/utils/interfaces'
+import { PatientInterface } from '/@src/utils/interfaces'
 import { fetchDistricts, fetchRegions } from '/@src/utils/api/additional'
 const props = defineProps<{
   patient: PatientInterface
   errors: {
-    region: RegionInterface
-    region_id: string
-    district_id: string
-    work_study_place: string
-    email: string
+    region_id: string[]
+    district_id: string[]
+    address: string[]
+    work_study_place: string[]
+    email: string[]
   }
 }>()
 const emits = defineEmits(['update:patient', 'editing'])
@@ -32,18 +32,15 @@ watch(
   () => form.value.region_id,
   async function (newVal) {
     if (newVal) {
-      form.value.district_id = null
+      // form.value.district_id = null
       const res = await fetchDistricts(newVal)
       districts.value = res.result
     }
   },
   { immediate: true }
 )
-
-async function fetchDistrictListByRegionId(region_id: number) {
-  const res = fetchDistrictList(region_id)
-}
 </script>
+
 <template>
   <div class="fieldset p-5">
     <VField v-slot="{ id }" :label="$t('Region')" required>
@@ -59,7 +56,7 @@ async function fetchDistrictListByRegionId(region_id: number) {
           :placeholder="$t('Region')"
           @input="$emit('editing', 'region_id')"
         />
-        <p class="help has-text-danger">{{ errors.region_id }}</p>
+        <p class="help has-text-danger">{{ errors.region_id[0] }}</p>
       </VControl>
     </VField>
     <VField v-slot="{ id }" :label="$t('District')" required>
@@ -76,7 +73,18 @@ async function fetchDistrictListByRegionId(region_id: number) {
           :disabled="!form.region_id"
           @input="$emit('editing', 'district_id')"
         />
-        <p class="help has-text-danger">{{ errors.district_id }}</p>
+        <p class="help has-text-danger">{{ errors.district_id[0] }}</p>
+      </VControl>
+    </VField>
+    <VField :label="$t('Additional_address')">
+      <VControl>
+        <VTextarea
+          v-model="form.address"
+          rows="2"
+          :placeholder="$t('Additional_address')"
+          @input="$emit('editing', 'address')"
+        />
+        <p class="help has-text-danger">{{ errors.address[0] }}</p>
       </VControl>
     </VField>
     <VField :label="$t('Place_work_study')">
@@ -87,7 +95,7 @@ async function fetchDistrictListByRegionId(region_id: number) {
           :placeholder="$t('Place_work_study')"
           @input="$emit('editing', 'work_study_place')"
         />
-        <p class="help has-text-danger">{{ errors.work_study_place }}</p>
+        <p class="help has-text-danger">{{ errors.work_study_place[0] }}</p>
       </VControl>
     </VField>
     <VField :label="$t('Email')">
@@ -98,7 +106,7 @@ async function fetchDistrictListByRegionId(region_id: number) {
           :placeholder="$t('Email')"
           @input="$emit('editing', 'email')"
         />
-        <p class="help has-text-danger">{{ errors.email }}</p>
+        <p class="help has-text-danger">{{ errors.email[0] }}</p>
       </VControl>
     </VField>
     <VField :label="$t('Phone_mobile')">

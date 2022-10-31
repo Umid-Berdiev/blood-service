@@ -5,7 +5,7 @@ import { useNotyf } from '/@src/composable/useNotyf'
 import { useMainStore } from '/@src/stores/main'
 
 import { useViewWrapper } from '/@src/stores/viewWrapper'
-import { fetchList, removeById } from '/@src/utils/api/employees'
+import { patientsList } from '/@src/utils/api/patient'
 
 const router = useRouter()
 const notif = useNotyf()
@@ -84,7 +84,14 @@ const searchInput = computed({
   },
 })
 const incomingCallerId = ref<number>()
-const donorStatuses = ref(['donors-for-examination', 'rejected'])
+const donorStatuses = ref([
+  'Направленные на медосмотр',
+  'Направленные на первичный скрининг',
+  'Скрининг завершен',
+  'Направленные на забор образцов',
+  'Направленные на лабораторные исследования',
+  'Лабораторные исследования завершены',
+])
 const selectedDonorStatus = ref('')
 
 // await fetchData()
@@ -115,9 +122,9 @@ async function fetchData(page: number = 1) {
     //   page,
     //   per_page: apiData.pagination.per_page,
     // })
-    const res = await fetch('https://jsonplaceholder.typicode.com/users')
+    const res = await patientsList({ page })
+    apiData.result = await res
 
-    apiData.result = await res.json()
     // Object.assign(apiData, res)
   } catch (error: any) {
     notif.error(t(error.response?.data?.error?.message))
@@ -168,13 +175,13 @@ async function handleRemoveAction() {
         />
       </VFlexItem>
       <VFlexItem>
-        <VField v-slot="{ id }" class="is-curved-select" style="width: 15rem">
+        <VField v-slot="{ id }" class="is-curved-select" style="width: 20rem">
           <VControl>
             <Multiselect
               v-model="selectedDonorStatus"
               :attrs="{ id }"
               :options="donorStatuses"
-              placeholder="Select an option"
+              :placeholder="$t('Select_donor_status')"
             />
           </VControl>
         </VField>
@@ -290,6 +297,7 @@ async function handleRemoveAction() {
                 <template v-if="column.key === 'name'">
                   <!-- <VAvatar size="medium" :picture="row.avatar" /> -->
                   <RouterLink
+                    class="table_link"
                     :to="`/app/physician-therapist/donors-for-examination/${row.id}`"
                   >
                     {{ value }}
@@ -325,3 +333,11 @@ async function handleRemoveAction() {
     <ConfirmActionModal @confirm-action="handleRemoveAction" />
   </div>
 </template>
+
+<style scoped lang="scss">
+.is-dark {
+  .table_link:hover {
+    color: darkgray;
+  }
+}
+</style>

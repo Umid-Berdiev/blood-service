@@ -1,17 +1,27 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
 import { PatientInterface } from '/@src/utils/interfaces'
 
 const props = defineProps<{
   patient: PatientInterface
   errors: {
-    last_name: string
-    first_name: string
-    father_name: string
-    birth_date: string
-    sex: string
+    last_name: string[]
+    first_name: string[]
+    father_name: string[]
+    birth_date: string[]
+    gender: string[]
   }
 }>()
 const emits = defineEmits(['update:patient', 'editing'])
+
+const { locale } = useI18n()
+const masks = ref({
+  input: 'YYYY-MM-DD',
+})
+const datePickerModelConfig = reactive({
+  type: 'string',
+  mask: masks.value.input, // Uses 'iso' if missing
+})
 const form = computed({
   get() {
     return props.patient
@@ -33,7 +43,7 @@ const form = computed({
           :placeholder="$t('Last_name')"
           @input="$emit('editing', 'last_name')"
         />
-        <p class="help has-text-danger">{{ errors.last_name }}</p>
+        <p class="help has-text-danger">{{ errors.last_name[0] }}</p>
       </VControl>
     </VField>
     <VField :label="$t('First_name')" required>
@@ -44,7 +54,7 @@ const form = computed({
           :placeholder="$t('First_name')"
           @input="$emit('editing', 'first_name')"
         />
-        <p class="help has-text-danger">{{ errors.first_name }}</p>
+        <p class="help has-text-danger">{{ errors.first_name[0] }}</p>
       </VControl>
     </VField>
     <VField :label="$t('Middlename')">
@@ -55,11 +65,15 @@ const form = computed({
           :placeholder="$t('Middlename')"
           @input="$emit('editing', 'father_name')"
         />
-        <p class="help has-text-danger">{{ errors.father_name }}</p>
+        <p class="help has-text-danger">{{ errors.father_name[0] }}</p>
       </VControl>
     </VField>
     <VDatePicker
       v-model="form.birth_date"
+      :locale="locale"
+      mode="date"
+      :masks="masks"
+      :model-config="datePickerModelConfig"
       color="green"
       trim-weeks
       :popover="{ visibility: 'click' }"
@@ -72,26 +86,26 @@ const form = computed({
               v-on="inputEvents"
               @input="$emit('editing', 'birth_date')"
             />
-            <p class="help has-text-danger">{{ errors.birth_date }}</p>
+            <p class="help has-text-danger">{{ errors.birth_date[0] }}</p>
           </VControl>
         </VField>
       </template>
     </VDatePicker>
-    <VField :label="$t('Sex')">
+    <VField :label="$t('Gender')">
       <VControl>
         <VRadio
-          v-model="form.sex"
+          v-model="form.gender"
           value="male"
           :label="$t('Male')"
-          @input="$emit('editing', 'sex')"
+          @input="$emit('editing', 'gender')"
         />
         <VRadio
-          v-model="form.sex"
+          v-model="form.gender"
           value="female"
           :label="$t('Female')"
-          @input="$emit('editing', 'sex')"
+          @input="$emit('editing', 'gender')"
         />
-        <p class="help has-text-danger">{{ errors.sex }}</p>
+        <p class="help has-text-danger">{{ errors.gender[0] }}</p>
       </VControl>
     </VField>
   </div>

@@ -23,7 +23,7 @@ const emits = defineEmits<{
         </div>
         <div class="meta">
           <span>{{ $t('View') }}</span>
-          <span>{{ $t('View_applicant_details') }}</span>
+          <span>{{ $t('View_patient_details') }}</span>
         </div>
       </a>
     </template>

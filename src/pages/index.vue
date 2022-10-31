@@ -70,16 +70,25 @@ function clearErrors(event: Event) {
 
       <div class="columns is-gapless is-vcentered">
         <div class="column is-relative is-8 h-hidden-mobile h-hidden-tablet-p">
-          <div class="hero is-fullheight is-image">
+          <div
+            class="hero is-fullheight is-image"
+            style="background: url('/images/clean-medical-background_53876-97927.webp')"
+          >
             <div class="hero-body">
               <div class="container">
                 <div class="columns">
                   <div class="column">
-                    <img
+                    <!-- <img
                       class="hero-image"
                       src="/@src/assets/illustrations/login/station.svg"
                       alt=""
-                    />
+                    /> -->
+                    <!-- <p class="is-size-1">{{ $t('Republic_Blood_Center') }}</p> -->
+                    <p class="is-size-1 has-text-dark has-text-weight-medium">
+                      Автоматизированная информационная система по формированию и ведению
+                      базы данных по донорам и лицам, отведенным от донорства, и данных по
+                      учету и распределению донорской крови
+                    </p>
                   </div>
                 </div>
               </div>
@@ -88,7 +97,7 @@ function clearErrors(event: Event) {
         </div>
         <div class="column is-4 is-relative">
           <RouterLink to="/" class="top-logo">
-            <AnimatedLogo width="38px" height="38px" />
+            <AnimatedLogo />
           </RouterLink>
 
           <label
@@ -107,13 +116,13 @@ function clearErrors(event: Event) {
           <div class="is-form">
             <div class="hero-body">
               <div class="form-text" :class="[step !== 'login' && 'is-hidden']">
-                <h2>Sign In</h2>
-                <p>Welcome back to your account.</p>
+                <h2>{{ $t('Sign_In') }}</h2>
+                <p>{{ $t('Please_sign_in_to_your_account') }}</p>
               </div>
-              <div class="form-text" :class="[step === 'login' && 'is-hidden']">
+              <!-- <div class="form-text" :class="[step === 'login' && 'is-hidden']">
                 <h2>Recover Account</h2>
                 <p>Reset your account password.</p>
-              </div>
+              </div> -->
               <form
                 data-cy="login-form"
                 :class="[step !== 'login' && 'is-hidden']"
@@ -201,7 +210,7 @@ function clearErrors(event: Event) {
                     raised
                     bold
                   >
-                    Confirm
+                    {{ $t('Confirm') }}
                   </VButton>
                   <!-- <span>
                     Or

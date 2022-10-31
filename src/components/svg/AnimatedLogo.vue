@@ -17,7 +17,8 @@ router.afterEach(() => {
 </script>
 
 <template>
-  <svg
+  <img src="/images/PikPng.com_blood-drop-png_340431.png" alt="logo" />
+  <!-- <svg
     id="OBJECTS"
     version="1.1"
     xmlns="http://www.w3.org/2000/svg"
@@ -46,7 +47,7 @@ router.afterEach(() => {
         />
       </g>
     </g>
-  </svg>
+  </svg> -->
 </template>
 
 <style lang="scss" scoped>

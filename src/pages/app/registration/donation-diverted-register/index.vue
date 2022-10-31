@@ -115,36 +115,52 @@ async function clearFilterForm() {
   data.result = []
 }
 
-function addPatient() {
-  router.push('/app/registration/register-donors')
+function printList() {
+  //
 }
 </script>
 
 <template>
   <div class="page-content-inner">
-    <VBreadcrumb
-      with-icons
-      separator="bullet"
-      :items="[
-        {
-          label: mainStore.app.name,
-          hideLabel: true,
-          icon: 'feather:home',
-          to: { name: '/app/dashboard' },
-        },
-        {
-          label: $t('Registration'),
-          // to: { name: '/app/registration/unified-donor-register/' },
-        },
-        {
-          label: $t('Donation-diverted-register'),
-          to: { name: '/app/registration/donation-diverted-register' },
-        },
-      ]"
-    />
-    <div class="columns is-justify-content-center">
+    <VFlex justify-content="space-between" flex-wrap="wrap">
+      <VFlexItem>
+        <VBreadcrumb
+          with-icons
+          separator="bullet"
+          :items="[
+            {
+              label: mainStore.app.name,
+              hideLabel: true,
+              icon: 'feather:home',
+              to: { name: '/app/dashboard' },
+            },
+            {
+              label: $t('Registration'),
+              // to: { name: '/app/registration/unified-donor-register/' },
+            },
+            {
+              label: $t('Donation-diverted-register'),
+              to: { name: '/app/registration/donation-diverted-register/' },
+            },
+          ]"
+        />
+      </VFlexItem>
+      <VFlexItem>
+        <VButtons>
+          <VButton
+            outlined
+            rounded
+            color="light"
+            icon="feather:printer"
+            @click.prevent="printList"
+          >
+            {{ $t('Print') }}
+          </VButton>
+        </VButtons>
+      </VFlexItem>
+    </VFlex>
+    <div class="columns mt-1">
       <div class="column">
-        <TableActionsBlock title="" add-disabled />
         <FilterForm
           :is-loading="isLoading"
           :errors="errors"
@@ -157,7 +173,6 @@ function addPatient() {
     <div class="columns">
       <div class="column is-12">
         <VFlexTableWrapper
-          class="mt-4"
           :columns="columns"
           :data="data.result"
           :limit="data.pagination.per_page"

@@ -6,10 +6,10 @@ import { useNotyf } from '/@src/composable/useNotyf'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { PatientInterface } from '/@src/utils/interfaces'
 import sleep from '/@src/utils/sleep'
-import { createPatient } from '/@src/utils/api/patient'
+import { createPatient, patientCategoriesList } from '/@src/utils/api/patient'
 
 const router = useRouter()
-const notyf = useNotyf()
+const notif = useNotyf()
 const { scrollTo } = VueScrollTo
 const { t } = useI18n()
 
@@ -18,42 +18,56 @@ const isLoading = ref(false)
 const currentHelp = ref(-1)
 const viewWrapper = useViewWrapper()
 
-const patient: PatientInterface = reactive({
+const patientForm: PatientInterface = reactive({
+  patient_category_id: null,
   last_name: '',
   first_name: '',
   father_name: '',
   birth_date: new Date(),
-  sex: 'male',
+  gender: 'male',
+  pinfl: null,
   passport_series: '',
   passport_number: '',
   issued_by: '',
   when_issued: new Date(),
   region_id: null,
   district_id: null,
+  address: '',
   work_study_place: '',
   email: '',
   phone_number: '',
   phone_home: '',
   phone_work: '',
+  avatar: '',
 })
 
 const errors = reactive({
-  last_name: '',
-  first_name: '',
-  father_name: '',
-  birth_date: '',
-  sex: '',
-  passport_series: '',
-  passport_number: '',
-  issued_by: '',
-  when_issued: '',
-  region_id: '',
-  district_id: '',
-  work_study_place: '',
-  email: '',
-  phone_number: '',
-  phone_home: '',
-  phone_work: '',
+  patient_category_id: [],
+  last_name: [],
+  first_name: [],
+  father_name: [],
+  birth_date: [],
+  gender: [],
+  pinfl: [],
+  passport_series: [],
+  passport_number: [],
+  issued_by: [],
+  when_issued: [],
+  region_id: [],
+  district_id: [],
+  address: [],
+  work_study_place: [],
+  email: [],
+  phone_number: [],
+  phone_home: [],
+  phone_work: [],
+})
+
+const categoryOptions = ref([])
+
+onMounted(async () => {
+  const res = await patientCategoriesList()
+  categoryOptions.value = res.result
 })
 
 viewWrapper.setPageTitle(t('Registration'))
@@ -63,16 +77,38 @@ useHead({
 
 const validateStep = async () => {
   if (currentStep.value === 2) {
+    clearErrors()
     if (isLoading.value) {
       return
     }
 
-    isLoading.value = true
-    const res = await createPatient(patient)
-    notyf.success('New patient data is successfully stored!')
-    await sleep(1000)
+    try {
+      isLoading.value = true
+      const res = await createPatient(patientForm)
+      notif.success('New patient data is successfully stored!')
 
-    router.push(`/app/registration/unified-donor-register/${res.id}`)
+      router.push(`/app/registration/unified-donor-register/${res.id}`)
+    } catch (error: any) {
+      Object.assign(errors, error.response?.data.errors)
+      if (
+        errors.last_name.length ||
+        errors.first_name.length ||
+        errors.father_name.length ||
+        errors.birth_date.length ||
+        errors.gender.length
+      ) {
+        return scrollTo(`#form-step-${0}`, 1000)
+      } else if (
+        errors.passport_series.length ||
+        errors.passport_number.length ||
+        errors.issued_by.length ||
+        errors.when_issued.length
+      ) {
+        return scrollTo(`#form-step-${1}`, 1000)
+      }
+    } finally {
+      isLoading.value = false
+    }
   }
 
   isLoading.value = true
@@ -87,6 +123,28 @@ const validateStep = async () => {
 
 function clearError(error: string) {
   errors[error] = ''
+}
+
+function clearErrors() {
+  Object.assign(errors, {
+    last_name: [],
+    first_name: [],
+    father_name: [],
+    birth_date: [],
+    gender: [],
+    passport_series: [],
+    passport_number: [],
+    issued_by: [],
+    when_issued: [],
+    region_id: [],
+    district_id: [],
+    address: [],
+    work_study_place: [],
+    email: [],
+    phone_number: [],
+    phone_home: [],
+    phone_work: [],
+  })
 }
 </script>
 
@@ -111,8 +169,20 @@ function clearError(error: string) {
           </h3>
 
           <div class="form-section-inner">
+            <VField :label="$t('Category')" required>
+              <VControl>
+                <Multiselect
+                  v-model="patientForm.patient_category_id"
+                  :options="categoryOptions"
+                  :placeholder="$t('Select_category')"
+                  label="name"
+                  value-prop="id"
+                />
+                <p class="help has-text-danger">{{ errors.patient_category_id[0] }}</p>
+              </VControl>
+            </VField>
             <PatientPersonalInfoForm
-              :patient="patient"
+              :patient="patientForm"
               :errors="errors"
               @editing="clearError"
             />
@@ -137,7 +207,7 @@ function clearError(error: string) {
 
             <div class="form-section-inner">
               <PatientPassportForm
-                :patient="patient"
+                :patient="patientForm"
                 :errors="errors"
                 @editing="clearError"
               />
@@ -163,7 +233,7 @@ function clearError(error: string) {
 
             <div class="form-section-inner">
               <PatientAddressForm
-                :patient="patient"
+                :patient="patientForm"
                 :errors="errors"
                 @editing="clearError"
               />
