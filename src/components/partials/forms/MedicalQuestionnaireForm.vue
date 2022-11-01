@@ -21,6 +21,10 @@ const datePickerModelConfig = reactive({
 
 const formData = reactive({})
 const errors = reactive({})
+
+async function onSubmit() {
+  //
+}
 </script>
 
 <template>
