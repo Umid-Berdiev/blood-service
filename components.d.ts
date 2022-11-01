@@ -107,7 +107,7 @@ declare module '@vue/runtime-core' {
     ContentTablesDocumentation: typeof import('./documentation/elements/content/content-tables-documentation.md')['default']
     ContentTitlesDocumentation: typeof import('./documentation/elements/content/content-titles-documentation.md')['default']
     ContentUnorderedListsDocumentation: typeof import('./documentation/elements/content/content-unordered-lists-documentation.md')['default']
-    copy: typeof import('./src/components/partials/wizard/RegistrationWizard.vue')['default']
+    copy: typeof import('./src/components/modals/RoleFormModal copy.vue')['default']
     CourseDashboard: typeof import('./src/components/pages/dashboards/business/CourseDashboard.vue')['default']
     DarkModeSwitcher: typeof import('./src/components/DarkModeSwitcher.vue')['default']
     DashboardHeaderWrapper: typeof import('./src/components/partials/lifestyle/DashboardHeaderWrapper.vue')['default']
@@ -261,6 +261,7 @@ declare module '@vue/runtime-core' {
     MarketingMockup: typeof import('./src/components/partials/marketing/MarketingMockup.vue')['default']
     MarketingPricings: typeof import('./src/components/partials/marketing/MarketingPricings.vue')['default']
     MarketingSideFeatures: typeof import('./src/components/partials/marketing/MarketingSideFeatures.vue')['default']
+    MedicalQuestionnaireForm: typeof import('./src/components/partials/forms/MedicalQuestionnaireForm.vue')['default']
     Message1: typeof import('./src/components/partials/inbox/message-details/Message1.vue')['default']
     Message10: typeof import('./src/components/partials/inbox/message-details/Message10.vue')['default']
     Message2: typeof import('./src/components/partials/inbox/message-details/Message2.vue')['default']
@@ -404,6 +405,7 @@ declare module '@vue/runtime-core' {
     StackPopoverContent: typeof import('./src/components/partials/popover/StackPopoverContent.vue')['default']
     StockDashboard: typeof import('./src/components/pages/dashboards/finance/StockDashboard.vue')['default']
     StockDropdown: typeof import('./src/components/partials/dropdowns/StockDropdown.vue')['default']
+    SubmitButton: typeof import('./src/components/partials/buttons/SubmitButton.vue')['default']
     SVGErrorPlaceholder: typeof import('./src/components/svg/SVGErrorPlaceholder.vue')['default']
     SwitchBlockDocumentation: typeof import('./documentation/switch-block/switch-block-documentation.md')['default']
     SwitchBlockEventsDocumentation: typeof import('./documentation/switch-block/switch-block-events-documentation.md')['default']
@@ -710,6 +712,7 @@ declare module '@vue/runtime-core' {
     WidgetsList: typeof import('./src/components/pages/layouts/widgets/WidgetsList.vue')['default']
     WidgetsStats: typeof import('./src/components/pages/layouts/widgets/WidgetsStats.vue')['default']
     WidgetsUI: typeof import('./src/components/pages/layouts/widgets/WidgetsUI.vue')['default']
+    WithdrawalFormModal: typeof import('./src/components/modals/WithdrawalFormModal.vue')['default']
     WizardV1Navigation: typeof import('./src/components/partials/wizard/WizardV1Navigation.vue')['default']
   }
 }

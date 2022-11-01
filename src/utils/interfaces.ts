@@ -98,7 +98,7 @@ export interface DistrictInterface {
 
 export interface PatientInterface {
   id?: number
-  pinfl: number
+  pinfl: number | string
   patient_category_id: number | null
   last_name: string
   first_name: string
@@ -140,7 +140,7 @@ export interface PatientVisitCardInterface {
   patient_id: number | string | null
   visit_type: PatientVisitType
   directed_by: PatientDirectorType
-  medical_organization: object | null
+  medical_organization_id: object | null
   public_organization: string | null
   personalized_donation: string
   mobile_team: string
@@ -168,4 +168,14 @@ export interface ApiDataInterface {
   path?: string
   prev_page_url?: null | string
   to?: number
+}
+
+type WithdrawalType = 'permanent' | 'temporary'
+
+export interface WithdrawalFormInterface {
+  type: WithdrawalType
+  reason: string
+  start_date: string
+  end_date: string
+  source: string
 }

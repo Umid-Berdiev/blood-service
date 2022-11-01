@@ -94,8 +94,8 @@ watch(
     <Transition name="slide-x">
       <Sideblock v-if="isDesktopSideblockOpen" :theme="props.theme">
         <template #header>
-          <RouterLink to="/" class="sidebar-block-logo">
-            <AnimatedLogo width="36px" />
+          <RouterLink to="/app/dashboard" class="sidebar-block-logo">
+            <AnimatedLogo width="36" />
           </RouterLink>
           <h3>{{ app.name }}</h3>
         </template>

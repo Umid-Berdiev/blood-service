@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { isEmpty } from 'lodash'
 import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
 import {
@@ -6,6 +7,7 @@ import {
   updateVisitcardById,
   fetchVisitcardById,
 } from '/@src/utils/api/patient'
+import { fetchHealthcareFacilities } from '/@src/utils/api/additional'
 import { PatientVisitCardInterface } from '/@src/utils/interfaces'
 
 const props = defineProps<{
@@ -24,11 +26,11 @@ const { t } = useI18n()
 const title = ref(t('Add'))
 const patientID = route.params?.id || null
 const isLoading = ref(false)
-const visitcardForm: PatientVisitCardInterface = reactive({
+const formData: PatientVisitCardInterface = reactive({
   patient_id: patientID,
   visit_type: 'gratuitous',
   directed_by: 'medical_organization',
-  medical_organization: '',
+  medical_organization_id: '',
   public_organization: '',
   is_personalized_donation: '',
   is_mobile_team: '',
@@ -44,25 +46,31 @@ const directors = ref([
   { value: 'public_organization', label: t('Public_organizations') },
   { value: 'independently', label: t('Independently') },
 ])
-const medicalOrganizations = ref(['Poliklinika #1', 'Red Half Moon Society'])
+const healthcareFacilitiesList = ref([
+  { id: 1, name: 'Poliklinika #1' },
+  { id: 2, name: 'Red Half Moon Society' },
+])
 const errors = reactive({
-  visit_type: '',
-  directed_by: '',
-  medical_organization: '',
-  public_organization: '',
-  is_personalized_donation: '',
-  is_mobile_team: '',
-  personalized_donation: '',
-  mobile_team: '',
+  visit_type: [],
+  directed_by: [],
+  medical_organization_id: [],
+  public_organization: [],
+  is_personalized_donation: [],
+  is_mobile_team: [],
+  personalized_donation: [],
+  mobile_team: [],
 })
-const personalizedDonationCheckbox = ref(false)
-const mobileTeamCheckbox = ref(false)
+
+onMounted(async () => {
+  const res = await fetchHealthcareFacilities()
+  if (!isEmpty(res.result)) healthcareFacilitiesList.value = res.result
+})
 
 watchEffect(async () => {
   if (Number(props.cardId)) {
     title.value = t('Edit')
     const res = await fetchVisitcardById(Number(props.cardId), patientID)
-    Object.assign(visitcardForm, res.result)
+    Object.assign(formData, res.result)
   }
 })
 
@@ -70,8 +78,8 @@ async function onSubmit() {
   try {
     isLoading.value = true
     props.cardId
-      ? await updateVisitcardById(props.cardId, visitcardForm)
-      : await createVisitcard(visitcardForm)
+      ? await updateVisitcardById(props.cardId, formData)
+      : await createVisitcard(formData)
     emits('update:list')
     notif.success(t('Updated_successfully'))
     onClose()
@@ -92,35 +100,47 @@ function onClose() {
 }
 
 function clearFields() {
-  //
+  Object.assign(formData, {
+    patient_id: patientID,
+    visit_type: 'gratuitous',
+    directed_by: 'medical_organization',
+    medical_organization_id: '',
+    public_organization: '',
+    is_personalized_donation: '',
+    is_mobile_team: '',
+    personalized_donation: '',
+    mobile_team: '',
+  })
 }
 
 function clearErrors() {
-  // Object.assign(errors, {
-  //   'name.uz': [],
-  //   'name.en': [],
-  //   'name.ru': [],
-  //   'description.uz': [],
-  //   'description.en': [],
-  //   'description.ru': [],
-  // })
+  Object.assign(errors, {
+    visit_type: [],
+    directed_by: [],
+    medical_organization_id: [],
+    public_organization: [],
+    is_personalized_donation: [],
+    is_mobile_team: [],
+    personalized_donation: [],
+    mobile_team: [],
+  })
 }
 </script>
 
 <template>
   <VModal :open="modelValue" size="large" :title="title" actions="right" @close="onClose">
     <template #content>
-      <form id="role-form" class="modal-form" @submit.prevent="onSubmit">
+      <form id="visitcard-form" class="modal-form" @submit.prevent="onSubmit">
         <VField :label="$t('Visit_type')" required>
           <VControl>
             <Multiselect
-              v-model="visitcardForm.visit_type"
+              v-model="formData.visit_type"
               :options="visitTypes"
               :placeholder="$t('Visit_type')"
               label="label"
               value-prop="value"
             />
-            <p class="help has-text-danger">{{ errors.visit_type }}</p>
+            <p class="help has-text-danger">{{ errors.visit_type[0] }}</p>
           </VControl>
         </VField>
         <br />
@@ -129,7 +149,7 @@ function clearErrors() {
             <VRadio
               v-for="(item, dirIndex) in directors"
               :key="dirIndex"
-              v-model="visitcardForm.directed_by"
+              v-model="formData.directed_by"
               :value="item.value"
               :label="item.label"
               color="primary"
@@ -137,30 +157,32 @@ function clearErrors() {
           </VControl>
         </VField>
         <VField
-          v-if="visitcardForm.directed_by === 'medical_organization'"
+          v-if="formData.directed_by === 'medical_organization'"
           :label="$t('Healthcare_facilities_list')"
           required
         >
           <VControl>
             <Multiselect
-              v-model="visitcardForm.medical_organization"
-              :options="medicalOrganizations"
+              v-model="formData.medical_organization_id"
+              :options="healthcareFacilitiesList"
               :placeholder="$t('Medical_organizations_list')"
+              label="name"
+              value-prop="id"
             />
-            <p class="help has-text-danger">{{ errors.medical_organization }}</p>
+            <p class="help has-text-danger">{{ errors.medical_organization_id[0] }}</p>
           </VControl>
         </VField>
         <VField
-          v-if="visitcardForm.directed_by === 'public_organization'"
+          v-if="formData.directed_by === 'public_organization'"
           :label="$t('Public_organization_title')"
           required
         >
           <VControl>
             <VInput
-              v-model="visitcardForm.public_organization"
+              v-model="formData.public_organization"
               :placeholder="$t('Public_organization_title')"
             />
-            <p class="help has-text-danger">{{ errors.public_organization }}</p>
+            <p class="help has-text-danger">{{ errors.public_organization[0] }}</p>
           </VControl>
         </VField>
         <div class="columns">
@@ -168,7 +190,7 @@ function clearErrors() {
             <VField>
               <VControl>
                 <VCheckbox
-                  v-model="visitcardForm.is_personalized_donation"
+                  v-model="formData.is_personalized_donation"
                   :label="$t('Personalized_donation')"
                   color="primary"
                 />
@@ -179,8 +201,8 @@ function clearErrors() {
             <VField>
               <VControl>
                 <VInput
-                  v-if="visitcardForm.is_personalized_donation"
-                  v-model="visitcardForm.personalized_donation"
+                  v-if="formData.is_personalized_donation"
+                  v-model="formData.personalized_donation"
                 />
               </VControl>
             </VField>
@@ -191,7 +213,7 @@ function clearErrors() {
             <VField>
               <VControl>
                 <VCheckbox
-                  v-model="visitcardForm.is_mobile_team"
+                  v-model="formData.is_mobile_team"
                   :label="$t('Mobile_team')"
                   color="primary"
                 />
@@ -201,10 +223,7 @@ function clearErrors() {
           <div class="column is-6">
             <VField>
               <VControl>
-                <VInput
-                  v-if="visitcardForm.is_mobile_team"
-                  v-model="visitcardForm.mobile_team"
-                />
+                <VInput v-if="formData.is_mobile_team" v-model="formData.mobile_team" />
               </VControl>
             </VField>
           </div>
@@ -212,16 +231,9 @@ function clearErrors() {
       </form>
     </template>
     <template #action="{ close }">
-      <VButton
-        :loading="isLoading"
-        color="primary"
-        outlined
-        type="submit"
-        form="role-form"
-        :disabled="isLoading"
-      >
+      <SubmitButton :loading="isLoading" form="visitcard-form">
         {{ $t('Send_for_examination') }}
-      </VButton>
+      </SubmitButton>
     </template>
   </VModal>
 </template>

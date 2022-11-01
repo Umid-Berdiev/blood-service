@@ -26,7 +26,7 @@ useHead({
   title: `${t('Advanced_Search')} - ${mainStore.app.name}`,
 })
 
-const dataApi: ApiDataInterface = reactive({
+const apiData: ApiDataInterface = reactive({
   current_page: 1,
   data: [],
   per_page: 10,
@@ -35,7 +35,7 @@ const dataApi: ApiDataInterface = reactive({
 
 const currentPage = computed({
   get: () => {
-    return dataApi.current_page
+    return apiData.current_page
   },
   set: async (page) => {
     currentFilterData.page = page
@@ -100,7 +100,7 @@ async function handleSearch(filterForm: any) {
     Object.assign(currentFilterData, filterForm)
     isLoading.value = true
     const res = await patientsList(filterForm)
-    Object.assign(dataApi, res.result)
+    Object.assign(apiData, res.result)
   } catch (error: any) {
     Object.assign(errors, error.response?.data?.errors)
   } finally {
@@ -119,10 +119,10 @@ function clearError(prop: string) {
 //     // async fetch data to our server
 //     const res = await patientsList({
 //       page,
-//       per_page: dataApi.pagination.per_page,
+//       per_page: apiData.pagination.per_page,
 //     })
 
-//     Object.assign(dataApi, res)
+//     Object.assign(apiData, res)
 //   } catch (error: any) {
 //     notif.error(t(error.response?.data.error.message))
 //   } finally {
@@ -132,7 +132,7 @@ function clearError(prop: string) {
 
 async function clearFilterForm() {
   // await fetchData()
-  dataApi.data = []
+  apiData.data = []
 }
 
 function addPatient() {
@@ -211,9 +211,9 @@ function printList() {
       <div class="column is-12">
         <VFlexTableWrapper
           :columns="columns"
-          :data="dataApi.data"
-          :limit="dataApi.per_page"
-          :total="dataApi.total"
+          :data="apiData.data"
+          :limit="apiData.per_page"
+          :total="apiData.total"
         >
           <!--
             Here we retrieve the internal wrapperState.
@@ -227,7 +227,7 @@ function printList() {
               </template>
 
               <template #right>
-                <PerPageSelect v-model="dataApi.pagination.per_page" />
+                <PerPageSelect v-model="apiData.pagination.per_page" />
               </template>
             </VFlexTableToolbar> -->
 
@@ -235,7 +235,7 @@ function printList() {
               The VFlexTable "data" and "columns" props
               will be inherited from parent VFlexTableWrapper
             -->
-            <VFlexTable rounded :no-header="!isLoading && dataApi.data.length === 0">
+            <VFlexTable rounded :no-header="!isLoading && apiData.data.length === 0">
               <template #header-column="{ column }">
                 <span
                   v-if="column.key === 'orderNumber'"
@@ -250,7 +250,7 @@ function printList() {
                   when the fetchData function is running
                 -->
                 <div v-if="isLoading" class="flex-list-inner">
-                  <div v-for="key in dataApi.per_page" :key="key" class="flex-table-item">
+                  <div v-for="key in apiData.per_page" :key="key" class="flex-table-item">
                     <VFlexTableCell>
                       <VPlaceloadText :lines="2" last-line-width="70%" class="mx-2" />
                     </VFlexTableCell>
@@ -267,7 +267,7 @@ function printList() {
                 </div>
 
                 <!-- This is the empty state -->
-                <div v-if="dataApi.data.length === 0" class="flex-list-inner">
+                <div v-if="apiData.data.length === 0" class="flex-list-inner">
                   <VPlaceholderSection
                     title="No matches"
                     subtitle="There is no data that match your query."
@@ -318,11 +318,11 @@ function printList() {
 
             <!--Table Pagination-->
             <VFlexPagination
-              v-if="dataApi.data.length"
+              v-if="apiData.data.length"
               v-model:current-page="currentPage"
               class="mt-5"
-              :item-per-page="dataApi.per_page"
-              :total-items="dataApi.total"
+              :item-per-page="apiData.per_page"
+              :total-items="apiData.total"
               no-router
             />
           </template>

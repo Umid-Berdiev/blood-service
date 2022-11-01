@@ -60,7 +60,7 @@ watch(
     <VCollapseLinks v-model:open="openSideblockLinks" collapse-id="registration">
       <template #header>
         <div class="icon">
-          <i class="iconify" data-icon="feather:briefcase"></i>
+          <i class="iconify" data-icon="feather:folder-plus" aria-hidden="true"></i>
         </div>
         {{ $t('Registration') }}
         <i aria-hidden="true" class="iconify" data-icon="feather:chevron-right"></i>
@@ -86,7 +86,7 @@ watch(
     <VCollapseLinks v-model:open="openSideblockLinks" collapse-id="physician-therapist">
       <template #header>
         <div class="icon">
-          <i class="iconify" data-icon="feather:briefcase"></i>
+          <i class="iconify" data-icon="feather:folder-plus" aria-hidden="true"></i>
         </div>
         {{ $t('Physician-therapist') }}
         <i aria-hidden="true" class="iconify" data-icon="feather:chevron-right"></i>
@@ -111,7 +111,7 @@ watch(
     <VCollapseLinks v-model:open="openSideblockLinks" collapse-id="screening">
       <template #header>
         <div class="icon">
-          <i class="iconify" data-icon="feather:briefcase"></i>
+          <i class="iconify" data-icon="feather:folder-plus" aria-hidden="true"></i>
         </div>
         {{ $t('Screening') }}
         <i aria-hidden="true" class="iconify" data-icon="feather:chevron-right"></i>
@@ -136,7 +136,7 @@ watch(
     <VCollapseLinks v-model:open="openSideblockLinks" collapse-id="donation">
       <template #header>
         <div class="icon">
-          <i class="iconify" data-icon="feather:briefcase"></i>
+          <i class="iconify" data-icon="feather:folder-plus" aria-hidden="true"></i>
         </div>
         {{ $t('Donation') }}
         <i aria-hidden="true" class="iconify" data-icon="feather:chevron-right"></i>
@@ -158,7 +158,7 @@ watch(
     >
       <template #header>
         <div class="icon">
-          <i class="iconify" data-icon="feather:briefcase"></i>
+          <i class="iconify" data-icon="feather:folder-plus" aria-hidden="true"></i>
         </div>
         {{ $t('Bloodborne-infections-laboratory') }}
         <i aria-hidden="true" class="iconify" data-icon="feather:chevron-right"></i>
@@ -186,7 +186,7 @@ watch(
     >
       <template #header>
         <div class="icon">
-          <i class="iconify" data-icon="feather:briefcase"></i>
+          <i class="iconify" data-icon="feather:folder-plus" aria-hidden="true"></i>
         </div>
         {{ $t('Clinical-biochemical-laboratory') }}
         <i aria-hidden="true" class="iconify" data-icon="feather:chevron-right"></i>
@@ -211,7 +211,7 @@ watch(
     <VCollapseLinks v-model:open="openSideblockLinks" collapse-id="buck-laboratory">
       <template #header>
         <div class="icon">
-          <i class="iconify" data-icon="feather:briefcase"></i>
+          <i class="iconify" data-icon="feather:folder-plus" aria-hidden="true"></i>
         </div>
         {{ $t('Buck-laboratory') }}
         <i aria-hidden="true" class="iconify" data-icon="feather:chevron-right"></i>
@@ -253,7 +253,7 @@ watch(
     >
       <template #header>
         <div class="icon">
-          <i class="iconify" data-icon="feather:briefcase"></i>
+          <i class="iconify" data-icon="feather:folder-plus" aria-hidden="true"></i>
         </div>
         {{ $t('Immunological-Research-Department') }}
         <i aria-hidden="true" class="iconify" data-icon="feather:chevron-right"></i>
@@ -278,7 +278,7 @@ watch(
     <VCollapseLinks v-model:open="openSideblockLinks" collapse-id="recycling">
       <template #header>
         <div class="icon">
-          <i class="iconify" data-icon="feather:briefcase"></i>
+          <i class="iconify" data-icon="feather:folder-plus" aria-hidden="true"></i>
         </div>
         {{ $t('Recycling') }}
         <i aria-hidden="true" class="iconify" data-icon="feather:chevron-right"></i>
@@ -322,7 +322,7 @@ watch(
     <VCollapseLinks v-model:open="openSideblockLinks" collapse-id="quality-control">
       <template #header>
         <div class="icon">
-          <i class="iconify" data-icon="feather:briefcase"></i>
+          <i class="iconify" data-icon="feather:folder-plus" aria-hidden="true"></i>
         </div>
         {{ $t('Quality-control') }}
         <i aria-hidden="true" class="iconify" data-icon="feather:chevron-right"></i>
@@ -344,7 +344,7 @@ watch(
     <VCollapseLinks v-model:open="openSideblockLinks" collapse-id="blood-bank">
       <template #header>
         <div class="icon">
-          <i class="iconify" data-icon="feather:briefcase"></i>
+          <i class="iconify" data-icon="feather:folder-plus" aria-hidden="true"></i>
         </div>
         {{ $t('Blood-bank') }}
         <i aria-hidden="true" class="iconify" data-icon="feather:chevron-right"></i>

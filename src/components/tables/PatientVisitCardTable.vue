@@ -5,7 +5,7 @@ import { useNotyf } from '/@src/composable/useNotyf'
 import { useMainStore } from '/@src/stores/main'
 
 import { useViewWrapper } from '/@src/stores/viewWrapper'
-import { visitcardsList } from '/@src/utils/api/patient'
+import { visitcardsList, removeVisitcardById } from '/@src/utils/api/patient'
 import { ApiDataInterface } from '/@src/utils/interfaces'
 
 const route = useRoute()
@@ -123,10 +123,10 @@ async function onRemove(id: number) {
   mainStore.$patch({ confirmModalState: true })
 }
 
-// async function handleRemoveAction() {
-//   await removeById(selectedId.value)
-//   fetchData()
-// }
+async function handleRemoveAction() {
+  await removeVisitcardById(patientID, selectedId.value)
+  fetchData()
+}
 
 function updateList() {
   fetchData()
@@ -275,7 +275,7 @@ function updateList() {
         </VFlexTableWrapper>
       </div>
     </div>
-    <!-- <ConfirmActionModal @confirm-action="handleRemoveAction" /> -->
+    <ConfirmActionModal @confirm-action="handleRemoveAction" />
     <PatientVisitCardFormModal
       v-model="isFormModalOpen"
       :card-id="selectedId"

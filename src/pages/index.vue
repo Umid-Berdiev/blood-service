@@ -97,7 +97,7 @@ function clearErrors(event: Event) {
         </div>
         <div class="column is-4 is-relative">
           <RouterLink to="/" class="top-logo">
-            <AnimatedLogo />
+            <AnimatedLogo :size="75" />
           </RouterLink>
 
           <label

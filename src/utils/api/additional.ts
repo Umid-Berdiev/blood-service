@@ -38,3 +38,15 @@ export async function fetchDistricts(region_id: number) {
     throw error
   }
 }
+
+export async function fetchHealthcareFacilities() {
+  try {
+    const { data } = await api({
+      url: `/medical-organizations`,
+    })
+
+    return data
+  } catch (error) {
+    throw error
+  }
+}

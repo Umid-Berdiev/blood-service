@@ -1,3 +1,4 @@
+import { WithdrawalFormInterface } from '../interfaces'
 import { useApi } from '/@src/composable/useApi'
 
 const api = useApi()
@@ -41,7 +42,7 @@ export async function createPatient(payload: any) {
   }
 }
 
-export async function updatePatientById(id: number, payload: any) {
+export async function updatePatientById(id: number | null, payload: any) {
   try {
     const { data } = await api({
       url: `/patients/${id}`,
@@ -55,7 +56,7 @@ export async function updatePatientById(id: number, payload: any) {
   }
 }
 
-export async function fetchPatientById(id: number | string) {
+export async function fetchPatientById(id: number | null) {
   try {
     const { data } = await api({
       url: `/patients/${id}`,
@@ -111,6 +112,19 @@ export async function updateVisitcardById(id: number, payload: any) {
   }
 }
 
+export async function removeVisitcardById(patient_id: number, id: number) {
+  try {
+    const { data } = await api({
+      url: `/patients/${patient_id}/visit-cards/${id}`,
+      method: 'DELETE',
+    })
+
+    return data
+  } catch (error) {
+    throw error
+  }
+}
+
 export async function fetchVisitcardById(
   id: number | string,
   patient_id: number | string
@@ -119,6 +133,35 @@ export async function fetchVisitcardById(
     const { data } = await api({
       url: `/patients/${patient_id}/visit-cards/${id}`,
       // url: `/visit-cards/${id}`,
+    })
+
+    return data
+  } catch (error) {
+    throw error
+  }
+}
+
+export async function fetchDonorStatusesList() {
+  try {
+    const { data } = await api({
+      url: `/patients/statuses`,
+    })
+
+    return data
+  } catch (error) {
+    throw error
+  }
+}
+
+export async function createWithdrawalForPatient(
+  id: number | null,
+  payload: WithdrawalFormInterface
+) {
+  try {
+    const { data } = await api({
+      url: `/patients/${id}/withdrawal`,
+      method: 'POST',
+      data: payload,
     })
 
     return data

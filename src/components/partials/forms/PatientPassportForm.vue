@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import { string } from 'zod'
 import { PatientInterface } from '/@src/utils/interfaces'
 
 const props = defineProps<{
@@ -22,7 +21,7 @@ const datePickerModelConfig = reactive({
   type: 'string',
   mask: masks.value.input, // Uses 'iso' if missing
 })
-const form = computed({
+const formData = computed({
   get() {
     return props.patient
   },
@@ -37,12 +36,13 @@ const form = computed({
     <VField :label="$t('Pinfl')" required>
       <VControl>
         <VIMaskInput
-          v-model="form.pinfl"
+          v-model="formData.pinfl"
           class="input"
           :options="{
             mask: '00000000000000',
           }"
           :placeholder="$t('Enter_pinfl')"
+          @input="$emit('editing', 'pinfl')"
         />
         <p class="help has-text-danger">{{ errors.pinfl[0] }}</p>
       </VControl>
@@ -50,7 +50,7 @@ const form = computed({
     <VField :label="$t('Passport_series')" required>
       <VControl>
         <VIMaskInput
-          v-model="form.passport_series"
+          v-model="formData.passport_series"
           class="input"
           :options="{
             mask: 'aa',
@@ -66,7 +66,7 @@ const form = computed({
     <VField :label="$t('Passport_number')" required>
       <VControl>
         <VIMaskInput
-          v-model="form.passport_number"
+          v-model="formData.passport_number"
           class="input"
           :options="{
             mask: '0000000',
@@ -79,7 +79,7 @@ const form = computed({
     <VField :label="$t('Issued_by')">
       <VControl>
         <VInput
-          v-model="form.issued_by"
+          v-model="formData.issued_by"
           type="text"
           :placeholder="$t('Issued_by')"
           @input="$emit('editing', 'issued_by')"
@@ -88,7 +88,7 @@ const form = computed({
       </VControl>
     </VField>
     <VDatePicker
-      v-model="form.when_issued"
+      v-model="formData.when_issued"
       :locale="locale"
       mode="date"
       :masks="masks"
