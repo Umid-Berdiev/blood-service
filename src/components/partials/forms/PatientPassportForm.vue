@@ -2,16 +2,23 @@
 import { useI18n } from 'vue-i18n'
 import { PatientInterface } from '/@src/utils/interfaces'
 
-const props = defineProps<{
-  patient: PatientInterface
-  errors: {
-    pinfl: string[]
-    passport_series: string[]
-    passport_number: string[]
-    issued_by: string[]
-    when_issued: string[]
+const props = withDefaults(
+  defineProps<{
+    patient: PatientInterface
+    errors: {
+      pinfl: string[]
+      passport_series: string[]
+      passport_number: string[]
+      issued_by: string[]
+      when_issued: string[]
+    }
+  }>(),
+  {
+    patient: {
+      pinfl: '',
+    },
   }
-}>()
+)
 const emits = defineEmits(['update:patient', 'editing'])
 const { locale } = useI18n()
 const masks = ref({

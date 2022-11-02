@@ -179,3 +179,21 @@ export interface WithdrawalFormInterface {
   end_date: string
   source: string
 }
+
+export interface MedicalQuestionnaireFormInterface {
+  age: number
+  profession: string
+  last_donated_at: string
+  last_visited_at: string
+  last_visited_reason: string
+  is_pregnant: boolean
+  in_6_month_had_birth_miscarriages: boolean
+  do_you_breastfeed: boolean
+  is_feeling_well: boolean
+  have_chronic_diseases: boolean
+  in_last_week_have_medicines: boolean
+  had_hepatitis_brucellosis: boolean
+  had_doctor_told_not_donate: boolean
+  in_last_2_week_had_dental_procedures: boolean
+  in_last_6_month_had_travel_to_foreign_countries: boolean
+}

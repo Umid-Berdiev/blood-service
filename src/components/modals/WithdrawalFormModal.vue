@@ -7,17 +7,17 @@ import { createWithdrawalForPatient } from '/@src/utils/api/patient'
 import { WithdrawalFormInterface } from '/@src/utils/interfaces'
 
 interface WithdrawalFormProps {
-  modelValue: boolean
-  patientID: number | null
+  isOpen: boolean
+  patientId: number | null
 }
 
 const props = withDefaults(defineProps<WithdrawalFormProps>(), {
-  modelValue: false,
-  patientID: null,
+  isOpen: false,
+  patientId: null,
 })
 
 const emits = defineEmits<{
-  (e: 'update:modelValue', modelValue: boolean): void
+  (e: 'update:isOpen', isOpen: boolean): void
   (e: 'update:list'): void
 }>()
 
@@ -56,7 +56,7 @@ const range = reactive({
 async function onSubmit() {
   try {
     isLoading.value = true
-    await createWithdrawalForPatient(props.patientID, formFields)
+    await createWithdrawalForPatient(props.patientId, formFields)
     emits('update:list')
     onClose()
   } catch (error: any) {
@@ -70,7 +70,7 @@ async function onSubmit() {
 function onClose() {
   clearFields()
   clearErrors()
-  emits('update:modelValue', false)
+  emits('update:isOpen', false)
 }
 
 function clearFields() {
@@ -99,7 +99,7 @@ function clearError(error: string) {
 </script>
 
 <template>
-  <VModal :open="modelValue" size="large" :title="title" actions="right" @close="onClose">
+  <VModal :open="isOpen" size="large" :title="title" actions="right" @close="onClose">
     <template #content>
       <form id="withdrawal-form" class="modal-form" @submit.prevent="onSubmit">
         <div class="column is-12">

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 
-export type VModalSize = 'small' | 'medium' | 'large' | 'big'
+export type VModalSize = 'small' | 'medium' | 'large' | 'big' | 'extra-big'
 export type VModalAction = 'center' | 'right'
 
 export interface VModalEmits {
@@ -103,6 +103,17 @@ onUnmounted(() => {
 <style lang="scss">
 .modal {
   transition: all 0.5s;
+
+  &.is-extra-big {
+    .modal-content {
+      width: 100%;
+      max-width: 75%;
+
+      .modal-card {
+        width: 100%;
+      }
+    }
+  }
 
   &.is-big {
     .modal-content {

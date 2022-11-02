@@ -68,13 +68,13 @@ const tabs = ref<TabHeader[]>([
     label: t('Patient_details'),
     value: '#details',
     icon: 'feather:info',
-    to: `/app/registration/unified-donor-register/${patientID}#details`,
+    to: `${route.path}#details`,
   },
   {
     label: t('Patient_card'),
     value: '#patient_visit_cards',
     icon: 'feather:file-text',
-    to: `/app/registration/unified-donor-register/${patientID}#patient_visit_cards`,
+    to: `${route.path}#patient_visit_cards`,
   },
 ])
 const categoryOptions = ref([])

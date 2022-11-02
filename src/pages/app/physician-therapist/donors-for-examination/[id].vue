@@ -12,6 +12,7 @@ import {
   patientCategoriesList,
 } from '/@src/utils/api/patient'
 import { useNotyf } from '/@src/composable/useNotyf'
+import MedicalQuestionnaireModal from '/@src/components/modals/MedicalQuestionnaireModal.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -24,7 +25,7 @@ const patientForm: PatientInterface = reactive({
   father_name: '',
   birth_date: new Date(),
   gender: 'male',
-  pinfl: null,
+  pinfl: '',
   passport_series: '',
   passport_number: '',
   issued_by: '',
@@ -68,16 +69,18 @@ const tabs = ref<TabHeader[]>([
     label: t('Patient_details'),
     value: '#details',
     icon: 'feather:info',
-    to: `/app/registration/unified-donor-register/${patientID}#details`,
+    to: `${route.path}#details`,
   },
   {
-    label: t('Patient_card'),
-    value: '#patient_visit_cards',
+    label: t('Medical_information'),
+    value: '#medical_information',
     icon: 'feather:file-text',
-    to: `/app/registration/unified-donor-register/${patientID}#patient_visit_cards`,
+    to: `${route.path}#medical_information`,
   },
 ])
 const categoryOptions = ref([])
+const isMedicalQuestionnaireModalOpen = ref(false)
+const isWithdrawalModalOpen = ref(false)
 const selectedTab = ref(route.hash || '#details')
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle(t('Patient_info'))
@@ -119,6 +122,14 @@ async function onSubmit() {
   } finally {
     isLoading.value = false
   }
+}
+
+function openMedicalQuestionnaireModal() {
+  isMedicalQuestionnaireModalOpen.value = true
+}
+
+function openWithdrawalModal() {
+  isWithdrawalModalOpen.value = true
 }
 </script>
 
@@ -182,11 +193,47 @@ async function onSubmit() {
             </div>
           </div>
         </form>
-        <div v-else-if="activeValue === '#patient_visit_cards'" class="mt-5">
-          <MedicalQuestionnaireForm />
+        <div v-else-if="activeValue === '#medical_information'" class="mt-5">
+          <div class="box">
+            <VFlex class="mb-3" justify-content="space-between">
+              <VFlexItem>
+                <p class="is-size-5">{{ $t('Directed_by') }}: Sombody</p>
+              </VFlexItem>
+              <VFlexItem>
+                <p class="is-size-5">{{ $t('Personalized_donation') }}: Sombody</p>
+              </VFlexItem>
+              <VFlexItem>
+                <p class="is-size-5">{{ $t('Blood_collect_condition') }}: Sombody</p>
+              </VFlexItem>
+            </VFlex>
+            <table class="table is-bordered is-fullwidth">
+              <tbody>
+                <tr>
+                  <td>
+                    <a
+                      href="javascript:;"
+                      class="has-text-primary is-uppercase"
+                      @click="openMedicalQuestionnaireModal"
+                    >
+                      {{ $t('Medical_questionnaire') }}
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </template>
     </VTabs>
+    <MedicalQuestionnaireModal
+      v-model:is-open="isMedicalQuestionnaireModalOpen"
+      :patient-id="patientID"
+      @withdrawal="openWithdrawalModal"
+    />
+    <WithdrawalFormModal
+      v-model:is-open="isWithdrawalModalOpen"
+      :patient-id="patientID"
+    />
   </div>
 </template>
 
@@ -211,6 +258,10 @@ async function onSubmit() {
 
   .fieldset-separator {
     border-color: var(--dark-sidebar-light-12);
+  }
+
+  .box {
+    background: var(--dark-sidebar-dark-2);
   }
 }
 </style>
