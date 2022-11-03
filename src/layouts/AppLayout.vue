@@ -4,6 +4,7 @@ import { useMainStore } from '/@src/stores/main'
 import { usePanels } from '/@src/stores/panels'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import mainMenuItems from '/@src/data/main-menu-items.json'
+import { useUserSession } from '../stores/userSession'
 
 const props = withDefaults(
   defineProps<{
@@ -21,12 +22,14 @@ const props = withDefaults(
 
 const viewWrapper = useViewWrapper()
 const { app } = useMainStore()
+const userSession = useUserSession()
 const panels = usePanels()
-const route = useRoute()
 const router = useRouter()
+const route = useRoute()
 const isMobileSideblockOpen = ref(false)
 const isDesktopSideblockOpen = ref(props.openOnMounted)
 const activeMobileSubsidebar = ref(props.defaultSideblock)
+const profileBranch = computed(() => userSession.user?.branch?.name)
 
 /**
  * watchPostEffect callback will be executed each time dependent reactive values has changed
@@ -97,7 +100,7 @@ watch(
           <RouterLink to="/app/dashboard" class="sidebar-block-logo">
             <AnimatedLogo width="36" />
           </RouterLink>
-          <h3>{{ app.name }}</h3>
+          <h3>{{ $t(app.name) }}</h3>
         </template>
         <template #links>
           <!-- main menu links -->
@@ -143,7 +146,11 @@ watch(
               <h1 class="title is-4">{{ viewWrapper.pageTitle }}</h1>
             </div>
 
-            <Toolbar class="desktop-toolbar" />
+            <div class="title-wrap ml-auto">
+              <h3 class="title is-4">{{ profileBranch }}</h3>
+            </div>
+
+            <Toolbar class="desktop-toolbar ml-auto" />
           </div>
 
           <slot></slot>

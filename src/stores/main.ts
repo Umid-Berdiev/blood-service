@@ -3,7 +3,7 @@ import { acceptHMRUpdate, defineStore } from 'pinia'
 export const useMainStore = defineStore('mainStore', {
   state: () => ({
     app: {
-      name: 'Qon Hizmati',
+      name: 'Blood_service',
       version: '',
       copyright: new Date().getFullYear(),
     },

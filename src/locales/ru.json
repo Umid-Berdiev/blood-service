@@ -502,7 +502,7 @@
   "Visit_type": "Тип посещения",
   "Directed_by": "Кем направлен",
   "Healthcare_facilities_list": "Список Лечебно-профилактических учреждений",
-  "Personalized_donation": "Индивидуальное пожертвование",
+  "Personalized_donation": "Именная донация",
   "Mobile_team": "Выездная брига",
   "Send_for_examination": "Направить на осмотр",
   "Medical_organizations_list": "Список Лечебно-профилактических учреждений",
@@ -523,5 +523,7 @@
   "independently": "Самостоятельно",
   "Something_went_wrong": "Что-то пошло не так",
   "Republic_Blood_Center": "Республиканский Центр Крови",
-  "Passport_info": "Паспорт данные"
+  "Passport_info": "Паспорт данные",
+  "Blood_service": "Служба крови",
+  "": ""
 }

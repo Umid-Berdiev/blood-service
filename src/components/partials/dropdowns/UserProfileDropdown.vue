@@ -2,10 +2,11 @@
 import { useUserSession } from '/@src/stores/userSession'
 
 const router = useRouter()
-const { logoutUser, user } = useUserSession()
+const userSession = useUserSession()
+const profileName = computed(() => userSession.user?.username)
 
 async function logoutAction() {
-  await logoutUser()
+  await userSession.logoutUser()
   router.push('/')
   // location.replace('/')
 }
@@ -21,7 +22,7 @@ async function logoutAction() {
         @keydown.space.prevent="toggle"
         @click="toggle"
       >
-        <p class="is-size-4 has-text-primary is-uppercase">{{ user?.username }}</p>
+        <p class="is-size-4 has-text-primary is-uppercase">{{ profileName }}</p>
         <!-- <VAvatar picture="/images/avatars/svg/vuero-1.svg" /> -->
       </a>
     </template>
@@ -31,7 +32,7 @@ async function logoutAction() {
         <VAvatar size="large" picture="/images/avatars/svg/vuero-1.svg" />
 
         <div class="meta">
-          <span>{{ user?.email }}</span>
+          <span>{{ userSession.user?.email }}</span>
           <br />
           <span>{{ 'Product Manager' }}</span>
         </div>

@@ -12,7 +12,9 @@ export default defineComponent({
       default: undefined,
     },
   },
+
   emits: ['update:open'],
+
   setup(props, { slots, emit }) {
     const route = useRoute()
     const hasNestedLinkActive = ref(false)

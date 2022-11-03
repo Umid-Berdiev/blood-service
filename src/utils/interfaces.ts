@@ -154,20 +154,17 @@ export interface ApiLinkInterface {
   active: boolean
 }
 
-export interface ApiDataInterface {
-  data: []
-  current_page: number
-  per_page: number
+export interface ApiPaginationInterface {
   total: number
-  first_page_url?: string
-  from?: number
-  last_page?: number
-  last_page_url?: string
-  links?: ApiLinkInterface[]
-  next_page_url?: string
-  path?: string
-  prev_page_url?: null | string
-  to?: number
+  count: number
+  per_page: number
+  current_page: number
+  total_pages: number
+}
+
+export interface ApiDataInterface {
+  result: []
+  pagination: ApiPaginationInterface
 }
 
 type WithdrawalType = 'permanent' | 'temporary'

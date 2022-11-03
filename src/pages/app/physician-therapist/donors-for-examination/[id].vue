@@ -219,6 +219,35 @@ function openWithdrawalModal() {
                     </a>
                   </td>
                 </tr>
+                <tr>
+                  <td>
+                    <CollapseLink
+                      :title="$t('Laboratory_test_results')"
+                      title-classes="has-text-primary is-uppercase"
+                      with-chevron
+                    >
+                      <template #collapse-item-content>
+                        <RouterLink class="has-text-primary" to="/"
+                          >Goto somewhere</RouterLink
+                        >
+                      </template>
+                    </CollapseLink>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <a href="javascript:;" class="has-text-primary is-uppercase">
+                      {{ $t('Infectious_diseases') }}
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <a href="javascript:;" class="has-text-primary is-uppercase">
+                      {{ $t('Medical_clearance') }}
+                    </a>
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>

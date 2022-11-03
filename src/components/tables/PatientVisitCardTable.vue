@@ -45,36 +45,36 @@ const columns = {
   visit_type: {
     label: t('Visit_type'),
     // grow: true,
-    sortable: true,
+    // sortable: true,
   },
   directed_by: {
     label: t('Directed_by'),
     // grow: true,
-    sortable: true,
+    // sortable: true,
   },
   medical_organization: {
     label: t('Healthcare_facilities'),
-    sortable: true,
+    // sortable: true,
   },
   public_organization: {
     label: t('Public_organizations'),
     // grow: true,
-    sortable: true,
+    // sortable: true,
   },
   independently: {
     label: t('Independently'),
     // grow: true,
-    sortable: true,
+    // sortable: true,
   },
   is_personalized_donation: {
     label: t('Personalized_donation'),
     // grow: true,
-    sortable: true,
+    // sortable: true,
   },
   is_mobile_team: {
     label: t('Mobile_team'),
     // grow: true,
-    sortable: true,
+    // sortable: true,
   },
   actions: {
     label: '',
@@ -211,12 +211,12 @@ function updateList() {
                     <template #image>
                       <img
                         class="light-image"
-                        src="/@src/assets/illustrations/placeholders/search-4.svg"
+                        src="/@src/assets/illustrations/placeholders/search-7.svg"
                         alt=""
                       />
                       <img
                         class="dark-image"
-                        src="/@src/assets/illustrations/placeholders/search-4-dark.svg"
+                        src="/@src/assets/illustrations/placeholders/search-7-dark.svg"
                         alt=""
                       />
                     </template>

@@ -28,6 +28,19 @@ export async function patientsList(payload: any) {
   }
 }
 
+export async function patientsListForCandidate(payload: any) {
+  try {
+    const { data } = await api({
+      url: '/patients/candidate',
+      params: payload,
+    })
+
+    return data
+  } catch (error) {
+    throw error
+  }
+}
+
 export async function createPatient(payload: any) {
   try {
     const { data } = await api({
@@ -59,7 +72,7 @@ export async function updatePatientById(id: number | null, payload: any) {
 export async function fetchPatientById(id: number | null) {
   try {
     const { data } = await api({
-      url: `/patients/${id}`,
+      url: `/patients/show/${id}`,
     })
 
     return data

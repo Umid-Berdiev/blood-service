@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { isEmpty, values } from 'lodash'
+import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { SearchErrorInterface } from '/@src/utils/interfaces'
 
@@ -9,24 +10,37 @@ defineProps<{
 }>()
 
 const emits = defineEmits(['search', 'clearError', 'clearForm'])
-const notyf = useNotyf()
-const filterForm = reactive({
-  lastname: '',
-  firstname: '',
-  middlename: '',
-  passpordId: '',
-})
 
+const { t } = useI18n()
+const notif = useNotyf()
+const filterForm = reactive({
+  last_name: '',
+  first_name: '',
+  father_name: '',
+  passport_series: '',
+  passport_number: '',
+})
+const passportId = ref('')
 const handleSearch = async () => {
-  if (!values(filterForm).every(isEmpty)) emits('search', filterForm)
-  else notyf.error('Form fields are empty')
+  if (!isEmpty(passportId.value)) {
+    // if (/^[a-zA-Z]{2}[0-9]{7}$/.test(passportId.value)) {
+    const series = passportId.value.substring(0, 2)
+    const number = passportId.value.substring(2)
+    filterForm.passport_series = series
+    filterForm.passport_number = number
+    // } else return notif.error(t('Passport_series_or_passport_number_filled_incorrect'))
+  }
+
+  if (!values(filterForm).every(isEmpty)) {
+    emits('search', filterForm)
+  } else notif.error(t('Form_fields_are_empty'))
 }
 
 const clearFilterForm = async () => {
   Object.assign(filterForm, {
-    lastname: '',
-    firstname: '',
-    middlename: '',
+    last_name: '',
+    first_name: '',
+    father_name: '',
     passpordId: '',
   })
   emits('clearForm')
@@ -38,28 +52,35 @@ const clearFilterForm = async () => {
     <form @submit.prevent="handleSearch">
       <div class="columns">
         <div class="column">
-          <VField :label="$t('Passport_series_number')" required>
+          <VField :label="$t('Passport_series_number')">
             <VControl>
-              <VInput
-                v-model="filterForm.passpordId"
-                type="text"
+              <VIMaskInput
+                v-model.trim="passportId"
+                class="input"
+                :options="{
+                  mask: 'aa0000000',
+                  prepare: function (str) {
+                    return str.toUpperCase()
+                  },
+                }"
                 :placeholder="$t('Passport_series_number')"
-                @input="emits('clearError', 'passpordId')"
               />
-              <p class="help has-text-danger">{{ errors.passpordId }}</p>
+              <p class="help has-text-danger">
+                {{ errors.passport_series || errors.passport_number }}
+              </p>
             </VControl>
           </VField>
         </div>
         <div class="column">
-          <VField :label="$t('Last_name')" required>
+          <VField :label="$t('Last_name')">
             <VControl>
               <VInput
-                v-model="filterForm.lastname"
+                v-model.trim="filterForm.last_name"
                 type="text"
                 :placeholder="$t('Last_name')"
-                @input="emits('clearError', 'lastname')"
+                @input="emits('clearError', 'last_name')"
               />
-              <p class="help has-text-danger">{{ errors.lastname }}</p>
+              <p class="help has-text-danger">{{ errors.last_name }}</p>
             </VControl>
           </VField>
         </div>
@@ -67,7 +88,7 @@ const clearFilterForm = async () => {
           <VField :label="$t('First_name')">
             <VControl>
               <VInput
-                v-model="filterForm.firstname"
+                v-model.trim="filterForm.first_name"
                 type="text"
                 :placeholder="$t('First_name')"
               />
@@ -78,7 +99,7 @@ const clearFilterForm = async () => {
           <VField :label="$t('Middlename')">
             <VControl>
               <VInput
-                v-model="filterForm.middlename"
+                v-model.trim="filterForm.father_name"
                 type="text"
                 :placeholder="$t('Middlename')"
               />
@@ -92,7 +113,7 @@ const clearFilterForm = async () => {
             type="button"
             color="warning"
             bold
-            :loading="isLoading"
+            :disabled="isLoading"
             tabindex="0"
             @click="clearFilterForm"
           >
