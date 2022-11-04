@@ -175,22 +175,44 @@ export interface WithdrawalFormInterface {
   start_date: string
   end_date: string
   source: string
+  created_by: string
 }
 
 export interface MedicalQuestionnaireFormInterface {
-  age: number
-  profession: string
-  last_donated_at: string
-  last_visited_at: string
-  last_visited_reason: string
-  is_pregnant: boolean
-  in_6_month_had_birth_miscarriages: boolean
-  do_you_breastfeed: boolean
-  is_feeling_well: boolean
-  have_chronic_diseases: boolean
-  in_last_week_have_medicines: boolean
-  had_hepatitis_brucellosis: boolean
-  had_doctor_told_not_donate: boolean
-  in_last_2_week_had_dental_procedures: boolean
-  in_last_6_month_had_travel_to_foreign_countries: boolean
+  age?: number
+  profession?: string
+  last_doctor_visit_reason?: string
+  date_input1?: string
+  date_input2?: string
+  date_input3?: string
+  checkbox1?: boolean
+  checkbox2?: boolean
+  checkbox3?: boolean
+  checkbox4?: boolean
+  checkbox5?: boolean
+  checkbox6?: boolean
+  checkbox7?: boolean
+  checkbox8?: boolean
+  checkbox9?: boolean
+  checkbox10?: boolean
+  checkbox11?: boolean
+  checkbox12?: boolean
+  checkbox13?: boolean
+  checkbox14?: boolean
+  checkbox15?: boolean
+  checkbox16?: boolean
+  checkbox17?: boolean
+  checkbox18?: boolean
+  checkbox19?: boolean
+  checkbox20?: boolean
+  checkbox21?: boolean
+  checkbox22?: boolean
+  checkbox23?: boolean
+  checkbox24?: boolean
+  checkbox25?: boolean
+  checkbox26?: boolean
+  checkbox27?: boolean
+  checkbox28?: boolean
+  checkbox29?: boolean
+  textarea1?: string
 }

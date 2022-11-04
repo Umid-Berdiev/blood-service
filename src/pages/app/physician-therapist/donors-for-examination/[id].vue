@@ -5,7 +5,6 @@ import { useHead } from '@vueuse/head'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { useI18n } from 'vue-i18n'
 import { PatientInterface, TabHeader } from '/@src/utils/interfaces'
-import PatientVisitCardTable from '/@src/components/tables/PatientVisitCardTable.vue'
 import {
   fetchPatientById,
   updatePatientById,
@@ -63,25 +62,25 @@ const errors = reactive({
   avatar: [],
 })
 const isLoading = ref(false)
-const patientID = (route.params?.id as number) || null
+const patientID = (route.params?.id as string) || null
 const tabs = ref<TabHeader[]>([
   {
     label: t('Patient_details'),
     value: '#details',
     icon: 'feather:info',
-    to: `${route.path}#details`,
+    // to: `${route.path}#details`,
   },
   {
     label: t('Medical_information'),
     value: '#medical_information',
     icon: 'feather:file-text',
-    to: `${route.path}#medical_information`,
+    // to: `${route.path}#medical_information`,
   },
 ])
 const categoryOptions = ref([])
 const isMedicalQuestionnaireModalOpen = ref(false)
 const isWithdrawalModalOpen = ref(false)
-const selectedTab = ref(route.hash || '#details')
+const selectedTab = ref('#details')
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle(t('Patient_info'))
 
@@ -100,6 +99,7 @@ async function fetchPatientInfo() {
   try {
     const res = await fetchPatientById(patientID)
     Object.assign(patientForm, res.result)
+    patientForm.pinfl = patientForm.pinfl ?? ''
   } catch (error: any) {
     notif.error(error.message)
   }
@@ -261,7 +261,7 @@ function openWithdrawalModal() {
     />
     <WithdrawalFormModal
       v-model:is-open="isWithdrawalModalOpen"
-      :patient-id="patientID"
+      :patient-id="Number(patientID)"
     />
   </div>
 </template>

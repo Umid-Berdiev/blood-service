@@ -206,6 +206,7 @@ declare module '@vue/runtime-core' {
     IconWrapSizesDocumentation: typeof import('./documentation/icon-wrap/icon-wrap-sizes-documentation.md')['default']
     IconWrapTooltipsDocumentation: typeof import('./documentation/icon-wrap/icon-wrap-tooltips-documentation.md')['default']
     IllustrationWidget: typeof import('./src/components/partials/widgets/ui-creative/IllustrationWidget.vue')['default']
+    IMaskDateInput: typeof import('./src/components/partials/forms/IMaskDateInput.vue')['default']
     InboxMessagesList: typeof import('./src/components/partials/inbox/messages/InboxMessagesList.vue')['default']
     InfluencerDropdown: typeof import('./src/components/partials/dropdowns/InfluencerDropdown.vue')['default']
     InputBasicDocumentation: typeof import('./documentation/elements/forms/inputs/input-basic-documentation.md')['default']

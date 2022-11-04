@@ -90,7 +90,7 @@ const columns = {
   },
   visit_status: {
     label: t('Visit_status'),
-    format: (value: string, row: any) => row.status?.name && t(row.status?.name),
+    format: (value: string, row: any) => row.status?.name,
     // grow: true,
     // sortable: true,
   },
@@ -281,7 +281,7 @@ async function fetchData(page: number = 1) {
                 <template v-if="column.key === 'name'">
                   <RouterLink
                     class="table_link"
-                    :to="`/app/physician-therapist/donors-for-examination/${row.id}#details`"
+                    :to="`/app/physician-therapist/donors-for-examination/${row.id}#`"
                   >
                     {{ row.first_name }} {{ row.last_name }} {{ row.father_name }}
                     <!-- <span class="dark-text">

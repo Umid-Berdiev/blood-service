@@ -1,17 +1,16 @@
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
 import { useI18n } from 'vue-i18n'
-import moment from 'moment'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import FilterForm from '/@src/components/pages/registration/FilterForm.vue'
-import sleep from '/@src/utils/sleep'
-import { SearchErrorInterface } from '/@src/utils/interfaces'
-import { fetchList } from '/@src/utils/api/employees'
+import { ApiDataInterface, SearchErrorInterface } from '/@src/utils/interfaces'
 import { useMainStore } from '/@src/stores/main'
+import { patientsListRejected } from '/@src/utils/api/patient'
+import { isEmpty } from 'lodash'
 
 const router = useRouter()
-const notyf = useNotyf()
+const notif = useNotyf()
 const { t } = useI18n()
 const mainStore = useMainStore()
 const isLoading = ref(false)
@@ -28,61 +27,81 @@ useHead({
   title: `${t('Donation-diverted-register')} - ${mainStore.app.name}`,
 })
 
-const data = reactive({
+const apiData: ApiDataInterface = reactive({
+  result: [],
   pagination: {
-    current_page: 1,
-    per_page: 10,
     total: 10,
+    count: 10,
+    per_page: 10,
+    current_page: 1,
     total_pages: 1,
   },
-  result: [],
 })
+
 const currentPage = computed({
   get: () => {
-    return data.pagination.current_page
+    return apiData.pagination.current_page
   },
   set: async (page) => {
-    await fetchData(page)
+    currentFilterData.page = page
+    await handleSearch(currentFilterData)
   },
 })
+
+const currentFilterData = reactive({
+  page: 1,
+})
+
 const columns = {
-  orderNumber: {
+  '#': {
     format: (value: any, row: any, index: number) => `${index + 1}`,
     cellClass: 'is-flex-grow-0',
   },
   name: {
-    label: 'Fullname',
-    media: true,
-    grow: true,
-    sortable: true,
+    label: t('Fullname'),
+    format: (value: string, row: any) => `${row.first_name} ${row.last_name}`,
   },
-  email: {
-    label: 'Email',
-    sortable: true,
+  birth_date: {
+    label: t('Date-of-birth'),
   },
-  role: {
-    label: 'Role',
-    sortable: true,
+  gender: {
+    label: t('Gender'),
+    format: (value: string) => t(value),
   },
-  department: {
-    label: 'Department',
-    grow: true,
-    sortable: true,
+  passport: {
+    label: t('Passport_series_number'),
+    format: (value: string, row: any) => `${row.passport_series}${row.passport_number}`,
   },
-  // actions: {
-  //   label: '',
-  //   align: 'end',
-  // },
+  withdrawal_end_date: {
+    label: t('Withdrawal_end_date'),
+    format: (value: string, row: any) => row.withdrawal?.end_date,
+  },
+  withdrawal_reason: {
+    label: t('Withdrawal_reason'),
+    format: (value: string, row: any) => row.withdrawal?.reason,
+  },
+  withdrawal_created_by: {
+    label: t('Withdrawal_created_by'),
+    format: (value: string, row: any) => row.withdrawal?.created_by,
+  },
 } as const
+
 const incomingCallerId = ref<number>()
 
-const handleSearch = async (filterForm: any) => {
+await handleSearch(currentFilterData)
+
+async function handleSearch(filterForm: any) {
   try {
+    Object.assign(currentFilterData, filterForm)
     isLoading.value = true
-    const res = await fetchList({ page: 1, ...filterForm })
-    Object.assign(data, res)
+    const res = await patientsListRejected(filterForm)
+    Object.assign(apiData, res.result)
+
+    if (isEmpty(res.result.result)) {
+      notif.warning(t('Data_not_found'))
+    } else notif.success(`${t('Found')}: ${res.result.pagination.total} ${t('records')}`)
   } catch (error: any) {
-    Object.assign(errors, error.response?.data?.errors)
+    Object.assign(errors, error.response?.result?.errors)
   } finally {
     isLoading.value = false
   }
@@ -92,27 +111,9 @@ function clearError(prop: string) {
   errors[prop] = ''
 }
 
-async function fetchData(page: number = 1) {
-  try {
-    isLoading.value = true
-
-    // async fetch data to our server
-    const res = await fetchList({
-      page,
-      per_page: data.pagination.per_page,
-    })
-
-    Object.assign(data, res)
-  } catch (error: any) {
-    notif.error(t(error.response?.data.error.message))
-  } finally {
-    isLoading.value = false
-  }
-}
-
 async function clearFilterForm() {
   // await fetchData()
-  data.result = []
+  apiData.result = []
 }
 
 function printList() {
@@ -174,15 +175,15 @@ function printList() {
       <div class="column is-12">
         <VFlexTableWrapper
           :columns="columns"
-          :data="data.result"
-          :limit="data.pagination.per_page"
-          :total="data.pagination.total"
+          :data="apiData.result"
+          :limit="apiData.pagination.per_page"
+          :total="apiData.pagination.total"
         >
           <!--
             Here we retrieve the internal wrapperState.
             Note that we can not destructure it
           -->
-          <template #default="wrapperState">
+          <template #default>
             <!-- We can place any content inside the default slot-->
             <!-- <VFlexTableToolbar>
               <template #left>
@@ -198,13 +199,9 @@ function printList() {
               The VFlexTable "data" and "columns" props
               will be inherited from parent VFlexTableWrapper
             -->
-            <VFlexTable rounded :no-header="!isLoading && data.result.length === 0">
+            <VFlexTable rounded :no-header="!isLoading && apiData.result.length === 0">
               <template #header-column="{ column }">
-                <span
-                  v-if="column.key === 'orderNumber'"
-                  class="is-flex-grow-0"
-                  v-text="'#'"
-                />
+                <span v-if="column.key === '#'" class="is-flex-grow-0" v-text="'#'" />
               </template>
 
               <template #body>
@@ -214,27 +211,18 @@ function printList() {
                 -->
                 <div v-if="isLoading" class="flex-list-inner">
                   <div
-                    v-for="key in data.pagination.per_page"
+                    v-for="key in apiData.pagination.per_page"
                     :key="key"
                     class="flex-table-item"
                   >
-                    <VFlexTableCell :column="{ grow: true }">
-                      <VPlaceloadText :lines="2" last-line-width="20%" class="mx-2" />
-                    </VFlexTableCell>
                     <VFlexTableCell>
-                      <VPlaceload class="mx-1" />
-                    </VFlexTableCell>
-                    <VFlexTableCell>
-                      <VPlaceload class="mx-1" />
-                    </VFlexTableCell>
-                    <VFlexTableCell :column="{ grow: true }">
-                      <VPlaceload class="mx-1" />
+                      <VPlaceloadText :lines="2" last-line-width="70%" class="mx-2" />
                     </VFlexTableCell>
                   </div>
                 </div>
 
                 <!-- This is the empty state -->
-                <div v-if="data.result.length === 0" class="flex-list-inner">
+                <div v-if="apiData.result.length === 0" class="flex-list-inner">
                   <VPlaceholderSection
                     title="No matches"
                     subtitle="There is no data that match your query."
@@ -264,34 +252,23 @@ function printList() {
               </template>
 
               <!-- This is the body cell slot -->
-              <template #body-cell="{ row, column }">
+              <!-- <template #body-cell="{ row, column }">
                 <template v-if="column.key === 'name'">
                   <VAvatar size="medium" :picture="row.avatar" />
                   <div>
                     <span class="dark-text">{{ row.firstname }} {{ row.lastname }}</span>
                   </div>
                 </template>
-                <template v-if="column.key === 'role'">
-                  <div>
-                    <span class="dark-text">{{ row.role.name }}</span>
-                  </div>
-                </template>
-                <!-- <template v-if="column.key === 'actions'">
-                  <EmployeeFlexTableDropdown
-                    @edit="onEdit(row.id)"
-                    @remove="onRemove(row.id)"
-                  />
-                </template> -->
-              </template>
+              </template> -->
             </VFlexTable>
 
             <!--Table Pagination-->
             <VFlexPagination
-              v-if="data.result.length"
+              v-if="apiData.result.length"
               v-model:current-page="currentPage"
               class="mt-5"
-              :item-per-page="data.pagination.per_page"
-              :total-items="data.pagination.total"
+              :item-per-page="apiData.pagination.per_page"
+              :total-items="apiData.pagination.total"
               no-router
             />
           </template>

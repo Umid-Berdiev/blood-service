@@ -41,6 +41,19 @@ export async function patientsListForCandidate(payload: any) {
   }
 }
 
+export async function patientsListRejected(payload: any) {
+  try {
+    const { data } = await api({
+      url: '/patients/rejected',
+      params: payload,
+    })
+
+    return data
+  } catch (error) {
+    throw error
+  }
+}
+
 export async function createPatient(payload: any) {
   try {
     const { data } = await api({
