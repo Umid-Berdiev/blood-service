@@ -94,11 +94,10 @@ export async function fetchPatientById(id: number | null) {
   }
 }
 
-export async function visitcardsList(payload: any) {
+export async function visitcardsList(patient_id: number, payload: any) {
   try {
     const { data } = await api({
-      url: `/patients/${payload.patient_id}/visit-cards`,
-      // url: '/visit-cards',
+      url: `/patients/${patient_id}/visit-cards`,
       params: payload,
     })
 
@@ -112,7 +111,6 @@ export async function createVisitcard(payload: any) {
   try {
     const { data } = await api({
       url: `/patients/${payload.patient_id}/visit-cards`,
-      // url: '/visit-cards',
       method: 'POST',
       data: payload,
     })
@@ -127,7 +125,6 @@ export async function updateVisitcardById(id: number, payload: any) {
   try {
     const { data } = await api({
       url: `/patients/${payload.patient_id}/visit-cards/${id}`,
-      // url: `/visit-cards/${id}`,
       method: 'PUT',
       data: payload,
     })
@@ -187,6 +184,20 @@ export async function createWithdrawalForPatient(
     const { data } = await api({
       url: `/patients/${id}/withdrawal`,
       method: 'POST',
+      data: payload,
+    })
+
+    return data
+  } catch (error) {
+    throw error
+  }
+}
+
+export async function updatePatientStatus(id: number | null, payload: any) {
+  try {
+    const { data } = await api({
+      url: `/patients/${id}/status`,
+      method: 'PUT',
       data: payload,
     })
 

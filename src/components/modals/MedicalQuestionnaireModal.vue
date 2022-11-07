@@ -16,6 +16,7 @@ const props = withDefaults(
 
 const emits = defineEmits<{
   (e: 'update:isOpen', value: boolean): void
+  (e: 'laboratoryResearch'): void
   (e: 'withdrawal'): void
 }>()
 
@@ -92,7 +93,17 @@ function clearFields() {
     </template>
     <template #action="{ close }">
       <VButtons>
-        <VButton type="button" color="warning" :disabled="isLoading">
+        <VButton
+          type="button"
+          color="warning"
+          :disabled="isLoading"
+          @click="
+            () => {
+              close()
+              $emit('laboratoryResearch')
+            }
+          "
+        >
           {{ $t('Send_for_examination') }}
         </VButton>
         <VButton

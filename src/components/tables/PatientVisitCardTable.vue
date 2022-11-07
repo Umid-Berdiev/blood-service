@@ -99,10 +99,9 @@ async function fetchData(page: number = 1) {
     isLoading.value = true
 
     // async fetch apiData to our server
-    const res = await visitcardsList({
+    const res = await visitcardsList(patientID, {
       page,
       per_page: apiData.per_page,
-      patient_id: patientID,
     })
 
     Object.assign(apiData, res.result)
@@ -158,27 +157,7 @@ function updateList() {
           :limit="apiData.per_page"
           :total="apiData.total"
         >
-          <!--
-            Here we retrieve the internal wrapperState.
-            Note that we can not destructure it
-          -->
-          <template #default="wrapperState">
-            <!-- {{ wrapperState }} -->
-            <!-- We can place any content inside the default slot-->
-            <!-- <VFlexTableToolbar>
-              <template #left>
-                <SearchInput v-model="searchInput" />
-              </template>
-
-              <template #right>
-                <PerPageSelect v-model="data.per_page" />
-              </template>
-            </VFlexTableToolbar> -->
-
-            <!--
-              The VFlexTable "data" and "columns" props
-              will be inherited from parent VFlexTableWrapper
-            -->
+          <template #default>
             <VFlexTable rounded :no-header="!isLoading && apiData.data.length === 0">
               <template #header-column="{ column }">
                 <span
@@ -277,7 +256,7 @@ function updateList() {
     </div>
     <ConfirmActionModal @confirm-action="handleRemoveAction" />
     <PatientVisitCardFormModal
-      v-model="isFormModalOpen"
+      v-model:is-open="isFormModalOpen"
       :card-id="selectedId"
       @update:list="updateList"
       @close="selectedId = null"

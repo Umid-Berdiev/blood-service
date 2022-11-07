@@ -556,5 +556,11 @@
   "": "",
   "Withdrawal_end_date": "Срок отвода",
   "Withdrawal_reason": "Причина отвода",
-  "Withdrawal_created_by": "Кем сделан отвод"
+  "Withdrawal_created_by": "Кем сделан отвод",
+  "Plateletpheresis": "Тромбоцитаферез",
+  "Plasmapheresis": "Плазмаферез",
+  "Whole_blood_donation": "Донация цельной крови",
+  "Submit_for_research": "Направить на исследование",
+  "Donation_types_list": "Виды донации",
+  "Select_donation_type": "Выберите вид донации"
 }

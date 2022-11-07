@@ -11,12 +11,12 @@ import { fetchHealthcareFacilities } from '/@src/utils/api/additional'
 import { PatientVisitCardInterface } from '/@src/utils/interfaces'
 
 const props = defineProps<{
-  modelValue: boolean
+  isOpen: boolean
   cardId: number | null
 }>()
 
 const emits = defineEmits<{
-  (e: 'update:modelValue', modelValue: boolean): void
+  (e: 'update:isOpen', value: boolean): void
   (e: 'update:list'): void
 }>()
 
@@ -46,10 +46,7 @@ const directors = ref([
   { value: 'public_organization', label: t('Public_organizations') },
   { value: 'independently', label: t('Independently') },
 ])
-const healthcareFacilitiesList = ref([
-  { id: 1, name: 'Poliklinika #1' },
-  { id: 2, name: 'Red Half Moon Society' },
-])
+const healthcareFacilitiesList = ref([])
 const errors = reactive({
   visit_type: [],
   directed_by: [],
@@ -96,7 +93,7 @@ function onClose() {
   title.value = t('Add')
   clearFields()
   clearErrors()
-  emits('update:modelValue', false)
+  emits('update:isOpen', false)
 }
 
 function clearFields() {
@@ -128,7 +125,7 @@ function clearErrors() {
 </script>
 
 <template>
-  <VModal :open="modelValue" size="large" :title="title" actions="right" @close="onClose">
+  <VModal :open="isOpen" size="large" :title="title" actions="right" @close="onClose">
     <template #content>
       <form id="visitcard-form" class="modal-form" @submit.prevent="onSubmit">
         <VField :label="$t('Visit_type')" required>

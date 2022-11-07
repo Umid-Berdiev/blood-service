@@ -557,5 +557,11 @@
   "Withdrawal_end_date": "Withdrawal end date",
   "Reason": "Reason",
   "Withdrawal_reason": "Reason of withdrawal",
-  "Withdrawal_created_by": "Withdrawal created by"
+  "Withdrawal_created_by": "Withdrawal created by",
+  "Plateletpheresis": "Plateletpheresis",
+  "Plasmapheresis": "Plasmapheresis",
+  "Whole_blood_donation": "Whole blood donation",
+  "Submit_for_research": "Submit for research",
+  "Donation_types_list": "List of donation types",
+  "Select_donation_type": "Select donation type"
 }

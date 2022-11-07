@@ -2,7 +2,7 @@
 export interface VCollapseProps {
   title: string
   titleClasses: string
-  content: string
+  content?: string
   withChevron?: boolean
 }
 

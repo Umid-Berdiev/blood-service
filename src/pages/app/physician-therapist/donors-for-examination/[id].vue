@@ -11,7 +11,6 @@ import {
   patientCategoriesList,
 } from '/@src/utils/api/patient'
 import { useNotyf } from '/@src/composable/useNotyf'
-import MedicalQuestionnaireModal from '/@src/components/modals/MedicalQuestionnaireModal.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -80,6 +79,7 @@ const tabs = ref<TabHeader[]>([
 const categoryOptions = ref([])
 const isMedicalQuestionnaireModalOpen = ref(false)
 const isWithdrawalModalOpen = ref(false)
+const isLaboratoryResearchModalOpen = ref(false)
 const selectedTab = ref('#details')
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle(t('Patient_info'))
@@ -130,6 +130,10 @@ function openMedicalQuestionnaireModal() {
 
 function openWithdrawalModal() {
   isWithdrawalModalOpen.value = true
+}
+
+function openLaboratoryResearchModal() {
+  isLaboratoryResearchModalOpen.value = true
 }
 </script>
 
@@ -256,11 +260,16 @@ function openWithdrawalModal() {
     </VTabs>
     <MedicalQuestionnaireModal
       v-model:is-open="isMedicalQuestionnaireModalOpen"
-      :patient-id="patientID"
+      :patient-id="Number(patientID)"
       @withdrawal="openWithdrawalModal"
+      @laboratory-research="openLaboratoryResearchModal"
     />
     <WithdrawalFormModal
       v-model:is-open="isWithdrawalModalOpen"
+      :patient-id="Number(patientID)"
+    />
+    <LaboratoryResearchModal
+      v-model:is-open="isLaboratoryResearchModalOpen"
       :patient-id="Number(patientID)"
     />
   </div>
