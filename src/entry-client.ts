@@ -12,6 +12,7 @@
  * @see /app.ts
  * @see /plugins/*.ts
  */
+
 import { createApp } from './app'
 
 /**
@@ -19,6 +20,7 @@ import { createApp } from './app'
  *
  * @see /@src/app.ts for more detailed informations
  */
+
 createApp().then(async (vuero) => {
   // restore pinia state from SSR if any
   const initialState = window.__vuero__
