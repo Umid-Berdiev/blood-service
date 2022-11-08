@@ -22,6 +22,7 @@ import { createApp } from './app'
 createApp().then(async (vuero) => {
   // restore pinia state from SSR if any
   const initialState = window.__vuero__
+
   if (typeof initialState?.pinia === 'object') {
     vuero.pinia.state.value = initialState.pinia
   }

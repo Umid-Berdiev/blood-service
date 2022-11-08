@@ -1,1 +1,0 @@
-import{_ as a}from"./AuthLayout.8af89d47.js";import{N as s,j as t,o,a as e,w as r,k as n}from"./index.cd1be135.js";const u=s({},[["render",function(s,u){const d=t("RouterView"),f=a;return o(),e(f,null,{default:r((()=>[n(d)])),_:1})}]]);export{u as default};

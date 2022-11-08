@@ -1,0 +1,1 @@
+import{q as a,E as s,G as d,o as n,d as t,t as e,K as l,N as r}from"./index.64f80ae1.js";const o=r(a({__name:"[id]",setup(a){var r,o;s();const u=null!=(o=null==(r=d().params)?void 0:r.id)?o:null;return(a,s)=>(n(),t("div",null,"currentId - "+e(l(u)),1))}}),[["__scopeId","data-v-d244a783"]]);export{o as default};
