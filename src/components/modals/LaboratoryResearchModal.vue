@@ -2,14 +2,21 @@
 import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { updatePatientStatus } from '/@src/utils/api/patient'
+import { PatientInterface } from '/@src/utils/interfaces'
 
 const props = withDefaults(
   defineProps<{
-    patientId: number | null
+    patient: PatientInterface
     isOpen: boolean
   }>(),
   {
-    patientId: null,
+    patient: {
+      id: null,
+      category: {
+        id: null,
+        name: '',
+      },
+    },
     isOpen: false,
   }
 )
@@ -26,6 +33,17 @@ const { locale, t } = useI18n()
 const isLoading = ref(false)
 const title = ref(t('Direction_for_laboratory_research'))
 const selectedDonationType = ref(null)
+const selectedImmunization = ref(null)
+const immunizationOptions = ref([
+  {
+    id: 1,
+    name: t('Антигенами системы резус'),
+  },
+  {
+    id: 2,
+    name: t('Стафилококковым анатоксином'),
+  },
+])
 const donationTypes = ref([
   {
     id: 1,
@@ -74,7 +92,7 @@ const errors = reactive({})
 async function submitForm() {
   try {
     isLoading.value = true
-    const res = await updatePatientStatus(props.patientId, formData)
+    const res = await updatePatientStatus(props.patient?.id, formData)
     onClose()
   } catch (error) {
     Object.assign(errors, error.response?.data?.errors)
@@ -125,16 +143,38 @@ function onClose() {
   <VModal :open="isOpen" size="extra-big" :title="title" actions="right" @close="onClose">
     <template #content>
       <div class="columns is-vcentered">
-        <div class="column is-narrow has-text-right-desktop">
+        <div
+          class="column is-1-fullhd is-2-widescreen is-3-desktop is-4-tablet has-text-right-tablet"
+        >
           <span>{{ $t('Donation_types_list') }}</span>
         </div>
-        <div class="column is-2-fullhd is-3-widescreen is-3-desktop is-5-tablet">
+        <div class="column is-2-fullhd is-3-widescreen is-4-desktop is-5-tablet">
           <VField>
             <VControl>
               <Multiselect
                 v-model="selectedDonationType"
                 :options="donationTypes"
                 :placeholder="$t('Select_donation_type')"
+                label="name"
+                value-prop="id"
+              />
+            </VControl>
+          </VField>
+        </div>
+      </div>
+      <div class="columns is-vcentered">
+        <div
+          class="column is-1-fullhd is-2-widescreen is-3-desktop is-4-tablet has-text-right-tablet"
+        >
+          <span>{{ $t('Immunization') }}</span>
+        </div>
+        <div class="column is-2-fullhd is-3-widescreen is-4-desktop is-5-tablet">
+          <VField>
+            <VControl>
+              <Multiselect
+                v-model="selectedImmunization"
+                :options="immunizationOptions"
+                :placeholder="$t('Not_required')"
                 label="name"
                 value-prop="id"
               />

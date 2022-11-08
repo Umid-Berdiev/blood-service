@@ -270,7 +270,7 @@ function openLaboratoryResearchModal() {
     />
     <LaboratoryResearchModal
       v-model:is-open="isLaboratoryResearchModalOpen"
-      :patient-id="Number(patientID)"
+      :patient="patientForm"
     />
   </div>
 </template>

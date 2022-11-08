@@ -562,5 +562,6 @@
   "Whole_blood_donation": "Донация цельной крови",
   "Submit_for_research": "Направить на исследование",
   "Donation_types_list": "Виды донации",
-  "Select_donation_type": "Выберите вид донации"
+  "Select_donation_type": "Выберите вид донации",
+  "Laboratory_test_results": "Результаты лабораторных исследований"
 }
