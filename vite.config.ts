@@ -12,7 +12,6 @@ import PurgeIcons from 'vite-plugin-purge-icons'
 import ImageMin from 'vite-plugin-imagemin'
 // import VueroDocumentation from './vite-plugin-vuero-doc/index'
 import vueI18n from '@intlify/vite-plugin-vue-i18n'
-import { VitePWA } from 'vite-plugin-pwa'
 import purgecss from 'rollup-plugin-purgecss'
 
 const MINIFY_IMAGES = process.env.MINIFY ? process.env.MINIFY === 'true' : false
@@ -29,7 +28,7 @@ export default defineConfig({
   // You also need to add this base like `history: createWebHistory('my-subdirectory')`
   // in ./src/router.ts
   // base: '/my-subdirectory/',
-  base: './',
+  base: '/',
   // Directory to serve as plain static assets.
   publicDir: 'public',
   // Adjust console output verbosity.
@@ -218,42 +217,6 @@ export default defineConfig({
             id: process.env.GTM_ID,
           },
         }),
-
-    /**
-     * vite-plugin-pwa generate manifest.json and register services worker to enable PWA
-     *
-     * @see https://github.com/antfu/vite-plugin-pwa
-     */
-    VitePWA({
-      base: '/',
-      includeAssets: ['favicon.svg', 'favicon.ico', 'robots.txt', 'apple-touch-icon.png'],
-      manifest: {
-        name: 'Vuero - A complete Vue 3 design system',
-        short_name: 'Vuero',
-        start_url: '/?utm_source=pwa',
-        display: 'standalone',
-        theme_color: '#ffffff',
-        background_color: '#ffffff',
-        icons: [
-          {
-            src: 'pwa-192x192.png',
-            sizes: '192x192',
-            type: 'image/png',
-          },
-          {
-            src: 'pwa-512x512.png',
-            sizes: '512x512',
-            type: 'image/png',
-          },
-          {
-            src: 'pwa-512x512.png',
-            sizes: '512x512',
-            type: 'image/png',
-            purpose: 'any maskable',
-          },
-        ],
-      },
-    }),
 
     /**
      * rollup-plugin-purgecss plugin is responsible of purging css rules

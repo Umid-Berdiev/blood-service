@@ -1,1 +1,1 @@
-const e=""+new URL("vuero-banking-light.b7953f3a.webp",import.meta.url).href,r=""+new URL("vuero-banking-dark.86b913f2.webp",import.meta.url).href;export{e as _,r as a};
+const a="/assets/vuero-banking-light.b7953f3a.webp",s="/assets/vuero-banking-dark.86b913f2.webp";export{a as _,s as a};

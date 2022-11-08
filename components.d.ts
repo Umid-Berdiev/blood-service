@@ -298,7 +298,6 @@ declare module '@vue/runtime-core' {
     VPlyr: typeof import('./src/components/base/plugins/VPlyr.vue')['default']
     VProgress: typeof import('./src/components/base/progress/VProgress.vue')['default']
     VRadio: typeof import('./src/components/base/form/VRadio.vue')['default']
-    VReloadPrompt: typeof import('./src/components/base/modal/VReloadPrompt.vue')['default']
     VSelect: typeof import('./src/components/base/form/VSelect.vue')['default']
     VSimpleDatatables: typeof import('./src/components/base/plugins/VSimpleDatatables.vue')['default']
     VSnack: typeof import('./src/components/base/snack/V-Snack.vue')['default']
