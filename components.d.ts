@@ -171,6 +171,7 @@ declare module '@vue/runtime-core' {
     PlaceloadV3: typeof import('./src/components/pages/layouts/placeload/PlaceloadV3.vue')['default']
     PlaceloadV4: typeof import('./src/components/pages/layouts/placeload/PlaceloadV4.vue')['default']
     PlateletpheresisForm: typeof import('./src/components/partials/forms/PlateletpheresisForm.vue')['default']
+    PrimaryScreeningResultsModal: typeof import('./src/components/modals/PrimaryScreeningResultsModal.vue')['default']
     ProjectCardDropdown: typeof import('./src/components/partials/dropdowns/ProjectCardDropdown.vue')['default']
     ProjectDetailsV1: typeof import('./src/components/pages/layouts/projects/ProjectDetailsV1.vue')['default']
     ProjectListDropdown: typeof import('./src/components/partials/dropdowns/ProjectListDropdown.vue')['default']

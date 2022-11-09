@@ -564,5 +564,14 @@
   "Submit_for_research": "Submit for research",
   "Donation_types_list": "List of donation types",
   "Select_donation_type": "Select donation type",
-  "Laboratory_test_results": "Laboratory test results"
+  "Laboratory_test_results": "Laboratory test results",
+  "Primary_screening_results": "Primary Screening Results",
+  "For_medical_examination": "For medical examination",
+  "Medical_questionnaire": "Medical questionnaire",
+  "Infectious_diseases": "Infectious diseases",
+  "Medical_clearance": "Medical clearance",
+  "Hemoglobin_gl": "Hemoglobin, g/l",
+  "Researched_at": "Researched at",
+  "Researched_by": "Researched by",
+  "Preliminary_blood_type": "Preliminary blood type"
 }

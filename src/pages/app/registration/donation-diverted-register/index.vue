@@ -38,15 +38,15 @@ const apiData: ApiDataInterface = reactive({
   },
 })
 
-const currentPage = computed({
-  get: () => {
-    return apiData.pagination.current_page
-  },
-  set: async (page) => {
-    currentFilterData.page = page
-    await handleSearch(currentFilterData)
-  },
-})
+// const currentPage = computed({
+//   get: () => {
+//     return apiData.pagination.current_page
+//   },
+//   set: async (page) => {
+//     currentFilterData.page = page
+//     await handleSearch(currentFilterData)
+//   },
+// })
 
 const currentFilterData = reactive({
   page: 1,
@@ -151,7 +151,7 @@ function printList() {
           <VButton
             outlined
             rounded
-            color="light"
+            color="info"
             icon="feather:printer"
             @click.prevent="printList"
           >
@@ -265,7 +265,7 @@ function printList() {
             <!--Table Pagination-->
             <VFlexPagination
               v-if="apiData.result.length"
-              v-model:current-page="currentPage"
+              v-model:current-page="apiData.pagination.current_page"
               class="mt-5"
               :item-per-page="apiData.pagination.per_page"
               :total-items="apiData.pagination.total"

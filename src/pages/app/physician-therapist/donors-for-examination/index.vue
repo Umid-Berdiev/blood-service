@@ -6,7 +6,7 @@ import { useNotyf } from '/@src/composable/useNotyf'
 import { useMainStore } from '/@src/stores/main'
 
 import { useViewWrapper } from '/@src/stores/viewWrapper'
-import { patientsList, fetchDonorStatusesList } from '/@src/utils/api/patient'
+import { patientsListForCandidate, fetchDonorStatusesList } from '/@src/utils/api/patient'
 import { ApiDataInterface } from '/@src/utils/interfaces'
 
 const router = useRouter()
@@ -117,7 +117,10 @@ async function fetchData(page: number = 1) {
   try {
     isLoading.value = true
 
-    const res = await patientsList({ page, status_id: selectedDonorStatus.value })
+    const res = await patientsListForCandidate({
+      page,
+      status_id: selectedDonorStatus.value,
+    })
     Object.assign(apiData, res.result)
   } catch (error: any) {
     notif.error(t(error.response?.data?.errors))

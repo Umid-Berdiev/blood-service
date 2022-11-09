@@ -78,6 +78,7 @@ const tabs = ref<TabHeader[]>([
 ])
 const categoryOptions = ref([])
 const isMedicalQuestionnaireModalOpen = ref(false)
+const isPrimaryScreeningResultsModalOpen = ref(false)
 const isWithdrawalModalOpen = ref(false)
 const isLaboratoryResearchModalOpen = ref(false)
 const selectedTab = ref('#details')
@@ -126,6 +127,10 @@ async function onSubmit() {
 
 function openMedicalQuestionnaireModal() {
   isMedicalQuestionnaireModalOpen.value = true
+}
+
+function openPrimaryScreeningResultsModal() {
+  isPrimaryScreeningResultsModalOpen.value = true
 }
 
 function openWithdrawalModal() {
@@ -225,6 +230,17 @@ function openLaboratoryResearchModal() {
                 </tr>
                 <tr>
                   <td>
+                    <a
+                      href="javascript:;"
+                      class="has-text-primary is-uppercase"
+                      @click="openPrimaryScreeningResultsModal"
+                    >
+                      {{ $t('Primary_screening_results') }}
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
                     <CollapseLink
                       :title="$t('Laboratory_test_results')"
                       title-classes="has-text-primary is-uppercase"
@@ -263,6 +279,12 @@ function openLaboratoryResearchModal() {
       :patient-id="Number(patientID)"
       @withdrawal="openWithdrawalModal"
       @laboratory-research="openLaboratoryResearchModal"
+    />
+    <PrimaryScreeningResultsModal
+      v-model:is-open="isPrimaryScreeningResultsModalOpen"
+      :patient-id="Number(patientID)"
+      @withdrawal="openWithdrawalModal"
+      @medical-examination="openLaboratoryResearchModal"
     />
     <WithdrawalFormModal
       v-model:is-open="isWithdrawalModalOpen"

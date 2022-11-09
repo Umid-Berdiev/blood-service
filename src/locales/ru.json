@@ -563,5 +563,14 @@
   "Submit_for_research": "Направить на исследование",
   "Donation_types_list": "Виды донации",
   "Select_donation_type": "Выберите вид донации",
-  "Laboratory_test_results": "Результаты лабораторных исследований"
+  "Laboratory_test_results": "Результаты лабораторных исследований",
+  "Primary_screening_results": "Результаты первичного скрининга",
+  "For_medical_examination": "На медосвидетельствование",
+  "Medical_questionnaire": "Медвопросник",
+  "Infectious_diseases": "Инфекционные заболевания",
+  "Medical_clearance": "Медицинское освидетельствование",
+  "Hemoglobin_gl": "Гемоглобин, г/л",
+  "Researched_at": "Дата исследования",
+  "Researched_by": "Исследование выполнил",
+  "Preliminary_blood_type": "Предварительная группа крови"
 }

@@ -169,7 +169,9 @@ function clearError(error: string) {
               <VField :label="$t('End_date')">
                 <VControl icon="feather:calendar">
                   <VInput
+                    class="is-primary-focus"
                     :value="inputValue"
+                    :disabled="formFields.type === 'permanent'"
                     v-on="inputEvents"
                     @change="clearError('end_date')"
                   />

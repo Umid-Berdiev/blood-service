@@ -183,7 +183,7 @@ function printList() {
           <VButton
             outlined
             rounded
-            color="light"
+            color="info"
             icon="feather:printer"
             @click.prevent="printList"
           >

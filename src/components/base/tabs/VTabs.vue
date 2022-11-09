@@ -102,7 +102,7 @@ watch(activeValue, (value) => {
             >
               <RouterLink
                 tabindex="0"
-                :to="tab.to ?? '#'"
+                :to="tab.to ?? ''"
                 @keydown.enter="toggle(tab.value)"
                 @click="toggle(tab.value)"
               >

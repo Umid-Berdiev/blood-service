@@ -164,6 +164,7 @@ function clearErrors() {
               :options="healthcareFacilitiesList"
               :placeholder="$t('Medical_organizations_list')"
               label="name"
+              searchable
               value-prop="id"
             />
             <p class="help has-text-danger">{{ errors.medical_organization_id[0] }}</p>
