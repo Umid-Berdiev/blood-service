@@ -79,6 +79,8 @@ const tabs = ref<TabHeader[]>([
 const categoryOptions = ref([])
 const isMedicalQuestionnaireModalOpen = ref(false)
 const isPrimaryScreeningResultsModalOpen = ref(false)
+const isLaboratoryTestResultsModalOpen = ref(false)
+const isMedicalInspectionFormModalOpen = ref(false)
 const isWithdrawalModalOpen = ref(false)
 const isLaboratoryResearchModalOpen = ref(false)
 const selectedTab = ref('#details')
@@ -133,12 +135,24 @@ function openPrimaryScreeningResultsModal() {
   isPrimaryScreeningResultsModalOpen.value = true
 }
 
+function openLaboratoryTestResultsModal() {
+  isLaboratoryTestResultsModalOpen.value = true
+}
+
+function openMedicalInspectionFormModal() {
+  isMedicalInspectionFormModalOpen.value = true
+}
+
 function openWithdrawalModal() {
   isWithdrawalModalOpen.value = true
 }
 
 function openLaboratoryResearchModal() {
   isLaboratoryResearchModalOpen.value = true
+}
+
+function toDonation() {
+  //
 }
 </script>
 
@@ -241,7 +255,14 @@ function openLaboratoryResearchModal() {
                 </tr>
                 <tr>
                   <td>
-                    <CollapseLink
+                    <a
+                      href="javascript:;"
+                      class="has-text-primary is-uppercase"
+                      @click="openLaboratoryTestResultsModal"
+                    >
+                      {{ $t('Laboratory_test_results') }}
+                    </a>
+                    <!-- <CollapseLink
                       :title="$t('Laboratory_test_results')"
                       title-classes="has-text-primary is-uppercase"
                       with-chevron
@@ -251,7 +272,7 @@ function openLaboratoryResearchModal() {
                           >Goto somewhere</RouterLink
                         >
                       </template>
-                    </CollapseLink>
+                    </CollapseLink> -->
                   </td>
                 </tr>
                 <tr>
@@ -284,7 +305,19 @@ function openLaboratoryResearchModal() {
       v-model:is-open="isPrimaryScreeningResultsModalOpen"
       :patient-id="Number(patientID)"
       @withdrawal="openWithdrawalModal"
-      @medical-examination="openLaboratoryResearchModal"
+      @medical-examination="openMedicalInspectionFormModal"
+    />
+    <LaboratoryTestResultsModal
+      v-model:is-open="isLaboratoryTestResultsModalOpen"
+      :patient-id="Number(patientID)"
+      @withdrawal="openWithdrawalModal"
+      @medical-examination="openMedicalInspectionFormModal"
+    />
+    <MedicalInspectionFormModal
+      v-model:is-open="isMedicalInspectionFormModalOpen"
+      :patient-id="Number(patientID)"
+      @withdrawal="openWithdrawalModal"
+      @donation="toDonation"
     />
     <WithdrawalFormModal
       v-model:is-open="isWithdrawalModalOpen"

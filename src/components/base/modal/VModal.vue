@@ -221,7 +221,7 @@ onUnmounted(() => {
           font-family: var(--font-alt);
           color: var(--dark-text);
           font-weight: 600;
-          font-size: 1rem;
+          font-size: 1.5rem;
         }
 
         .v-modal-close {
