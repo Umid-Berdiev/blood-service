@@ -28,7 +28,7 @@ useHead({
 })
 
 const apiData: ApiDataInterface = reactive({
-  result: [],
+  data: [],
   pagination: {
     total: 10,
     count: 10,
@@ -112,11 +112,11 @@ async function handleSearch(filterForm: any) {
     const res = await patientsList(filterForm)
     Object.assign(apiData, res.result)
 
-    if (isEmpty(res.result.result)) {
+    if (isEmpty(res.result.data)) {
       notif.warning(t('Data_not_found'))
     } else notif.success(`${t('Found')}: ${res.result.pagination.total} ${t('records')}`)
   } catch (error: any) {
-    Object.assign(errors, error.response?.result?.errors)
+    Object.assign(errors, error.response?.data?.errors)
   } finally {
     isLoading.value = false
   }
@@ -128,7 +128,7 @@ function clearError(prop: string) {
 
 async function clearFilterForm() {
   // await fetchData()
-  apiData.result = []
+  apiData.data = []
 }
 
 function addPatient() {
@@ -207,7 +207,7 @@ function printList() {
       <div class="column is-12">
         <VFlexTableWrapper
           :columns="columns"
-          :data="apiData.result"
+          :data="apiData.data"
           :limit="apiData.pagination.per_page"
           :total="apiData.pagination.total"
         >
@@ -216,7 +216,7 @@ function printList() {
             Note that we can not destructure it
           -->
           <template #default>
-            <VFlexTable rounded :no-header="!isLoading && apiData.result.length === 0">
+            <VFlexTable rounded :no-header="!isLoading && apiData.data.length === 0">
               <template #header-column="{ column }">
                 <span v-if="column.key === '#'" class="is-flex-grow-0" v-text="'#'" />
               </template>
@@ -239,7 +239,7 @@ function printList() {
                 </div>
 
                 <!-- This is the empty state -->
-                <div v-if="apiData.result.length === 0" class="flex-list-inner">
+                <div v-if="apiData.data.length === 0" class="flex-list-inner">
                   <VPlaceholderSection
                     title="No matches"
                     subtitle="There is no data that match your query."
@@ -284,7 +284,7 @@ function printList() {
 
             <!--Table Pagination-->
             <VFlexPagination
-              v-if="apiData.result.length"
+              v-if="apiData.data.length"
               v-model:current-page="currentPage"
               class="mt-5"
               :item-per-page="apiData.pagination.per_page"

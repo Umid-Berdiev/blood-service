@@ -1,89 +1,125 @@
 <script setup lang="ts">
+import { formatDate } from '@vueuse/core'
 import { useHead } from '@vueuse/head'
 import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { useMainStore } from '/@src/stores/main'
 
 import { useViewWrapper } from '/@src/stores/viewWrapper'
-import { fetchList, removeById } from '/@src/utils/api/employees'
+import { patientsListForCandidate, fetchDonorStatusesList } from '/@src/utils/api/patient'
+import { ApiDataInterface } from '/@src/utils/interfaces'
 
 const router = useRouter()
 const notif = useNotyf()
 const { t } = useI18n()
 const mainStore = useMainStore()
+const isLoading = ref(false)
 const viewWrapper = useViewWrapper()
 
 viewWrapper.setPageTitle(t('Users_List'))
 useHead({
-  title: `${t('Examined-donor-register')} - ${mainStore.app.name}`,
+  title: `${t('Donors-list-for-examination')} - ${mainStore.app.name}`,
 })
 
-const apiData = reactive({
+const apiData: ApiDataInterface = reactive({
+  data: [],
   pagination: {
-    current_page: 1,
-    per_page: 10,
     total: 10,
+    count: 10,
+    per_page: 10,
+    current_page: 1,
     total_pages: 1,
   },
-  result: [],
 })
 
-const selectedId = ref()
 const currentPage = computed({
   get: () => {
     return apiData.pagination.current_page
   },
   set: async (page) => {
+    // currentFilterData.page = page
     await fetchData(page)
   },
 })
+
+// const currentFilterData = reactive({
+//   page: 1,
+// })
+
 const columns = {
   orderNumber: {
     format: (value: any, row: any, index: number) => `${index + 1}`,
-    cellClass: 'is-flex-grow-0',
+    // cellClass: 'is-flex-grow-0',
   },
   name: {
-    label: 'Fullname',
-    media: true,
-    grow: true,
-    sortable: true,
+    label: t('Fullname'),
+    // media: true,
+    // grow: true,
+    // sortable: true,
   },
-  email: {
-    label: 'Email',
-    sortable: true,
+  birth_date: {
+    label: t('Date-of-birth'),
+    // sortable: true,
   },
-  role: {
-    label: 'Role',
-    sortable: true,
+  visit_date: {
+    label: t('Visit_date'),
+    format: (value: string, row: any) =>
+      row.last_visit?.created_at &&
+      formatDate(new Date(row.last_visit?.created_at), 'YYYY-MM-DD'),
+    // sortable: true,
   },
-  department: {
-    label: 'Department',
-    grow: true,
-    sortable: true,
+  visit_type: {
+    label: t('Visit_type'),
+    format: (value: string, row: any) =>
+      row.last_visit?.visit_type && t(row.last_visit?.visit_type),
+    // grow: true,
+    // sortable: true,
   },
-  actions: {
-    label: '',
-    align: 'end',
+  medical_inspection_date: {
+    label: t('Medical_inspection_date'),
+    format: (value: string, row: any) =>
+      row.last_visit?.directed_by && t(row.last_visit?.directed_by),
+    // grow: true,
+    // sortable: true,
+  },
+  medical_inspection_conclusion: {
+    label: t('Medical_inspection_conclusion'),
+    format: (value: string, row: any) => row.last_visit?.personalized_donation,
+    // grow: true,
+    // sortable: true,
+  },
+  linked_donation_number: {
+    label: t('Linked_donation_number'),
+    format: (value: string, row: any) => row.last_visit?.personalized_donation,
+    // grow: true,
+    // sortable: true,
+  },
+  donation_type: {
+    label: t('Donation_type'),
+    format: (value: string, row: any) => row.last_visit?.personalized_donation,
+    // grow: true,
+    // sortable: true,
+  },
+  blood_component_amount: {
+    label: t('Blood_component_amount'),
+    format: (value: string, row: any) => row.status?.name,
+    // grow: true,
+    // sortable: true,
   },
 } as const
-const isLoading = ref<boolean>(false)
-const searchInput = computed({
-  get(): string {
-    return ''
-  },
-  async set(v: string) {
-    console.log(v)
 
-    // await onSearch(v)
-  },
-})
 const incomingCallerId = ref<number>()
+const donorStatuses = ref([{ id: 0, name: t('All') }])
+const selectedDonorStatus = ref('')
 
-// await fetchData()
+onMounted(async () => {
+  const res = await fetchDonorStatusesList()
+  donorStatuses.value = res.result
+})
 
 watch(
-  () => apiData.pagination.per_page,
-  async () => {
+  () => selectedDonorStatus.value,
+  async (newVal) => {
     await fetchData()
   }
 )
@@ -93,65 +129,104 @@ async function fetchData(page: number = 1) {
   try {
     isLoading.value = true
 
-    // async fetch apiData to our server
-    const res = await fetchList({
+    const res = await patientsListForCandidate({
       page,
-      per_page: apiData.pagination.per_page,
+      status_id: selectedDonorStatus.value,
     })
-
-    Object.assign(apiData, res)
+    Object.assign(apiData, res.result)
   } catch (error: any) {
-    notif.error(t(error.response?.data?.error?.message))
+    notif.error(t(error.response?.data?.errors))
   } finally {
     isLoading.value = false
   }
-}
-
-function onEdit(rowId: number | null) {
-  selectedId.value = rowId
-  router.push(`/app/users/${rowId}`)
-}
-
-async function onRemove(id: number) {
-  selectedId.value = id
-  mainStore.$patch({ confirmModalState: true })
-}
-
-async function handleRemoveAction() {
-  await removeById(selectedId.value)
-  fetchData()
 }
 </script>
 
 <template>
   <div class="page-content-inner">
-    <VBreadcrumb
-      with-icons
-      separator="bullet"
-      :items="[
-        {
-          label: mainStore.app.name,
-          hideLabel: true,
-          icon: 'feather:home',
-          to: { name: '/app/dashboard' },
-        },
-        {
-          label: $t('Physician-therapist'),
-          // to: { name: '/app/users/' },
-        },
-        {
-          label: $t('Examined-donor-register'),
-          to: { name: '/app/physician-therapist/examined-donors-list/' },
-        },
-      ]"
-    />
+    <!-- <VFlex justify-content="space-between" flex-wrap="wrap" class="mb-3">
+      <VFlexItem>
+        <VBreadcrumb
+          with-icons
+          separator="bullet"
+          :items="[
+            {
+              label: mainStore.app.name,
+              hideLabel: true,
+              icon: 'feather:home',
+              to: { name: '/app/dashboard' },
+            },
+            {
+              label: $t('Physician-therapist'),
+              // to: { name: '/app/users/' },
+            },
+            {
+              label: $t('Donors-list-for-examination'),
+              to: { name: '/app/physician-therapist/donors-for-examination/' },
+            },
+          ]"
+        />
+      </VFlexItem>
+      <VFlexItem>
+        <VField v-slot="{ id }" class="is-curved-select" style="width: 20rem">
+          <VControl>
+            <Multiselect
+              v-model="selectedDonorStatus"
+              :attrs="{ id }"
+              :options="donorStatuses"
+              :placeholder="$t('Select_donor_status')"
+              label="name"
+              value-prop="id"
+            />
+          </VControl>
+        </VField>
+      </VFlexItem>
+    </VFlex> -->
+
+    <div class="columns mb-3">
+      <div class="column">
+        <VBreadcrumb
+          with-icons
+          separator="bullet"
+          :items="[
+            {
+              label: mainStore.app.name,
+              hideLabel: true,
+              icon: 'feather:home',
+              to: { name: '/app/dashboard' },
+            },
+            {
+              label: $t('Physician-therapist'),
+              // to: { name: '/app/users/' },
+            },
+            {
+              label: $t('Donors-list-for-examination'),
+              to: { name: '/app/physician-therapist/donors-for-examination/' },
+            },
+          ]"
+        />
+      </div>
+      <div class="column is-3">
+        <VField v-slot="{ id }" class="is-curved-select">
+          <VControl>
+            <Multiselect
+              v-model="selectedDonorStatus"
+              :attrs="{ id }"
+              :options="donorStatuses"
+              :placeholder="$t('Select_donor_status')"
+              label="name"
+              value-prop="id"
+            />
+          </VControl>
+        </VField>
+      </div>
+    </div>
 
     <div class="columns">
       <div class="column is-12">
         <VFlexTableWrapper
-          class="mt-4"
           :columns="columns"
-          :data="apiData.result"
+          :data="apiData.data"
           :limit="apiData.pagination.per_page"
           :total="apiData.pagination.total"
         >
@@ -159,28 +234,12 @@ async function handleRemoveAction() {
             Here we retrieve the internal wrapperState.
             Note that we can not destructure it
           -->
-          <template #default="wrapperState">
-            <!-- We can place any content inside the default slot-->
-            <VFlexTableToolbar>
-              <template #left>
-                <SearchInput v-model="searchInput" />
-              </template>
-
-              <template #right>
-                <PerPageSelect v-model="apiData.pagination.per_page" />
-              </template>
-            </VFlexTableToolbar>
-
-            <!--
-              The VFlexTable "apiData" and "columns" props
-              will be inherited from parent VFlexTableWrapper
-            -->
-            <VFlexTable rounded :no-header="!isLoading && apiData.result.length === 0">
+          <template #default>
+            <VFlexTable rounded :no-header="!isLoading && apiData.data.length === 0">
               <template #header-column="{ column }">
                 <span
                   v-if="column.key === 'orderNumber'"
-                  class="is-flex-grow-0"
-                  v-text="'#'"
+                  v-text="$t('Donor_register_number')"
                 />
               </template>
 
@@ -195,30 +254,14 @@ async function handleRemoveAction() {
                     :key="key"
                     class="flex-table-item"
                   >
-                    <VFlexTableCell :column="{ grow: true, media: true }">
-                      <VPlaceloadAvatar size="medium" />
-
-                      <VPlaceloadText
-                        :lines="2"
-                        width="60%"
-                        last-line-width="20%"
-                        class="mx-2"
-                      />
-                    </VFlexTableCell>
                     <VFlexTableCell>
-                      <VPlaceload width="60%" class="mx-1" />
-                    </VFlexTableCell>
-                    <VFlexTableCell>
-                      <VPlaceload width="60%" class="mx-1" />
-                    </VFlexTableCell>
-                    <VFlexTableCell :column="{ align: 'end' }">
-                      <VPlaceload width="45%" class="mx-1" />
+                      <VPlaceloadText :lines="2" last-line-width="70%" class="mx-2" />
                     </VFlexTableCell>
                   </div>
                 </div>
 
                 <!-- This is the empty state -->
-                <div v-else-if="apiData.result.length === 0" class="flex-list-inner">
+                <div v-if="apiData.data.length === 0" class="flex-list-inner">
                   <VPlaceholderSection
                     title="No matches"
                     subtitle="There is no data that match your query."
@@ -250,28 +293,21 @@ async function handleRemoveAction() {
               <!-- This is the body cell slot -->
               <template #body-cell="{ row, column }">
                 <template v-if="column.key === 'name'">
-                  <VAvatar size="medium" :picture="row.avatar" />
-                  <div>
-                    <span class="dark-text">{{ row.firstname }} {{ row.lastname }}</span>
-                  </div>
-                </template>
-                <template v-if="column.key === 'role'">
-                  <div>
-                    <span class="dark-text">{{ row.role.name }}</span>
-                  </div>
-                </template>
-                <template v-if="column.key === 'actions'">
-                  <EmployeeFlexTableDropdown
-                    @edit="onEdit(row.id)"
-                    @remove="onRemove(row.id)"
-                  />
+                  <RouterLink
+                    class="table_link"
+                    :to="`/app/physician-therapist/donors-for-examination/${row.id}#`"
+                  >
+                    {{ row.first_name }} {{ row.last_name }} {{ row.father_name }}
+                    <!-- <span class="dark-text">
+                    </span> -->
+                  </RouterLink>
                 </template>
               </template>
             </VFlexTable>
 
             <!--Table Pagination-->
             <VFlexPagination
-              v-if="apiData.result.length"
+              v-if="apiData.data.length"
               v-model:current-page="currentPage"
               class="mt-5"
               :item-per-page="apiData.pagination.per_page"
@@ -282,6 +318,17 @@ async function handleRemoveAction() {
         </VFlexTableWrapper>
       </div>
     </div>
-    <ConfirmActionModal @confirm-action="handleRemoveAction" />
   </div>
 </template>
+
+<style scoped lang="scss">
+.is-dark {
+  .table_link {
+    color: var(--primary);
+
+    &:hover {
+      color: var(--smoke-white);
+    }
+  }
+}
+</style>

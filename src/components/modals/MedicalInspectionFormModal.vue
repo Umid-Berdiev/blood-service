@@ -46,7 +46,7 @@ function onClose() {
 <template>
   <VModal
     :open="isOpen"
-    size="extra-big"
+    size="big"
     :title="$t('Medical_inspection')"
     actions="right"
     @close="onClose"
@@ -342,7 +342,7 @@ function onClose() {
             }
           "
         >
-          {{ $t('For_medical_examination') }}
+          {{ $t('For_donation') }}
         </VButton>
         <VButton
           type="button"

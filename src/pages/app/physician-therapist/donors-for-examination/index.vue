@@ -22,7 +22,7 @@ useHead({
 })
 
 const apiData: ApiDataInterface = reactive({
-  result: [],
+  data: [],
   pagination: {
     total: 10,
     count: 10,
@@ -102,7 +102,7 @@ const selectedDonorStatus = ref('')
 
 onMounted(async () => {
   const res = await fetchDonorStatusesList()
-  donorStatuses.value.push(...res.result)
+  donorStatuses.value = res.result
 })
 
 watch(
@@ -132,45 +132,6 @@ async function fetchData(page: number = 1) {
 
 <template>
   <div class="page-content-inner">
-    <!-- <VFlex justify-content="space-between" flex-wrap="wrap" class="mb-3">
-      <VFlexItem>
-        <VBreadcrumb
-          with-icons
-          separator="bullet"
-          :items="[
-            {
-              label: mainStore.app.name,
-              hideLabel: true,
-              icon: 'feather:home',
-              to: { name: '/app/dashboard' },
-            },
-            {
-              label: $t('Physician-therapist'),
-              // to: { name: '/app/users/' },
-            },
-            {
-              label: $t('Donors-list-for-examination'),
-              to: { name: '/app/physician-therapist/donors-for-examination/' },
-            },
-          ]"
-        />
-      </VFlexItem>
-      <VFlexItem>
-        <VField v-slot="{ id }" class="is-curved-select" style="width: 20rem">
-          <VControl>
-            <Multiselect
-              v-model="selectedDonorStatus"
-              :attrs="{ id }"
-              :options="donorStatuses"
-              :placeholder="$t('Select_donor_status')"
-              label="name"
-              value-prop="id"
-            />
-          </VControl>
-        </VField>
-      </VFlexItem>
-    </VFlex> -->
-
     <div class="columns mb-3">
       <div class="column">
         <VBreadcrumb
@@ -214,7 +175,7 @@ async function fetchData(page: number = 1) {
       <div class="column is-12">
         <VFlexTableWrapper
           :columns="columns"
-          :data="apiData.result"
+          :data="apiData.data"
           :limit="apiData.pagination.per_page"
           :total="apiData.pagination.total"
         >
@@ -223,7 +184,7 @@ async function fetchData(page: number = 1) {
             Note that we can not destructure it
           -->
           <template #default>
-            <VFlexTable rounded :no-header="!isLoading && apiData.result.length === 0">
+            <VFlexTable rounded :no-header="!isLoading && apiData.data.length === 0">
               <template #header-column="{ column }">
                 <span
                   v-if="column.key === 'orderNumber'"
@@ -250,7 +211,7 @@ async function fetchData(page: number = 1) {
                 </div>
 
                 <!-- This is the empty state -->
-                <div v-if="apiData.result.length === 0" class="flex-list-inner">
+                <div v-if="apiData.data.length === 0" class="flex-list-inner">
                   <VPlaceholderSection
                     title="No matches"
                     subtitle="There is no data that match your query."
@@ -296,7 +257,7 @@ async function fetchData(page: number = 1) {
 
             <!--Table Pagination-->
             <VFlexPagination
-              v-if="apiData.result.length"
+              v-if="apiData.data.length"
               v-model:current-page="currentPage"
               class="mt-5"
               :item-per-page="apiData.pagination.per_page"

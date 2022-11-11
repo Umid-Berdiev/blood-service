@@ -163,7 +163,7 @@ export interface ApiPaginationInterface {
 }
 
 export interface ApiDataInterface {
-  result: []
+  data: []
   pagination: ApiPaginationInterface
 }
 
