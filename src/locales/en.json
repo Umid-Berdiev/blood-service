@@ -598,5 +598,9 @@
   "Heart": "Heart",
   "Fine": "Fine",
   "Not_fine": "Not fine",
-  "For_donation": "For a donation"
+  "For_donation": "For a donation",
+  "Complete": "Complete",
+  "Donor_categories": "Donor categories",
+  "Donation_type": "Donation type",
+  "Date_of_an_analysis": "Date of an analysis"
 }

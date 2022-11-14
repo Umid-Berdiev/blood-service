@@ -596,5 +596,8 @@
   "Heart": "Сердце",
   "Fine": "В норме",
   "Not_fine": "Не в норме",
-  "For_donation": "На донацию"
+  "For_donation": "На донацию",
+  "Complete": "Завершить",
+  "Donor_categories": "Категории доноров",
+  "Donation_type": "Тип донации"
 }

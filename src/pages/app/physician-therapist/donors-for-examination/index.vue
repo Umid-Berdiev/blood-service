@@ -94,6 +94,9 @@ const columns = {
     // grow: true,
     // sortable: true,
   },
+  actions: {
+    label: t('Actions'),
+  },
 } as const
 
 const incomingCallerId = ref<number>()
@@ -150,7 +153,7 @@ async function fetchData(page: number = 1) {
             },
             {
               label: $t('Donors-list-for-examination'),
-              to: { name: '/app/physician-therapist/donors-for-examination/' },
+              // to: { name: '/app/physician-therapist/donors-for-examination/' },
             },
           ]"
         />
@@ -245,9 +248,19 @@ async function fetchData(page: number = 1) {
                 <template v-if="column.key === 'name'">
                   <RouterLink
                     class="table_link"
-                    :to="`/app/physician-therapist/donors-for-examination/${row.id}#`"
+                    :to="`/app/physician-therapist/donors-for-examination/${row.id}`"
                   >
                     {{ row.first_name }} {{ row.last_name }} {{ row.father_name }}
+                    <!-- <span class="dark-text">
+                    </span> -->
+                  </RouterLink>
+                </template>
+                <template v-if="column.key === 'actions'">
+                  <RouterLink
+                    class="has-text-warning"
+                    :to="`/app/physician-therapist/donors-for-examination`"
+                  >
+                    {{ $t('Complete') }}
                     <!-- <span class="dark-text">
                     </span> -->
                   </RouterLink>

@@ -74,7 +74,7 @@ watch(
     </MobileNavbar>
 
     <!-- Mobile sidebar links -->
-    <MobileSidebar
+    <!-- <MobileSidebar
       :is-open="isMobileSideblockOpen"
       @toggle="isMobileSideblockOpen = !isMobileSideblockOpen"
     >
@@ -89,7 +89,7 @@ watch(
           </a>
         </li>
       </template>
-    </MobileSidebar>
+    </MobileSidebar> -->
 
     <!-- Desktop navigation -->
     <!-- <CircularMenu /> -->

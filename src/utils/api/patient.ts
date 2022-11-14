@@ -28,6 +28,19 @@ export async function patientsList(payload: any) {
   }
 }
 
+export async function fetchDonorsList(payload: any) {
+  try {
+    const { data } = await api({
+      url: '/patients',
+      params: payload,
+    })
+
+    return data
+  } catch (error) {
+    throw error
+  }
+}
+
 export async function patientsListForCandidate(payload: any) {
   try {
     const { data } = await api({

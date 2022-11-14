@@ -19,7 +19,7 @@ const viewWrapper = useViewWrapper()
 
 viewWrapper.setPageTitle(t('Users_List'))
 useHead({
-  title: `${t('Donors-list-for-examination')} - ${mainStore.app.name}`,
+  title: `${t('Donors-list-for-primary-screening')} - ${mainStore.app.name}`,
 })
 
 const apiData: ApiDataInterface = reactive({
@@ -160,11 +160,11 @@ async function clearFilterForm() {
               to: { name: '/app/dashboard' },
             },
             {
-              label: $t('Physician-therapist'),
+              label: $t('Screening'),
               // to: { name: '/app/users/' },
             },
             {
-              label: $t('Examined-donor-register'),
+              label: $t('Donors-list-for-primary-screening'),
               // to: { name: '/app/physician-therapist/donors-for-examination/' },
             },
           ]"
@@ -173,7 +173,7 @@ async function clearFilterForm() {
     </div>
     <div class="columns mt-1">
       <div class="column">
-        <ExaminedDonorsFilterForm
+        <ForScreeningDonorsFilterForm
           :is-loading="isLoading"
           :errors="errors"
           @search="handleSearch"
