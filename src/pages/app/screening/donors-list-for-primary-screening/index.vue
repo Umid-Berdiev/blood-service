@@ -8,7 +8,7 @@ import { useMainStore } from '/@src/stores/main'
 
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { patientsListForCandidate, fetchDonorsList } from '/@src/utils/api/patient'
-import { ApiDataInterface } from '/@src/utils/interfaces'
+import { ApiDataInterface, PatientInterface } from '/@src/utils/interfaces'
 
 const router = useRouter()
 const notif = useNotyf()
@@ -117,6 +117,8 @@ const errors = reactive({
 const currentFilterData = reactive({
   page: 1,
 })
+const clickedRowData: PatientInterface = reactive({})
+const isPrimaryScreeningModalOpen = ref(true)
 
 async function handleSearch(filterForm: any) {
   try {
@@ -142,6 +144,11 @@ function clearError(prop: string) {
 async function clearFilterForm() {
   // await fetchData()
   apiData.data = []
+}
+
+function openPrimaryScreeningModal(patient: PatientInterface) {
+  Object.assign(clickedRowData, patient)
+  isPrimaryScreeningModalOpen.value = true
 }
 </script>
 
@@ -253,14 +260,14 @@ async function clearFilterForm() {
               <!-- This is the body cell slot -->
               <template #body-cell="{ row, column }">
                 <template v-if="column.key === 'name'">
-                  <RouterLink
-                    class="table_link"
-                    :to="`/app/physician-therapist/donors-for-examination/${row.id}`"
+                  <button
+                    class="button button-link"
+                    @click="openPrimaryScreeningModal(row)"
                   >
                     {{ row.first_name }} {{ row.last_name }} {{ row.father_name }}
                     <!-- <span class="dark-text">
                     </span> -->
-                  </RouterLink>
+                  </button>
                 </template>
               </template>
             </VFlexTable>
@@ -278,6 +285,10 @@ async function clearFilterForm() {
         </VFlexTableWrapper>
       </div>
     </div>
+    <PrimaryScreeningFormModal
+      v-model:is-open="isPrimaryScreeningModalOpen"
+      :patient="clickedRowData"
+    />
   </div>
 </template>
 

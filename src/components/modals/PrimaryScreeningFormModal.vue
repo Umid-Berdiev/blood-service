@@ -1,19 +1,18 @@
 <script setup lang="ts">
 import moment from 'moment'
-import { reactive, ref, watch } from 'vue'
+import { reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { createWithdrawalForPatient } from '/@src/utils/api/patient'
-import { PrimaryScreeningFormInterface } from '/@src/utils/interfaces'
+import { PatientInterface, PrimaryScreeningFormInterface } from '/@src/utils/interfaces'
 
 interface WithdrawalFormProps {
   isOpen: boolean
-  patientId: number | null
+  patient: PatientInterface
 }
 
 const props = withDefaults(defineProps<WithdrawalFormProps>(), {
   isOpen: false,
-  patientId: null,
 })
 
 const emits = defineEmits<{
@@ -25,19 +24,12 @@ const notif = useNotyf()
 const { t } = useI18n()
 const title = ref(t('Primary_screening_form'))
 const isLoading = ref(false)
-const { locale } = useI18n()
-const masks = ref({
-  input: 'YYYY-MM-DD',
-})
-const datePickerModelConfig = reactive({
-  type: 'string',
-  mask: masks.value.input, // Uses 'iso' if missing
-})
-const reasonOptions = ref([{ id: 'brucellosis', name: t('Brucellosis') }])
+const preliminaryBloodTypes = ref([{ value: 'oi', label: 'O(I)' }])
+const optionsHemoglobin = ref([{ value: 'normal', label: t('Normal') }])
 const formFields: PrimaryScreeningFormInterface = reactive({
   analysis_date: moment().format('YYYY-MM-DD'),
-  preliminary_blood_type: 'O(I)',
-  hemoglobin: '',
+  preliminary_blood_type: 'oi',
+  hemoglobin: 'normal',
 })
 const errors = reactive({
   analysis_date: [],
@@ -48,7 +40,7 @@ const errors = reactive({
 async function onSubmit() {
   try {
     isLoading.value = true
-    await createWithdrawalForPatient(props.patientId, formFields)
+    await createWithdrawalForPatient(props.patient?.id, formFields)
     emits('update:list')
     onClose()
   } catch (error: any) {
@@ -68,8 +60,8 @@ function onClose() {
 function clearFields() {
   Object.assign(formFields, {
     analysis_date: moment().format('YYYY-MM-DD'),
-    preliminary_blood_type: 'O(I)',
-    hemoglobin: '',
+    preliminary_blood_type: 'oi',
+    hemoglobin: 'normal',
   })
 }
 
@@ -87,13 +79,67 @@ function clearError(error: string) {
 </script>
 
 <template>
-  <VModal :open="isOpen" size="large" :title="title" actions="right" @close="onClose">
+  <VModal :open="isOpen" size="big" :title="title" actions="right" @close="onClose">
     <template #content>
-      <form id="withdrawal-form" class="modal-form" @submit.prevent="onSubmit">
-        <table class="table is-bordered">
+      <div class="columns">
+        <div class="column">
+          <h5 class="is-size-5 has-text-weight-medium">
+            {{ $t('Information_about_donor') }} # {{ patient.id }}
+          </h5>
+        </div>
+        <div class="column">
+          <h5 class="is-size-5 has-text-weight-medium">
+            {{ $t('Visit_date') }}: {{ patient.created_at }}
+          </h5>
+        </div>
+      </div>
+      <table class="table">
+        <tbody>
+          <tr>
+            <th>{{ $t('Last_name') }}</th>
+            <td>{{ patient.last_name }}</td>
+          </tr>
+          <tr>
+            <th>{{ $t('First_name') }}</th>
+            <td>{{ patient.first_name }}</td>
+          </tr>
+          <tr>
+            <th>{{ $t('Middlename') }}</th>
+            <td>{{ patient.father_name }}</td>
+          </tr>
+          <tr>
+            <th>{{ $t('Date-of-birth') }}</th>
+            <td>{{ patient.birth_date }}</td>
+          </tr>
+          <tr>
+            <th>{{ $t('Gender') }}</th>
+            <td>{{ patient.gender }}</td>
+          </tr>
+          <tr>
+            <th>{{ $t('Visit_type') }}</th>
+            <td>{{ patient.visit?.visit_type }}</td>
+          </tr>
+          <tr>
+            <th>{{ $t('Donor_category') }}</th>
+            <td>{{ patient.patient_category_id }}</td>
+          </tr>
+          <tr>
+            <th>{{ $t('Passport_series_number') }}</th>
+            <td>
+              {{ patient.passport_series }}{{ patient.passport_number }},
+              {{ patient.issued_by }}, {{ patient.when_issued }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <form id="primary-screening-form" class="modal-form" @submit.prevent="onSubmit">
+        <h5 class="is-size-5 has-text-weight-medium">
+          {{ $t('Primary_screening_results') }}
+        </h5>
+        <table class="table is-fullwidth">
           <tbody>
             <tr>
-              <td>{{ $t('Date_of_an_analysis') }}</td>
+              <th>{{ $t('Date_of_an_analysis') }}</th>
               <td>
                 <VField required>
                   <VControl>
@@ -104,19 +150,51 @@ function clearError(error: string) {
               </td>
             </tr>
             <tr>
-              <td></td>
-              <td></td>
+              <th>{{ $t('Preliminary_blood_type') }}</th>
+              <td>
+                <VField required>
+                  <VControl>
+                    <Multiselect
+                      v-model="formFields.preliminary_blood_type"
+                      :options="preliminaryBloodTypes"
+                    />
+                    <p class="help has-text-danger">{{ errors.analysis_date[0] }}</p>
+                  </VControl>
+                </VField>
+              </td>
             </tr>
             <tr>
-              <td></td>
-              <td></td>
+              <th>{{ $t('Hemoglobin') }}</th>
+              <td>
+                <VField required>
+                  <VControl>
+                    <VFlex>
+                      <VFlexItem :flex-grow="1">
+                        <Multiselect
+                          v-model="formFields.hemoglobin"
+                          :options="optionsHemoglobin"
+                        />
+                      </VFlexItem>
+                      <VFlexItem>
+                        <input
+                          class="input"
+                          type="text"
+                          :value="$t('g/l')"
+                          style="width: 3rem"
+                        />
+                      </VFlexItem>
+                    </VFlex>
+                    <p class="help has-text-danger">{{ errors.analysis_date[0] }}</p>
+                  </VControl>
+                </VField>
+              </td>
             </tr>
           </tbody>
         </table>
       </form>
     </template>
     <template #action="{ close }">
-      <SubmitButton :loading="isLoading" form="withdrawal-form" />
+      <SubmitButton :loading="isLoading" form="primary-screening-form" />
     </template>
   </VModal>
 </template>

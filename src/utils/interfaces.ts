@@ -120,6 +120,8 @@ export interface PatientInterface {
   work_study_place: string
   avatar: string
   email: string
+  created_at: string
+  visit: PatientVisitCardInterface
 }
 
 export interface TabHeader {
@@ -176,6 +178,14 @@ export interface WithdrawalFormInterface {
   end_date: string
   source: string
   created_by: string
+}
+
+export interface PrimaryScreeningFormInterface {
+  analysis_date: string
+  preliminary_blood_type: string
+  hemoglobin: string
+  // created_at: string
+  // updated_at: string
 }
 
 export interface MedicalQuestionnaireFormInterface {
