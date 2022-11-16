@@ -148,7 +148,7 @@ function clearError(error: string) {
         <table class="table is-fullwidth">
           <tbody>
             <tr>
-              <th>{{ $t('Date_of_an_analysis') }}</th>
+              <th>{{ $t('Blood_sampling_date') }}</th>
               <td>
                 <VField required>
                   <VControl>
@@ -158,47 +158,13 @@ function clearError(error: string) {
                 </VField>
               </td>
             </tr>
-            <tr>
-              <th>{{ $t('Preliminary_blood_type') }}</th>
-              <td>
-                <VField required>
-                  <VControl>
-                    <Multiselect
-                      v-model="formFields.preliminary_blood_type"
-                      :options="preliminaryBloodTypes"
-                    />
-                    <p class="help has-text-danger">{{ errors.analysis_date[0] }}</p>
-                  </VControl>
-                </VField>
-              </td>
-            </tr>
-            <tr>
-              <th>{{ $t('Hemoglobin') }}</th>
-              <td>
-                <VField required>
-                  <VControl>
-                    <VFlex>
-                      <VFlexItem :flex-grow="1">
-                        <Multiselect
-                          v-model="formFields.hemoglobin"
-                          :options="optionsHemoglobin"
-                        />
-                      </VFlexItem>
-                      <VFlexItem>
-                        <input
-                          class="input"
-                          type="text"
-                          :value="$t('g/l')"
-                          style="width: 3rem"
-                        />
-                      </VFlexItem>
-                    </VFlex>
-                    <p class="help has-text-danger">{{ errors.analysis_date[0] }}</p>
-                  </VControl>
-                </VField>
-              </td>
-            </tr>
           </tbody>
+          <thead>
+            <tr>
+              <th></th>
+              <th></th>
+            </tr>
+          </thead>
         </table>
       </form>
     </template>

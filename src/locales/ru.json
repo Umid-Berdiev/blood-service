@@ -442,7 +442,7 @@
   "Donors-list-for-primary-screening": "Список доноров, направленных на первичный скрининг",
   "Screening-passed-donors-list": "Журнал учета доноров, прошедших первичный скрининг",
   "Donation": "Донация",
-  "Donation-list": "Список доноров на донацию",
+  "Donor_list_for_blood_sampling": "Список доноров на забор образцов крови",
   "Journal-blood-&-components": "Журнал сбора крови и компонентов",
   "Bloodborne-infections-laboratory": "Лаборатория по гемотрансмиссивным инфекциям",
   "Research-aimed-donations-list": "Список донации, направленных  на исследование",
@@ -600,5 +600,12 @@
   "Complete": "Завершить",
   "Donor_categories": "Категории доноров",
   "Donation_type": "Тип донации",
-  "Normal": "В норме"
+  "Normal": "В норме",
+  "Below_normal": "Ниже нормы",
+  "Above_normal": "Выше нормы",
+  "Screening_date": "Дата проведения скрининга",
+  "Hemoglobin": "Гемоглобин",
+  "g/l": "г/л",
+  "Laboratory_assistant_fullname": "ФИО лаборанта",
+  "Donor_fullname": "ФИО донора"
 }

@@ -143,7 +143,7 @@ watch(
       </template>
       <RouterLink to="/app/donation/donation-list" class="is-submenu mb-3">
         <i class="iconify" data-icon="feather:minus" aria-hidden="true"></i>
-        <span>{{ $t('Donation-list') }}</span>
+        <span>{{ $t('Donor_list_for_blood_sampling') }}</span>
       </RouterLink>
       <RouterLink to="/app/donation/journal-blood-&-components" class="is-submenu mb-3">
         <i class="iconify" data-icon="feather:minus" aria-hidden="true"></i>

@@ -442,7 +442,7 @@
   "Donors-list-for-primary-screening": "List of donors referred for primary screening",
   "Screening-passed-donors-list": "Primary Screened Donor Register",
   "Donation": "Donation",
-  "Donation-list": "List of donors for donations",
+  "Donor_list_for_blood_sampling": "Donor list for blood sampling",
   "Journal-blood-&-components": "Journal of Blood and Components Collection",
   "Bloodborne-infections-laboratory": "Laboratory for Bloodborne Infections",
   "Research-aimed-donations-list": "List of donations sent for research",
@@ -603,5 +603,12 @@
   "Donor_categories": "Donor categories",
   "Donation_type": "Donation type",
   "Date_of_an_analysis": "Date of an analysis",
-  "Normal": "Normal"
+  "Normal": "Normal",
+  "Below_normal": "Below normal",
+  "Above_normal": "Above normal",
+  "Screening_date": "Screening date",
+  "Hemoglobin": "Hemoglobin",
+  "g/l": "g/l",
+  "Laboratory_assistant_fullname": "Laboratory assistant's fullname",
+  "Donor_fullname": "Donor's fullname"
 }

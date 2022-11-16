@@ -177,18 +177,6 @@ export async function fetchVisitcardById(
   }
 }
 
-export async function fetchDonorStatusesList() {
-  try {
-    const { data } = await api({
-      url: `/patients/statuses`,
-    })
-
-    return data
-  } catch (error) {
-    throw error
-  }
-}
-
 export async function createWithdrawalForPatient(
   id: number | null,
   payload: WithdrawalFormInterface
@@ -212,6 +200,18 @@ export async function updatePatientStatus(id: number | null, payload: any) {
       url: `/patients/${id}/status`,
       method: 'PUT',
       data: payload,
+    })
+
+    return data
+  } catch (error) {
+    throw error
+  }
+}
+
+export async function fetchVisitcardStatuses() {
+  try {
+    const { data } = await api({
+      url: `/visit-cards/statuses`,
     })
 
     return data

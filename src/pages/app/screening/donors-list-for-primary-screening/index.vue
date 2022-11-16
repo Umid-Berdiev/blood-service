@@ -112,7 +112,6 @@ const errors = reactive({
   donor_category_id: [],
   visit_type_id: [],
   donation_type_id: [],
-  passport_number: [],
 })
 const currentFilterData = reactive({
   page: 1,

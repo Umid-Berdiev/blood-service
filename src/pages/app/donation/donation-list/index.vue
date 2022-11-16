@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { formatDate } from '@vueuse/core'
 import { useHead } from '@vueuse/head'
+import { isEmpty } from 'lodash'
 import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { useMainStore } from '/@src/stores/main'
 
 import { useViewWrapper } from '/@src/stores/viewWrapper'
-import { patientsListForCandidate, fetchVisitcardStatuses } from '/@src/utils/api/patient'
-import { ApiDataInterface } from '/@src/utils/interfaces'
+import { fetchDonorsList } from '/@src/utils/api/patient'
+import { ApiDataInterface, PatientInterface } from '/@src/utils/interfaces'
 
 const router = useRouter()
 const notif = useNotyf()
@@ -18,7 +19,7 @@ const viewWrapper = useViewWrapper()
 
 viewWrapper.setPageTitle(t('Users_List'))
 useHead({
-  title: `${t('Donors-list-for-examination')} - ${mainStore.app.name}`,
+  title: `${t('Donor_list_for_blood_sampling')} - ${mainStore.app.name}`,
 })
 
 const apiData: ApiDataInterface = reactive({
@@ -37,19 +38,15 @@ const currentPage = computed({
     return apiData.pagination.current_page
   },
   set: async (page) => {
-    // currentFilterData.page = page
-    await fetchData(page)
+    currentFilterData.page = page
+    await handleSearch(currentFilterData)
   },
 })
-
-// const currentFilterData = reactive({
-//   page: 1,
-// })
 
 const columns = {
   orderNumber: {
     format: (value: any, row: any, index: number) => `${index + 1}`,
-    cellClass: 'is-flex-grow-0',
+    // cellClass: 'is-flex-grow-0',
   },
   name: {
     label: t('Fullname'),
@@ -75,61 +72,79 @@ const columns = {
     // grow: true,
     // sortable: true,
   },
-  directed_by: {
-    label: t('Directed_by'),
+  medical_inspection_date: {
+    label: t('Medical_inspection_date'),
     format: (value: string, row: any) =>
       row.last_visit?.directed_by && t(row.last_visit?.directed_by),
     // grow: true,
     // sortable: true,
   },
-  personalized_donation: {
-    label: t('Personalized_donation'),
+  medical_inspection_conclusion: {
+    label: t('Medical_inspection_conclusion'),
     format: (value: string, row: any) => row.last_visit?.personalized_donation,
     // grow: true,
     // sortable: true,
   },
-  visit_status: {
-    label: t('Visit_status'),
+  linked_donation_number: {
+    label: t('Linked_donation_number'),
+    format: (value: string, row: any) => row.last_visit?.personalized_donation,
+    // grow: true,
+    // sortable: true,
+  },
+  donation_type: {
+    label: t('Donation_type'),
+    format: (value: string, row: any) => row.last_visit?.personalized_donation,
+    // grow: true,
+    // sortable: true,
+  },
+  blood_component_amount: {
+    label: t('Blood_component_amount'),
     format: (value: string, row: any) => row.status?.name,
     // grow: true,
     // sortable: true,
   },
-  actions: {
-    label: t('Actions'),
-  },
 } as const
 
 const incomingCallerId = ref<number>()
-const donorStatuses = ref([{ id: 0, name: t('All') }])
-const selectedDonorStatus = ref('')
-
-onMounted(async () => {
-  const res = await fetchVisitcardStatuses()
-  donorStatuses.value = res.result
+const errors = reactive({
+  visit_type_id: [],
+  donation_type_id: [],
 })
+const currentFilterData = reactive({
+  page: 1,
+})
+const clickedRowData: PatientInterface = reactive({})
+const isBloodSamplingFormModalOpen = ref(true)
 
-watch(
-  () => selectedDonorStatus.value,
-  async (newVal) => {
-    await fetchData()
-  }
-)
-
-// the fetchData function will be called each time one of the parameter changes
-async function fetchData(page: number = 1) {
+async function handleSearch(filterForm: any) {
   try {
+    Object.assign(currentFilterData, filterForm)
     isLoading.value = true
-
-    const res = await patientsListForCandidate({
-      page,
-      status_id: selectedDonorStatus.value,
-    })
+    const res = await fetchDonorsList(filterForm)
     Object.assign(apiData, res.result)
+
+    if (isEmpty(res.result.data)) {
+      notif.warning(t('Data_not_found'))
+    } else notif.success(`${t('Found')}: ${res.result.pagination.total} ${t('records')}`)
   } catch (error: any) {
-    notif.error(t(error.response?.data?.errors))
+    Object.assign(errors, error.response?.data?.errors)
   } finally {
     isLoading.value = false
   }
+}
+
+function clearError(prop: string) {
+  errors[prop] = ''
+}
+
+async function clearFilterForm() {
+  // await fetchData()
+  apiData.data = []
+}
+
+function openBloodSamplingFormModal(patient: PatientInterface) {
+  Object.assign(clickedRowData, patient)
+  isBloodSamplingFormModalOpen.value = true
 }
 </script>
 
@@ -148,32 +163,28 @@ async function fetchData(page: number = 1) {
               to: { name: '/app/dashboard' },
             },
             {
-              label: $t('Physician-therapist'),
+              label: $t('Screening'),
               // to: { name: '/app/users/' },
             },
             {
-              label: $t('Donors-list-for-examination'),
+              label: $t('Donor_list_for_blood_sampling'),
               // to: { name: '/app/physician-therapist/donors-for-examination/' },
             },
           ]"
         />
       </div>
-      <div class="column is-3">
-        <VField v-slot="{ id }" class="is-curved-select">
-          <VControl>
-            <Multiselect
-              v-model="selectedDonorStatus"
-              :attrs="{ id }"
-              :options="donorStatuses"
-              :placeholder="$t('Select_donor_status')"
-              label="name"
-              value-prop="id"
-            />
-          </VControl>
-        </VField>
+    </div>
+    <div class="columns mt-1">
+      <div class="column">
+        <BloodSamplingFilterForm
+          :is-loading="isLoading"
+          :errors="errors"
+          @search="handleSearch"
+          @clear-form="clearFilterForm"
+          @clear-error="clearError"
+        />
       </div>
     </div>
-
     <div class="columns">
       <div class="column is-12">
         <VFlexTableWrapper
@@ -191,8 +202,7 @@ async function fetchData(page: number = 1) {
               <template #header-column="{ column }">
                 <span
                   v-if="column.key === 'orderNumber'"
-                  class="is-flex-grow-0"
-                  v-text="'#'"
+                  v-text="$t('Donor_register_number')"
                 />
               </template>
 
@@ -246,24 +256,14 @@ async function fetchData(page: number = 1) {
               <!-- This is the body cell slot -->
               <template #body-cell="{ row, column }">
                 <template v-if="column.key === 'name'">
-                  <RouterLink
-                    class="table_link"
-                    :to="`/app/physician-therapist/donors-for-examination/${row.id}`"
+                  <button
+                    class="button button-link"
+                    @click="openBloodSamplingFormModal(row)"
                   >
                     {{ row.first_name }} {{ row.last_name }} {{ row.father_name }}
                     <!-- <span class="dark-text">
                     </span> -->
-                  </RouterLink>
-                </template>
-                <template v-if="column.key === 'actions'">
-                  <RouterLink
-                    class="has-text-warning"
-                    :to="`/app/physician-therapist/donors-for-examination`"
-                  >
-                    {{ $t('Complete') }}
-                    <!-- <span class="dark-text">
-                    </span> -->
-                  </RouterLink>
+                  </button>
                 </template>
               </template>
             </VFlexTable>
@@ -281,6 +281,10 @@ async function fetchData(page: number = 1) {
         </VFlexTableWrapper>
       </div>
     </div>
+    <BloodSamplingFormModal
+      v-model:is-open="isBloodSamplingFormModalOpen"
+      :patient="clickedRowData"
+    />
   </div>
 </template>
 
