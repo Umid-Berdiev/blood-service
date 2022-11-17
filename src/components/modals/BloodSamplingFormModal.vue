@@ -24,26 +24,13 @@ const notif = useNotyf()
 const { t } = useI18n()
 const title = ref(t('Primary_screening_form'))
 const isLoading = ref(false)
-const preliminaryBloodTypes = ref([
-  { value: 'o1', label: 'O(I)' },
-  { value: 'a2', label: 'A(II)' },
-  { value: 'b3', label: 'B(III)' },
-  { value: 'ab4', label: 'AB(IV)' },
-])
-const optionsHemoglobin = ref([
-  { value: 'normal', label: t('Normal') },
-  { value: 'below_normal', label: t('Below_normal') },
-  { value: 'above_normal', label: t('Above_normal') },
-])
 const formFields: PrimaryScreeningFormInterface = reactive({
-  analysis_date: moment().format('YYYY-MM-DD'),
-  preliminary_blood_type: 'o1',
-  hemoglobin: 'normal',
+  blood_sampling_to: '',
+  blood_sampling_date: moment().format('YYYY-MM-DD'),
 })
 const errors = reactive({
-  analysis_date: [],
-  preliminary_blood_type: [],
-  hemoglobin: [],
+  blood_sampling_to: [],
+  blood_sampling_date: [],
 })
 
 async function onSubmit() {
@@ -68,17 +55,15 @@ function onClose() {
 
 function clearFields() {
   Object.assign(formFields, {
-    analysis_date: moment().format('YYYY-MM-DD'),
-    preliminary_blood_type: 'o1',
-    hemoglobin: 'normal',
+    blood_sampling_to: '',
+    blood_sampling_date: moment().format('YYYY-MM-DD'),
   })
 }
 
 function clearErrors() {
   Object.assign(errors, {
-    analysis_date: [],
-    preliminary_blood_type: [],
-    hemoglobin: [],
+    blood_sampling_to: [],
+    blood_sampling_date: [],
   })
 }
 
@@ -161,10 +146,32 @@ function clearError(error: string) {
           </tbody>
           <thead>
             <tr>
-              <th></th>
-              <th></th>
+              <th>{{ $t('Blood_sampling_to') }}</th>
+              <th>{{ $t('Blood_sampling_date') }}</th>
             </tr>
           </thead>
+          <tbody>
+            <tr>
+              <td>
+                <VField required>
+                  <VControl>
+                    <IMaskDateInput v-model="formFields.blood_sampling_to" />
+                    <p class="help has-text-danger">{{ errors.blood_sampling_to[0] }}</p>
+                  </VControl>
+                </VField>
+              </td>
+              <td>
+                <VField required>
+                  <VControl>
+                    <IMaskDateInput v-model="formFields.blood_sampling_date" />
+                    <p class="help has-text-danger">
+                      {{ errors.blood_sampling_date[0] }}
+                    </p>
+                  </VControl>
+                </VField>
+              </td>
+            </tr>
+          </tbody>
         </table>
       </form>
     </template>

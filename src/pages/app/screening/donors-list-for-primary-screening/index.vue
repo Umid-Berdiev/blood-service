@@ -117,7 +117,7 @@ const currentFilterData = reactive({
   page: 1,
 })
 const clickedRowData: PatientInterface = reactive({})
-const isPrimaryScreeningModalOpen = ref(true)
+const isPrimaryScreeningModalOpen = ref(false)
 
 async function handleSearch(filterForm: any) {
   try {
