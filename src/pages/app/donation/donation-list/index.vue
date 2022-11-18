@@ -281,10 +281,10 @@ function openBloodSamplingFormModal(patient: PatientInterface) {
         </VFlexTableWrapper>
       </div>
     </div>
-    <!-- <BloodSamplingFormModal
+    <BloodSamplingFormModal
       v-model:is-open="isBloodSamplingFormModalOpen"
       :patient="clickedRowData"
-    /> -->
+    />
   </div>
 </template>
 

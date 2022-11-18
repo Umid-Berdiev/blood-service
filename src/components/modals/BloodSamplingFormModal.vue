@@ -146,26 +146,40 @@ function clearError(error: string) {
           </tbody>
           <thead>
             <tr>
-              <th>{{ $t('Blood_sampling_to') }}</th>
-              <th>{{ $t('Blood_sampling_date') }}</th>
+              <th>{{ $t('Blood_sample_transfer_to') }}</th>
+              <th>{{ $t('Blood_sample_transfer_date') }}</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td>
-                <VField required>
-                  <VControl>
-                    <IMaskDateInput v-model="formFields.blood_sampling_to" />
-                    <p class="help has-text-danger">{{ errors.blood_sampling_to[0] }}</p>
-                  </VControl>
-                </VField>
+                {{ $t('Bloodborne-infections-laboratory') }}
               </td>
               <td>
                 <VField required>
                   <VControl>
-                    <IMaskDateInput v-model="formFields.blood_sampling_date" />
+                    <IMaskDateInput
+                      v-model="formFields.bloodborne_infections_laboratory_date"
+                    />
                     <p class="help has-text-danger">
-                      {{ errors.blood_sampling_date[0] }}
+                      {{ errors.bloodborne_infections_laboratory_date[0] }}
+                    </p>
+                  </VControl>
+                </VField>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                {{ $t('Clinical-biochemical-laboratory') }}
+              </td>
+              <td>
+                <VField required>
+                  <VControl>
+                    <IMaskDateInput
+                      v-model="formFields.clinical_biochemical_laboratory"
+                    />
+                    <p class="help has-text-danger">
+                      {{ errors.clinical_biochemical_laboratory[0] }}
                     </p>
                   </VControl>
                 </VField>
