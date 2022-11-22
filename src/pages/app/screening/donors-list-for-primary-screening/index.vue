@@ -7,7 +7,7 @@ import { useNotyf } from '/@src/composable/useNotyf'
 import { useMainStore } from '/@src/stores/main'
 
 import { useViewWrapper } from '/@src/stores/viewWrapper'
-import { patientsListForCandidate, fetchDonorsList } from '/@src/utils/api/patient'
+import { patientsListForScreening } from '/@src/utils/api/patient'
 import { ApiDataInterface, PatientInterface } from '/@src/utils/interfaces'
 
 const router = useRouter()
@@ -107,10 +107,8 @@ const columns = {
 
 const incomingCallerId = ref<number>()
 const errors = reactive({
-  start_date: [],
-  end_date: [],
   donor_category_id: [],
-  visit_type_id: [],
+  visit_type: [],
   donation_type_id: [],
 })
 const currentFilterData = reactive({
@@ -119,11 +117,13 @@ const currentFilterData = reactive({
 const clickedRowData: PatientInterface = reactive({})
 const isPrimaryScreeningModalOpen = ref(false)
 
+await handleSearch(currentFilterData)
+
 async function handleSearch(filterForm: any) {
   try {
     Object.assign(currentFilterData, filterForm)
     isLoading.value = true
-    const res = await fetchDonorsList(filterForm)
+    const res = await patientsListForScreening(filterForm)
     Object.assign(apiData, res.result)
 
     if (isEmpty(res.result.data)) {

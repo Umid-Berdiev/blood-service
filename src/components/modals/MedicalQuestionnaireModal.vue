@@ -1,15 +1,36 @@
 <script setup lang="ts">
+import { flatten } from 'lodash'
 import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
-import { MedicalQuestionnaireFormInterface } from '/@src/utils/interfaces'
+import { fetchQuestionsList, storePatientQuestionnaire } from '/@src/utils/api/patient'
+
+interface AnswerInterface {
+  id?: number
+  question_id?: number
+  value: string | number | boolean
+}
+
+interface QuestionInterface {
+  id: number
+  question_category_id?: number
+  name?: string
+  answer_type?: string | number | boolean
+  question_answer: string | number | boolean
+}
+
+interface MedicalQuestionnaireFormInterface {
+  id?: number
+  name?: string
+  questions: QuestionInterface[]
+}
 
 const props = withDefaults(
   defineProps<{
-    patientId: number | null
+    visitcardId: number | null
     isOpen: boolean
   }>(),
   {
-    patientId: null,
+    visitcardId: null,
     isOpen: false,
   }
 )
@@ -23,72 +44,111 @@ const emits = defineEmits<{
 const route = useRoute()
 const router = useRouter()
 const notif = useNotyf()
-const { locale } = useI18n()
+const { t } = useI18n()
 const isLoading = ref(false)
-const title = ref('')
+const title = t('Medical_questionnaire_before_donation')
+const medicalQuestionnaireForm = ref<MedicalQuestionnaireFormInterface[]>([])
+// const medicalQuestionnaireFormAnswers = ref<AnswerInterface[]>([])
 
-const formData: MedicalQuestionnaireFormInterface = reactive({})
-const errors = reactive({
-  age: [],
-  profession: [],
-  checkbox1: [],
-})
+await questionsList()
 
+async function questionsList() {
+  const res = await fetchQuestionsList(props.visitcardId as number)
+  medicalQuestionnaireForm.value = res.result
+}
+
+async function onSubmit() {
+  try {
+    isLoading.value = true
+    const medicalQuestionnaireFormAnswers = flatten(
+      medicalQuestionnaireForm.value.map((block) =>
+        block.questions.map((question) => ({
+          question_id: question.id,
+          value: question.question_answer,
+        }))
+      )
+    )
+    // console.log({ medicalQuestionnaireFormAnswers })
+
+    await storePatientQuestionnaire(props.visitcardId as number, {
+      answers: medicalQuestionnaireFormAnswers,
+    })
+    notif.success(t('Success'))
+  } catch (error: any) {
+    notif.error(error.message)
+  } finally {
+    isLoading.value = false
+  }
+}
 function onClose() {
-  clearFields()
   emits('update:isOpen', false)
 }
 
-function clearFields() {
-  Object.assign(formData, {
-    age: '',
-    profession: '',
-    last_doctor_visit_reason: '',
-    date_input1: '',
-    date_input2: '',
-    date_input3: '',
-    checkbox1: false,
-    checkbox2: false,
-    checkbox3: false,
-    checkbox4: false,
-    checkbox5: false,
-    checkbox6: false,
-    checkbox7: false,
-    checkbox8: false,
-    checkbox9: false,
-    checkbox10: false,
-    checkbox11: false,
-    checkbox12: false,
-    checkbox13: false,
-    checkbox14: false,
-    checkbox15: false,
-    checkbox16: false,
-    checkbox17: false,
-    checkbox18: false,
-    checkbox19: false,
-    checkbox20: false,
-    checkbox21: false,
-    checkbox22: false,
-    checkbox23: false,
-    checkbox24: false,
-    checkbox25: false,
-    checkbox26: false,
-    checkbox27: false,
-    checkbox28: false,
-    checkbox29: false,
-    textarea1: false,
-  })
-}
+// function handleChange(question_id: number, question_answer: string | boolean | number) {
+//   const answerIndex = medicalQuestionnaireFormAnswers.value.findIndex(
+//     (answer) => answer.question_id == question_id
+//   )
+
+//   if (answerIndex === -1)
+//     medicalQuestionnaireFormAnswers.value.push({
+//       question_id,
+//       value: question_answer,
+//     })
+//   else {
+//     medicalQuestionnaireFormAnswers.value[answerIndex].question_id = question_id
+//     medicalQuestionnaireFormAnswers.value[answerIndex].value = question_answer
+//   }
+// }
 </script>
 
 <template>
   <VModal :open="isOpen" size="extra-big" :title="title" actions="right" @close="onClose">
     <template #content>
-      <h1 class="has-text-centered is-size-3">
-        {{ $t('Medical_questionnaire_before_donation') }}
-      </h1>
-      <form>
-        <MedicalQuestionnaireForm :form="formData" :errors="errors" />
+      <form id="questionnaire-form" @submit.prevent="onSubmit">
+        <table class="table is-bordered is-fullwidth">
+          <template
+            v-for="(block, blockIndex) in medicalQuestionnaireForm"
+            :key="block.id"
+          >
+            <thead>
+              <tr>
+                <th class="has-text-centered">{{ block.name }}</th>
+                <th class="has-text-centered">{{ $t('Answer') }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(question, questionIndex) in block.questions" :key="question.id">
+                <td>{{ question.name }}</td>
+                <td>
+                  <VField>
+                    <VControl>
+                      <VTextarea
+                        v-if="question.answer_type === 'text'"
+                        v-model="
+                          medicalQuestionnaireForm[blockIndex].questions[questionIndex]
+                            .question_answer
+                        "
+                        :rows="1"
+                      />
+                      <VCheckbox
+                        v-if="question.answer_type === 'boolean'"
+                        v-model="
+                          medicalQuestionnaireForm[blockIndex].questions[questionIndex]
+                            .question_answer
+                        "
+                        true-value="1"
+                        :false-value="null"
+                        color="primary"
+                        class="p-0"
+                      />
+                      <!-- <p class="help has-text-danger">{{ errors.age[0] }}</p> -->
+                    </VControl>
+                  </VField>
+                </td>
+              </tr>
+            </tbody>
+          </template>
+        </table>
       </form>
     </template>
     <template #action="{ close }">
@@ -119,8 +179,20 @@ function clearFields() {
         >
           {{ $t('Withdrawal') }}
         </VButton>
-        <SubmitButton :loading="isLoading" />
+        <SubmitButton form="questionnaire-form" :loading="isLoading" />
       </VButtons>
     </template>
   </VModal>
 </template>
+
+<style scoped lang="scss">
+table {
+  thead {
+    tr {
+      th:first-child {
+        width: 70%;
+      }
+    }
+  }
+}
+</style>

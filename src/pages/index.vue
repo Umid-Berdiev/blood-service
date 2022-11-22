@@ -22,12 +22,6 @@ const errors = reactive({
   password: '',
 })
 
-if (isLoggedIn) {
-  router.push({
-    name: '/app/dashboard',
-  })
-}
-
 const handleLogin = async (event: Event) => {
   try {
     isLoading.value = true

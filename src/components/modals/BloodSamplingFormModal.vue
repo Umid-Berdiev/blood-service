@@ -22,15 +22,17 @@ const emits = defineEmits<{
 
 const notif = useNotyf()
 const { t } = useI18n()
-const title = ref(t('Primary_screening_form'))
+const title = ref(t('Sampling_data_entry_form'))
 const isLoading = ref(false)
 const formFields: PrimaryScreeningFormInterface = reactive({
-  blood_sampling_to: '',
   blood_sampling_date: moment().format('YYYY-MM-DD'),
+  bloodborne_infections_laboratory_date: moment().format('YYYY-MM-DD'),
+  clinical_biochemical_laboratory_date: moment().format('YYYY-MM-DD'),
 })
 const errors = reactive({
-  blood_sampling_to: [],
   blood_sampling_date: [],
+  bloodborne_infections_laboratory_date: [],
+  clinical_biochemical_laboratory_date: [],
 })
 
 async function onSubmit() {
@@ -55,15 +57,17 @@ function onClose() {
 
 function clearFields() {
   Object.assign(formFields, {
-    blood_sampling_to: '',
     blood_sampling_date: moment().format('YYYY-MM-DD'),
+    bloodborne_infections_laboratory_date: moment().format('YYYY-MM-DD'),
+    clinical_biochemical_laboratory_date: moment().format('YYYY-MM-DD'),
   })
 }
 
 function clearErrors() {
   Object.assign(errors, {
-    blood_sampling_to: [],
     blood_sampling_date: [],
+    bloodborne_infections_laboratory_date: [],
+    clinical_biochemical_laboratory_date: [],
   })
 }
 
@@ -78,7 +82,7 @@ function clearError(error: string) {
       <div class="columns">
         <div class="column">
           <h5 class="is-size-5 has-text-weight-medium">
-            {{ $t('Information_about_donor') }} # {{ patient.id }}
+            {{ $t('Donor_information') }} # {{ patient.id }}
           </h5>
         </div>
         <div class="column">
@@ -126,28 +130,32 @@ function clearError(error: string) {
           </tr>
         </tbody>
       </table>
-      <form id="primary-screening-form" class="modal-form" @submit.prevent="onSubmit">
+      <form id="blood-sampling-form" class="modal-form" @submit.prevent="onSubmit">
         <h5 class="is-size-5 has-text-weight-medium">
-          {{ $t('Primary_screening_results') }}
+          {{ $t('Information_about_blood_sampling') }}
         </h5>
+        <br />
+        <VFlex column-gap="1rem" align-items="center">
+          <VFlexItem>
+            {{ $t('Blood_sampling_date') }}
+          </VFlexItem>
+          <VFlexItem>
+            <VField>
+              <VControl>
+                <IMaskDateInput v-model="formFields.blood_sampling_date" />
+                <p class="help has-text-danger">
+                  {{ errors.blood_sampling_date[0] }}
+                </p>
+              </VControl>
+            </VField>
+          </VFlexItem>
+        </VFlex>
+        <br />
         <table class="table is-fullwidth">
-          <tbody>
-            <tr>
-              <th>{{ $t('Blood_sampling_date') }}</th>
-              <td>
-                <VField required>
-                  <VControl>
-                    <IMaskDateInput v-model="formFields.analysis_date" />
-                    <p class="help has-text-danger">{{ errors.analysis_date[0] }}</p>
-                  </VControl>
-                </VField>
-              </td>
-            </tr>
-          </tbody>
           <thead>
             <tr>
-              <th>{{ $t('Blood_sample_transfer_to') }}</th>
-              <th>{{ $t('Blood_sample_transfer_date') }}</th>
+              <th>{{ $t('Blood_sample_transferred_where') }}</th>
+              <th>{{ $t('Blood_sample_transferred_when') }}</th>
             </tr>
           </thead>
           <tbody>
@@ -176,10 +184,10 @@ function clearError(error: string) {
                 <VField required>
                   <VControl>
                     <IMaskDateInput
-                      v-model="formFields.clinical_biochemical_laboratory"
+                      v-model="formFields.clinical_biochemical_laboratory_date"
                     />
                     <p class="help has-text-danger">
-                      {{ errors.clinical_biochemical_laboratory[0] }}
+                      {{ errors.clinical_biochemical_laboratory_date[0] }}
                     </p>
                   </VControl>
                 </VField>
@@ -190,7 +198,7 @@ function clearError(error: string) {
       </form>
     </template>
     <template #action="{ close }">
-      <SubmitButton :loading="isLoading" form="primary-screening-form" />
+      <SubmitButton :loading="isLoading" form="blood-sampling-form" />
     </template>
   </VModal>
 </template>

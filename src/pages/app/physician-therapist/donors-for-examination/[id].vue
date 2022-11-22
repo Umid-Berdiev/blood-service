@@ -297,7 +297,7 @@ function toDonation() {
     </VTabs>
     <MedicalQuestionnaireModal
       v-model:is-open="isMedicalQuestionnaireModalOpen"
-      :patient-id="Number(patientID)"
+      :visitcard-id="patientForm.last_visit.id"
       @withdrawal="openWithdrawalModal"
       @laboratory-research="openLaboratoryResearchModal"
     />

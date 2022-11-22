@@ -1,10 +1,11 @@
-import type { INotyfNotificationOptions, NotyfNotification } from 'notyf'
+import type { INotyfNotificationOptions, Notyf, NotyfNotification } from 'notyf'
 
 import { definePlugin } from '/@src/app'
 import { useThemeColors } from '/@src/composable/useThemeColors'
 
 export default definePlugin(async ({ app }) => {
   const themeColors = useThemeColors()
+
   let notyf: Notyf
 
   if (!import.meta.env.SSR) {

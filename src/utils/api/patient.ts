@@ -54,6 +54,19 @@ export async function patientsListForCandidate(payload: any) {
   }
 }
 
+export async function patientsListForScreening(payload: any) {
+  try {
+    const { data } = await api({
+      url: '/patients/primary-screening',
+      params: payload,
+    })
+
+    return data
+  } catch (error) {
+    throw error
+  }
+}
+
 export async function patientsListRejected(payload: any) {
   try {
     const { data } = await api({
@@ -212,6 +225,46 @@ export async function fetchVisitcardStatuses() {
   try {
     const { data } = await api({
       url: `/visit-cards/statuses`,
+    })
+
+    return data
+  } catch (error) {
+    throw error
+  }
+}
+
+export async function primaryScreening(id: number | null, payload: any) {
+  try {
+    const { data } = await api({
+      url: `/visit-cards/${id}/primary-screening-results`,
+      method: 'POST',
+      data: payload,
+    })
+
+    return data
+  } catch (error) {
+    throw error
+  }
+}
+
+export async function fetchQuestionsList(id: number) {
+  try {
+    const { data } = await api({
+      url: `/visit-cards/${id}/questionnaire`,
+    })
+
+    return data
+  } catch (error) {
+    throw error
+  }
+}
+
+export async function storePatientQuestionnaire(id: number, payload: any) {
+  try {
+    const { data } = await api({
+      url: `/visit-cards/${id}/questionnaire`,
+      method: 'POST',
+      data: payload,
     })
 
     return data

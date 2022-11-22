@@ -601,7 +601,7 @@
   "Complete": "Complete",
   "Donor_categories": "Donor categories",
   "Donation_type": "Donation type",
-  "Date_of_an_analysis": "Date of an analysis",
+  "Date_of_an_analysis": "Дата проведения анализа",
   "Normal": "Normal",
   "Below_normal": "Below normal",
   "Above_normal": "Above normal",
@@ -609,5 +609,16 @@
   "Hemoglobin": "Hemoglobin",
   "g/l": "g/l",
   "Laboratory_assistant_fullname": "Laboratory assistant's fullname",
-  "Donor_fullname": "Donor's fullname"
+  "Donor_fullname": "Donor's fullname",
+  "Information_about_blood_sampling": "Information about blood sampling",
+  "Blood_sampling_date": "Date of blood sampling",
+  "Blood_sample_transferred_where": "Where were the blood samples taken?",
+  "Blood_sample_transferred_when": "When were the blood samples taken?",
+  "Donor_information": "Donor information",
+  "Sampling_data_entry_form": "Blood sampling data entry form",
+  "Donation_number": "Donation number",
+  "Direction_for_laboratory_research": "Direction For Laboratory Research",
+  "Laboratory_research_types": "Laboratory Research Types",
+  "Immunization": "Immunization",
+  "Not_required": "Not required"
 }

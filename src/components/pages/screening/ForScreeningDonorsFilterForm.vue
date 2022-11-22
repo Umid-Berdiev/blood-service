@@ -15,11 +15,11 @@ const { t } = useI18n()
 const notif = useNotyf()
 const filterForm = reactive({
   donor_category_id: '',
-  visit_type_id: '',
+  visit_type: '',
   donation_type_id: '',
 })
 
-const donorCategories = await patientCategoriesList().then((res) => res.result)
+const donorCategories = ref([])
 const visitTypes = ref([
   { value: 'gratuitous', label: t('Gratuitous') },
   { value: 'chargeable', label: t('Chargeable') },
@@ -39,16 +39,18 @@ const donationTypes = ref([
   },
 ])
 
+onMounted(async () => {
+  donorCategories.value = await patientCategoriesList().then((res) => res.result)
+})
+
 const handleSearch = async () => {
-  if (!values(filterForm).every(isEmpty)) {
-    emits('search', filterForm)
-  } else notif.error(t('Form_fields_are_empty'))
+  emits('search', filterForm)
 }
 
 const clearFilterForm = async () => {
   Object.assign(filterForm, {
     donor_category_id: '',
-    visit_type_id: '',
+    visit_type: '',
     donation_type_id: '',
   })
   emits('clearForm')
@@ -82,12 +84,12 @@ const clearFilterForm = async () => {
           <VField v-slot="{ id }" class="is-curved-select" :label="$t('Visit_type')">
             <VControl>
               <Multiselect
-                v-model="filterForm.visit_type_id"
+                v-model="filterForm.visit_type"
                 :attrs="{ id }"
                 :options="visitTypes"
                 :placeholder="$t('All')"
               />
-              <p class="help has-text-danger">{{ errors.visit_type_id[0] }}</p>
+              <p class="help has-text-danger">{{ errors.visit_type[0] }}</p>
             </VControl>
           </VField>
         </div>

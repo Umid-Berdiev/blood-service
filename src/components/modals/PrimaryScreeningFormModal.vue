@@ -3,15 +3,15 @@ import moment from 'moment'
 import { reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
-import { createWithdrawalForPatient } from '/@src/utils/api/patient'
+import { primaryScreening } from '/@src/utils/api/patient'
 import { PatientInterface, PrimaryScreeningFormInterface } from '/@src/utils/interfaces'
 
-interface WithdrawalFormProps {
+interface PrimaryScreeningFormProps {
   isOpen: boolean
   patient: PatientInterface
 }
 
-const props = withDefaults(defineProps<WithdrawalFormProps>(), {
+const props = withDefaults(defineProps<PrimaryScreeningFormProps>(), {
   isOpen: false,
 })
 
@@ -49,7 +49,7 @@ const errors = reactive({
 async function onSubmit() {
   try {
     isLoading.value = true
-    await createWithdrawalForPatient(props.patient?.id, formFields)
+    await primaryScreening(props.patient?.id, formFields)
     emits('update:list')
     onClose()
   } catch (error: any) {

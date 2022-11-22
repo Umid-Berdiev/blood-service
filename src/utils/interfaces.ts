@@ -121,7 +121,7 @@ export interface PatientInterface {
   avatar: string
   email: string
   created_at: string
-  visit: PatientVisitCardInterface
+  last_visit: PatientVisitCardInterface
 }
 
 export interface TabHeader {
@@ -139,6 +139,7 @@ export type PatientDirectorType =
   | 'independently'
 
 export interface PatientVisitCardInterface {
+  id: number
   patient_id: number | string | null
   visit_type: PatientVisitType
   directed_by: PatientDirectorType
@@ -181,11 +182,9 @@ export interface WithdrawalFormInterface {
 }
 
 export interface PrimaryScreeningFormInterface {
-  analysis_date: string
-  preliminary_blood_type: string
-  hemoglobin: string
-  // created_at: string
-  // updated_at: string
+  blood_sampling_date: string
+  bloodborne_infections_laboratory_date: string
+  clinical_biochemical_laboratory_date: string
 }
 
 export interface MedicalQuestionnaireFormInterface {
