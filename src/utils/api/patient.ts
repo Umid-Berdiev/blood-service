@@ -272,3 +272,29 @@ export async function storePatientQuestionnaire(id: number, payload: any) {
     throw error
   }
 }
+
+export async function fetchLaboratoryResearchFields(visitcardID: number) {
+  try {
+    const { data } = await api({
+      url: `/visit-cards/${visitcardID}/laboratory-research`,
+    })
+
+    return data
+  } catch (error) {
+    throw error
+  }
+}
+
+export async function sendingToLaboratoryResearch(visitcardID: number, payload: any) {
+  try {
+    const { data } = await api({
+      url: `/visit-cards/${visitcardID}/laboratory-research`,
+      method: 'PUT',
+      data: payload,
+    })
+
+    return data
+  } catch (error) {
+    throw error
+  }
+}

@@ -149,6 +149,9 @@ export interface PatientVisitCardInterface {
   mobile_team: string
   is_personalized_donation: boolean
   is_mobile_team: boolean
+  donation_type_id: number | null
+  immunization_id: number | null
+  donation_code: number | null
 }
 
 export interface ApiLinkInterface {

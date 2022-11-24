@@ -325,7 +325,7 @@ function toDonation() {
     />
     <LaboratoryResearchModal
       v-model:is-open="isLaboratoryResearchModalOpen"
-      :patient="patientForm"
+      :visitcard="patientForm.last_visit"
     />
   </div>
 </template>

@@ -620,5 +620,6 @@
   "Direction_for_laboratory_research": "Direction For Laboratory Research",
   "Laboratory_research_types": "Laboratory Research Types",
   "Immunization": "Immunization",
-  "Not_required": "Not required"
+  "Not_required": "Not required",
+  "Data_saved_successfully": "Data saved successfully!"
 }

@@ -620,5 +620,6 @@
   "Direction_for_laboratory_research": "Направление на лабораторные исследования",
   "Laboratory_research_types": "Типы лабораторных исследований",
   "Immunization": "Иммунизация",
-  "Not_required": "Не требуется"
+  "Not_required": "Не требуется",
+  "Data_saved_successfully": "Данные успешно сохранены!"
 }

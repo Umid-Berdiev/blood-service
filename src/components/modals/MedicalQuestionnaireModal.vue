@@ -83,22 +83,6 @@ async function onSubmit() {
 function onClose() {
   emits('update:isOpen', false)
 }
-
-// function handleChange(question_id: number, question_answer: string | boolean | number) {
-//   const answerIndex = medicalQuestionnaireFormAnswers.value.findIndex(
-//     (answer) => answer.question_id == question_id
-//   )
-
-//   if (answerIndex === -1)
-//     medicalQuestionnaireFormAnswers.value.push({
-//       question_id,
-//       value: question_answer,
-//     })
-//   else {
-//     medicalQuestionnaireFormAnswers.value[answerIndex].question_id = question_id
-//     medicalQuestionnaireFormAnswers.value[answerIndex].value = question_answer
-//   }
-// }
 </script>
 
 <template>
