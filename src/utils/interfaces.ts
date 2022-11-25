@@ -97,7 +97,7 @@ export interface DistrictInterface {
 }
 
 export interface PatientInterface {
-  id?: number
+  id: number
   pinfl: number | string
   patient_category_id: number | null
   last_name: string
@@ -142,6 +142,7 @@ export interface PatientVisitCardInterface {
   id: number
   patient_id: number | string | null
   visit_type: PatientVisitType
+  stage: string
   directed_by: PatientDirectorType
   medical_organization_id: object | null
   public_organization: string | null

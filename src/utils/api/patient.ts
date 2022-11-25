@@ -298,3 +298,20 @@ export async function sendingToLaboratoryResearch(visitcardID: number, payload: 
     throw error
   }
 }
+
+export async function storeHemotransmissionResearchResults(
+  visitcardID: number,
+  payload: any
+) {
+  try {
+    const { data } = await api({
+      url: `/visit-cards/${visitcardID}/hemotransmission-research`,
+      method: 'POST',
+      data: payload,
+    })
+
+    return data
+  } catch (error) {
+    throw error
+  }
+}

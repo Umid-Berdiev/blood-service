@@ -621,5 +621,12 @@
   "Laboratory_research_types": "Laboratory Research Types",
   "Immunization": "Immunization",
   "Not_required": "Not required",
-  "Data_saved_successfully": "Data saved successfully!"
+  "Data_saved_successfully": "Data saved successfully!",
+  "Donation_code": "Donation code",
+  "Blood_samples_acceptance_date": "Date of acceptance of blood samples",
+  "Blood_samples_taken_date": "Date when blood samples were taken",
+  "Analysis_date": "Date of analysis",
+  "Visit_stage": "Visit stage",
+  "Testing_system": "Testing system",
+  "OIDS": "HIV"
 }

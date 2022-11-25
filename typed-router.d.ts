@@ -38,6 +38,8 @@ declare module 'vue-router/auto/routes' {
     '/': RouteRecordInfo<'/', '/', Record<never, never>, Record<never, never>>,
     '/[...all]': RouteRecordInfo<'/[...all]', '/:all(.*)', { all: ParamValue<true> }, { all: ParamValue<false> }>,
     '/app': RouteRecordInfo<'/app', '/app', Record<never, never>, Record<never, never>>,
+    '/app/bloodborne-infections-laboratory/research-aimed-donations/': RouteRecordInfo<'/app/bloodborne-infections-laboratory/research-aimed-donations/', '/app/bloodborne-infections-laboratory/research-aimed-donations', Record<never, never>, Record<never, never>>,
+    '/app/bloodborne-infections-laboratory/research-journal/': RouteRecordInfo<'/app/bloodborne-infections-laboratory/research-journal/', '/app/bloodborne-infections-laboratory/research-journal', Record<never, never>, Record<never, never>>,
     '/app/dashboard': RouteRecordInfo<'/app/dashboard', '/app/dashboard', Record<never, never>, Record<never, never>>,
     '/app/donation/donation-list/': RouteRecordInfo<'/app/donation/donation-list/', '/app/donation/donation-list', Record<never, never>, Record<never, never>>,
     '/app/donation/journal-blood-&-components/': RouteRecordInfo<'/app/donation/journal-blood-&-components/', '/app/donation/journal-blood-&-components', Record<never, never>, Record<never, never>>,

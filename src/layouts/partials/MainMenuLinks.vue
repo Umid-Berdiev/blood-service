@@ -164,14 +164,14 @@ watch(
         <i aria-hidden="true" class="iconify" data-icon="feather:chevron-right"></i>
       </template>
       <RouterLink
-        to="/app/bloodborne-infections-laboratory/research-aimed-donations-list"
+        to="/app/bloodborne-infections-laboratory/research-aimed-donations"
         class="is-submenu mb-3"
       >
         <i class="iconify" data-icon="feather:minus" aria-hidden="true"></i>
         <span>{{ $t('Research-aimed-donations-list') }}</span>
       </RouterLink>
       <RouterLink
-        to="/app/bloodborne-infections-laboratory/bloodborne-infections-research-journal"
+        to="/app/bloodborne-infections-laboratory/research-journal"
         class="is-submenu mb-3"
       >
         <i class="iconify" data-icon="feather:minus" aria-hidden="true"></i>

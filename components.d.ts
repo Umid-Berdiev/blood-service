@@ -190,6 +190,7 @@ declare module '@vue/runtime-core' {
     ProjectWidgetDropdown: typeof import('./src/components/partials/dropdowns/ProjectWidgetDropdown.vue')['default']
     Promotion: typeof import('./src/components/pages/layouts/actions/Promotion.vue')['default']
     RegistrationWizard: typeof import('./src/components/partials/wizard/RegistrationWizard.vue')['default']
+    ResearchAimedFormModal: typeof import('./src/components/modals/ResearchAimedFormModal.vue')['default']
     RoleDropdown: typeof import('./src/components/partials/dropdowns/tables/RoleDropdown.vue')['default']
     RoleFormModal: typeof import('./src/components/modals/RoleFormModal.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

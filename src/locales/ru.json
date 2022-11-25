@@ -621,5 +621,12 @@
   "Laboratory_research_types": "Типы лабораторных исследований",
   "Immunization": "Иммунизация",
   "Not_required": "Не требуется",
-  "Data_saved_successfully": "Данные успешно сохранены!"
+  "Data_saved_successfully": "Данные успешно сохранены!",
+  "Donation_code": "Номер донации",
+  "Blood_samples_acceptance_date": "Дата приемки образцов крови",
+  "Blood_samples_taken_date": "Дата приемки образцов крови",
+  "Analysis_date": "Дата проведения анализа",
+  "Visit_stage": "Стадия посещения",
+  "Testing_system": "Система тестирования",
+  "OIDS": "ВИЧ"
 }
