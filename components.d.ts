@@ -61,6 +61,7 @@ declare module '@vue/runtime-core' {
     EditProfileSettings: typeof import('./src/components/pages/forms/edit-profile/EditProfileSettings.vue')['default']
     EditProfileSkills: typeof import('./src/components/pages/forms/edit-profile/EditProfileSkills.vue')['default']
     EditSettingItemDropdown: typeof import('./src/components/partials/dropdowns/EditSettingItemDropdown.vue')['default']
+    EmergencyNoticeFormModal: typeof import('./src/components/modals/EmergencyNoticeFormModal.vue')['default']
     EmployeeFlexTableDropdown: typeof import('./src/components/partials/dropdowns/EmployeeFlexTableDropdown.vue')['default']
     EmptySearch: typeof import('./src/components/pages/layouts/search/EmptySearch.vue')['default']
     ExaminedDonorsFilterForm: typeof import('./src/components/pages/physician-therapist/ExaminedDonorsFilterForm.vue')['default']

@@ -175,25 +175,19 @@ function onClose() {
                   </td>
                   <td>
                     <VField>
-                      <VControl>
-                        <div class="columns">
-                          <div class="column">
-                            <VRadio
-                              v-model="formData.lymph_nodes"
-                              :value="0"
-                              :label="$t('Not_increased')"
-                              color="primary"
-                            />
-                          </div>
-                          <div class="column">
-                            <VRadio
-                              v-model="formData.lymph_nodes"
-                              :value="1"
-                              :label="$t('Increased')"
-                              color="primary"
-                            />
-                          </div>
-                        </div>
+                      <VControl raw>
+                        <VRadio
+                          v-model="formData.lymph_nodes"
+                          :value="0"
+                          :label="$t('Not_increased')"
+                          color="primary"
+                        />
+                        <VRadio
+                          v-model="formData.lymph_nodes"
+                          :value="1"
+                          :label="$t('Increased')"
+                          color="primary"
+                        />
                       </VControl>
                     </VField>
                   </td>

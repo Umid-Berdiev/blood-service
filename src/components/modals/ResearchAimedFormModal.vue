@@ -7,11 +7,6 @@ import { useNotyf } from '/@src/composable/useNotyf'
 import { storeHemotransmissionResearchResults } from '/@src/utils/api/patient'
 import { PatientInterface } from '/@src/utils/interfaces'
 
-interface FormProps {
-  isOpen: boolean
-  patient: PatientInterface
-}
-
 interface ResearchAimedFormInterface {
   blood_samples_taken_date: string
   analysis_date: string
@@ -25,6 +20,11 @@ interface ResearchAimedFormInterface {
   testing_system_oids?: string
   testing_system_antihcv?: string
   testing_system_rw?: string
+}
+
+interface FormProps {
+  isOpen: boolean
+  patient: PatientInterface
 }
 
 const props = withDefaults(defineProps<FormProps>(), {
@@ -145,60 +145,142 @@ function clearError(error: string) {
         </VFlex>
       </div>
       <br />
-      <div class="box">
-        <VFlex flex-wrap="wrap" column-gap="2rem">
-          <VFlexItem>
-            <VField>
-              <VControl>
-                <VCheckbox
-                  v-model="formFields.hbsag"
-                  class="p-2"
-                  color="primary"
-                  label="HBsAg"
-                />
-              </VControl>
-            </VField>
-          </VFlexItem>
-          <VFlexItem>
-            <VField horizontal>
-              <VLabel class="is-size-6 my-auto mr-3"
-                >{{ $t('Testing_system') }} (HBsAg)</VLabel
-              >
-              <VControl>
-                <VInput v-model="formFields.testing_system_hbsag" />
-              </VControl>
-            </VField>
-          </VFlexItem>
-        </VFlex>
-        <br />
-        <VFlex flex-wrap="wrap" column-gap="2rem">
-          <VFlexItem>
-            <VField>
-              <VControl>
-                <VCheckbox
-                  v-model="formFields.oids"
-                  class="p-2"
-                  color="primary"
-                  :label="$t('OIDS')"
-                />
-              </VControl>
-            </VField>
-          </VFlexItem>
-          <br />
-          <VFlexItem>
-            <VField horizontal>
-              <VLabel class="is-size-6 my-auto mr-3"
-                >{{ $t('Testing_system') }} ({{ $t('OIDS') }})</VLabel
-              >
-              <VControl>
-                <VInput v-model="formFields.testing_system_oids" />
-              </VControl>
-            </VField>
-          </VFlexItem>
-        </VFlex>
+      <div class="table-container">
+        <table class="table box is-fullwidth">
+          <tbody>
+            <tr>
+              <td>
+                <VField>
+                  <VControl>
+                    <VCheckbox
+                      v-model="formFields.hbsag"
+                      class="p-2"
+                      color="primary"
+                      label="HBsAg"
+                    />
+                  </VControl>
+                </VField>
+              </td>
+              <td>
+                <VField horizontal class="is-justify-content-end">
+                  <VLabel class="is-size-6 my-auto mr-3"
+                    >{{ $t('Testing_system') }} (HBsAg)</VLabel
+                  >
+                  <VControl>
+                    <VInput v-model="formFields.testing_system_hbsag" />
+                  </VControl>
+                </VField>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <VField>
+                  <VControl>
+                    <VCheckbox
+                      v-model="formFields.oids"
+                      class="p-2"
+                      color="primary"
+                      :label="$t('OIDS')"
+                    />
+                  </VControl>
+                </VField>
+              </td>
+              <td>
+                <VField horizontal class="is-justify-content-end">
+                  <VLabel class="is-size-6 my-auto mr-3"
+                    >{{ $t('Testing_system') }} ({{ $t('OIDS') }})</VLabel
+                  >
+                  <VControl>
+                    <VInput v-model="formFields.testing_system_oids" />
+                  </VControl>
+                </VField>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <VField>
+                  <VControl>
+                    <VCheckbox
+                      v-model="formFields.antihcv"
+                      class="has-text-danger p-2"
+                      color="danger"
+                      :label="$t('AntiHCV')"
+                    />
+                  </VControl>
+                </VField>
+              </td>
+              <td>
+                <VField horizontal class="is-justify-content-end">
+                  <VLabel class="is-size-6 my-auto mr-3"
+                    >{{ $t('Testing_system') }} ({{ $t('AntiHCV') }})</VLabel
+                  >
+                  <VControl>
+                    <VInput v-model="formFields.testing_system_antihcv" />
+                  </VControl>
+                </VField>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <VField>
+                  <VControl>
+                    <VCheckbox
+                      v-model="formFields.rw"
+                      class="p-2"
+                      color="primary"
+                      :label="$t('RW')"
+                    />
+                  </VControl>
+                </VField>
+              </td>
+              <td>
+                <VField horizontal class="is-justify-content-end">
+                  <VLabel class="is-size-6 my-auto mr-3"
+                    >{{ $t('Testing_system') }} ({{ $t('RW') }})</VLabel
+                  >
+                  <VControl>
+                    <VInput v-model="formFields.testing_system_rw" />
+                  </VControl>
+                </VField>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <VField>
+                  <VControl>
+                    <VCheckbox
+                      v-model="formFields.hemolis"
+                      class="p-2"
+                      color="primary"
+                      :label="$t('Hemolis')"
+                    />
+                  </VControl>
+                </VField>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <VField>
+                  <VControl>
+                    <VCheckbox
+                      v-model="formFields.hiles"
+                      class="p-2"
+                      color="primary"
+                      :label="$t('Hiles')"
+                    />
+                  </VControl>
+                </VField>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="has-text-danger">
+          Красным цветом указаны показатели, заданные врачом-терапевтом, как обязательные
+          для определения
+        </p>
       </div>
     </template>
-    <template #action="{ close }">
+    <template #action>
       <SubmitButton :loading="isLoading" form="blood-sampling-form" />
     </template>
   </VModal>
@@ -207,7 +289,7 @@ function clearError(error: string) {
 <style scoped lang="scss">
 .is-dark {
   .box {
-    background-color: var(--dark--800--lighten);
+    background-color: var(--dark-sidebar);
   }
 }
 </style>
