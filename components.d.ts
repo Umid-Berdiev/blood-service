@@ -134,7 +134,6 @@ declare module '@vue/runtime-core' {
     MarketingPricings: typeof import('./src/components/partials/marketing/MarketingPricings.vue')['default']
     MarketingSideFeatures: typeof import('./src/components/partials/marketing/MarketingSideFeatures.vue')['default']
     MedicalInspectionFormModal: typeof import('./src/components/modals/MedicalInspectionFormModal.vue')['default']
-    MedicalQuestionnaireForm: typeof import('./src/components/partials/forms/MedicalQuestionnaireForm.vue')['default']
     MedicalQuestionnaireModal: typeof import('./src/components/modals/MedicalQuestionnaireModal.vue')['default']
     Message1: typeof import('./src/components/partials/inbox/message-details/Message1.vue')['default']
     Message10: typeof import('./src/components/partials/inbox/message-details/Message10.vue')['default']
