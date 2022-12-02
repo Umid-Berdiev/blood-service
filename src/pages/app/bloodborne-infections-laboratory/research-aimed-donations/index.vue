@@ -60,7 +60,7 @@ const columns = {
     // sortable: true,
   },
   name: {
-    label: t('Fullname'),
+    label: t('Donor_fullname'),
     // format: (value: string, row: any) =>
     //   row.last_visit?.created_at &&
     //   formatDate(new Date(row.last_visit?.created_at), 'YYYY-MM-DD'),

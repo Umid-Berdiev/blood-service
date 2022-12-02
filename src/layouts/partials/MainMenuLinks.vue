@@ -192,14 +192,14 @@ watch(
         <i aria-hidden="true" class="iconify" data-icon="feather:chevron-right"></i>
       </template>
       <RouterLink
-        to="/app/clinical-biochemical-laboratory/research-aimed-donations-list"
+        to="/app/clinical-biochemical-laboratory/research-aimed-donations"
         class="is-submenu mb-3"
       >
         <i class="iconify" data-icon="feather:minus" aria-hidden="true"></i>
         <span>{{ $t('Research-aimed-donations-list') }}</span>
       </RouterLink>
       <RouterLink
-        to="/app/clinical-biochemical-laboratory/Clinical-biochemical-research-journal"
+        to="/app/clinical-biochemical-laboratory/research-journal"
         class="is-submenu mb-3"
       >
         <i class="iconify" data-icon="feather:minus" aria-hidden="true"></i>
@@ -217,16 +217,13 @@ watch(
         <i aria-hidden="true" class="iconify" data-icon="feather:chevron-right"></i>
       </template>
       <RouterLink
-        to="/app/buck-laboratory/research-aimed-donations-list"
+        to="/app/buck-laboratory/research-aimed-donations"
         class="is-submenu mb-3"
       >
         <i class="iconify" data-icon="feather:minus" aria-hidden="true"></i>
         <span>{{ $t('Research-aimed-donations-list') }}</span>
       </RouterLink>
-      <RouterLink
-        to="/app/buck-laboratory/supernatant-plasma-list"
-        class="is-submenu mb-3"
-      >
+      <RouterLink to="/app/buck-laboratory/supernatant-plasmas" class="is-submenu mb-3">
         <i class="iconify" data-icon="feather:minus" aria-hidden="true"></i>
         <span>{{ $t('Supernatant-plasma-list') }}</span>
       </RouterLink>

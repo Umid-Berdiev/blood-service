@@ -119,7 +119,7 @@ onUnmounted(() => {
   &.is-big {
     .modal-content {
       width: 100%;
-      max-width: 840px;
+      max-width: 1040px;
 
       .modal-card {
         width: 100%;
@@ -130,7 +130,7 @@ onUnmounted(() => {
   &.is-large {
     .modal-content {
       width: 100%;
-      max-width: 720px;
+      max-width: 840px;
 
       .modal-card {
         width: 100%;
@@ -141,7 +141,7 @@ onUnmounted(() => {
   &.is-medium {
     .modal-content {
       width: 100%;
-      max-width: 640px;
+      max-width: 720px;
 
       .modal-card {
         width: 100%;
@@ -152,7 +152,7 @@ onUnmounted(() => {
   &.is-small {
     .modal-content {
       width: 100%;
-      max-width: 420px;
+      max-width: 640px;
 
       .modal-card {
         width: 100%;

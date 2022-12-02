@@ -1,1 +1,0 @@
-import{_ as e}from"./AuthLayout.3359a4b9.js";import{j as o,o as r,a as t,w as a,k as s}from"./index.0f6d367e.js";import{_ as u}from"./_plugin-vue_export-helper.cdc0426e.js";const n=u({},[["render",function(u,n){const f=o("RouterView"),i=e;return r(),t(i,null,{default:a((()=>[s(f)])),_:1})}]]);export{n as default};

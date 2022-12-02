@@ -10,11 +10,9 @@ declare module 'v-calendar' {
 
 declare module 'vue3-apexcharts'
 declare module 'vue-tippy'
-declare module 'simplebar-vue'
 declare module '@vueform/multiselect'
 declare module '@vueform/slider'
 declare module 'simple-datatables'
 declare module '@ckeditor/ckeditor5-vue'
 declare module '@ckeditor/ckeditor5-build-classic'
 declare module 'dropzone'
-declare module '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.min.js'

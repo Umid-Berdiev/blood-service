@@ -3,7 +3,6 @@ import { useHead } from '@vueuse/head'
 import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
-import FilterForm from '/@src/components/pages/registration/FilterForm.vue'
 import { ApiDataInterface, SearchErrorInterface } from '/@src/utils/interfaces'
 import { patientsList } from '/@src/utils/api/patient'
 import { useMainStore } from '/@src/stores/main'
@@ -194,7 +193,7 @@ function printList() {
     </VFlex>
     <div class="columns mt-1">
       <div class="column">
-        <FilterForm
+        <RegistrationFilterForm
           :is-loading="isLoading"
           :errors="errors"
           @search="handleSearch"
