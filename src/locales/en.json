@@ -650,5 +650,12 @@
   "Informer_fullname": "Full name of an informent",
   "Notice_sent_from": "Notice sent from",
   "Notice_sent_to": "Where is the notice sent",
-  "Notice_for_required_fields": "Note. The * sign marks the required fields"
+  "Notice_for_required_fields": "Note. The * sign marks the required fields",
+  "Dose": "Dose",
+  "Quantity_ml": "Quantity, ml",
+  "Component_name": "Component name",
+  "Come_from": "Come from",
+  "Sterility_test_result": "Sterility test result",
+  "Donation_date": "Donation date",
+  "Serial_number": "Serial number"
 }

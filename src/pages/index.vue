@@ -17,14 +17,19 @@ const route = useRoute()
 const notif = useNotyf()
 const { loginUser, isLoggedIn } = useUserSession()
 const redirect = route.query.redirect as string
-const errors = reactive({
-  username: '',
-  password: '',
+const formErrors = reactive({
+  username: [],
+  password: [],
 })
 
 const handleLogin = async (event: Event) => {
   try {
     isLoading.value = true
+    Object.assign(formErrors, {
+      username: [],
+      password: [],
+    })
+
     const values = Object.fromEntries(new FormData(event.target as HTMLFormElement))
 
     await loginUser(values)
@@ -40,9 +45,9 @@ const handleLogin = async (event: Event) => {
       })
     }
   } catch (error: any) {
-    Object.assign(errors, error.response?.data?.errors)
+    Object.assign(formErrors, error.response?.data?.errors)
     error.response?.data?.errors.message &&
-      notif.error(error.response?.data?.errors.message[0])
+      notif.error(error.response?.data?.errors.message)
   } finally {
     isLoading.value = false
   }
@@ -52,8 +57,8 @@ useHead({
   title: t('auth_login'),
 })
 
-function clearErrors(event: Event) {
-  errors[event.target.name] = ''
+function clearError(fieldName: string) {
+  formErrors[fieldName] = []
 }
 </script>
 
@@ -141,9 +146,9 @@ function clearErrors(event: Event) {
                       name="username"
                       :placeholder="$t('Username')"
                       autocomplete="username"
-                      @input="clearErrors"
+                      @input="clearError('username')"
                     />
-                    <p class="help has-text-danger">{{ errors.username[0] }}</p>
+                    <p class="help has-text-danger">{{ formErrors.username[0] }}</p>
                   </VControl>
                 </VField>
                 <VField>
@@ -153,9 +158,9 @@ function clearErrors(event: Event) {
                       name="password"
                       :placeholder="$t('Password')"
                       autocomplete="current-password"
-                      @input="clearErrors"
+                      @input="clearError('current-password')"
                     />
-                    <p class="help has-text-danger">{{ errors.password[0] }}</p>
+                    <p class="help has-text-danger">{{ formErrors.password[0] }}</p>
                   </VControl>
                 </VField>
 

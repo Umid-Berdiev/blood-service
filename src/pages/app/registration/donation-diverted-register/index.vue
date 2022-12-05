@@ -22,7 +22,7 @@ const errors: SearchErrorInterface = reactive({
 })
 const viewWrapper = useViewWrapper()
 
-viewWrapper.setPageTitle(t('Advanced_Search'))
+viewWrapper.setPageTitle(t('Registration'))
 useHead({
   title: `${t('Donation-diverted-register')} - ${mainStore.app.name}`,
 })

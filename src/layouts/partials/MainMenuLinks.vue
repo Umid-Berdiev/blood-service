@@ -46,7 +46,7 @@ watch(
 </script>
 
 <template>
-  <div>
+  <ul>
     <!-- dashboard -->
     <li>
       <RouterLink to="/app/dashboard" class="single-link">
@@ -355,5 +355,5 @@ watch(
         <span>{{ $t('Donor-system-directories') }}</span>
       </RouterLink>
     </VCollapseLinks>
-  </div>
+  </ul>
 </template>

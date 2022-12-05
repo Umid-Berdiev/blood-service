@@ -72,7 +72,7 @@ onMounted(async () => {
 
 viewWrapper.setPageTitle(t('Registration'))
 useHead({
-  title: t('Registration'),
+  title: t('Register-donors'),
 })
 
 const validateStep = async () => {

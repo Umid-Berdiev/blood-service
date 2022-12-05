@@ -1,11 +1,9 @@
 {
-  "name": "vuero",
-  "version": "2.4.0",
+  "name": "blood-center-app",
+  "version": "1.0.0",
   "private": true,
   "license": "",
-  "author": {
-    "name": "cssninjaStudio <hello@cssninja.io> (https://cssninja.io)"
-  },
+  "author": "",
   "engines": {
     "node": ">=14.18.0",
     "npm": ">=7"
@@ -23,10 +21,6 @@
       "stylelint",
       "prettier --write"
     ],
-    "*.md": [
-      "eslint --fix",
-      "prettier --write"
-    ],
     "*.vue": [
       "eslint --fix",
       "prettier --write"
@@ -37,30 +31,7 @@
     "build": "run-s build:*",
     "build:update-bulma-colors": "bulma-css-vars",
     "build:vite": "vite build",
-    "ssr:build": "run-s build:update-bulma-colors ssr:build:*",
-    "ssr:build:client": "vite build --ssrManifest --outDir dist/client",
-    "ssr:build:server": "vite build --ssr src/entry-server.ts --outDir dist/server",
-    "ssr:dev": "jiti server.ts",
-    "ssr:serve": "cross-env NODE_ENV=production jiti server.ts",
-    "preview": "run-p preview:vite preview:json-server",
-    "preview:vite": "http-server dist -s --proxy http://localhost:5000? -p 5000",
-    "preview:json-server": "json-server -q --read-only --routes ./json-server/routes.json --host 0.0.0.0 --port 8080 ./json-server/db.json",
-    "lint": "run-s lint:doc:fix lint:eslint:fix lint:stylelint:fix lint:prettier:fix",
-    "lint:prettier": "prettier --check \"./src/**/*.(ts|vue|css|scss)\"",
-    "lint:prettier:fix": "prettier --write \"./src/**/*.(ts|vue|css|scss)\"",
-    "lint:eslint": "eslint --ext .ts,.vue ./src",
-    "lint:eslint:fix": "eslint --fix --ext .ts,.vue ./src",
-    "lint:stylelint": "stylelint ./src/**/*.{vue,css,scss}",
-    "lint:stylelint:fix": "stylelint ./src/**/*.{vue,css,scss} --fix",
-    "lint:doc:fix": "run-s lint:doc:fix:*",
-    "lint:doc:fix:eslint": "eslint --fix --ext .md ./documentation",
-    "lint:doc:fix:prettier": "prettier --write \"./documentation/**/*.(md)\"",
-    "test": "run-p test:lint test:tsc test:e2e",
-    "test:tsc": "vue-tsc --noEmit",
-    "test:lint": "run-p lint:eslint lint:stylelint lint:prettier",
-    "test:e2e": "cypress run",
-    "test:unit": "echo \"[warning] no unit test implemented yet\"",
-    "cypress": "cypress"
+    "preview": "http-server dist -s --proxy http://localhost:5000? -p 5000"
   },
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "35.2.1",
@@ -134,7 +105,6 @@
     "commitlint": "17.2.0",
     "compression": "^1.7.4",
     "cross-env": "7.0.3",
-    "cypress": "10.11.0",
     "eslint": "8.26.0",
     "eslint-config-prettier": "8.5.0",
     "eslint-plugin-md": "1.0.19",
@@ -145,7 +115,6 @@
     "h3": "^0.8.6",
     "http-server": "14.1.1",
     "jiti": "1.16.0",
-    "json-server": "0.17.0",
     "lint-staged": "13.0.3",
     "npm-run-all": "4.1.5",
     "plyr": "3.7.2",

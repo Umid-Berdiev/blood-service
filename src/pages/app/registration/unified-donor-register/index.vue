@@ -21,9 +21,9 @@ const errors: SearchErrorInterface = reactive({
 })
 const viewWrapper = useViewWrapper()
 
-viewWrapper.setPageTitle(t('Advanced_Search'))
+viewWrapper.setPageTitle(t('Registration'))
 useHead({
-  title: `${t('Advanced_Search')} - ${mainStore.app.name}`,
+  title: `${t('Unified-donor-register')} - ${mainStore.app.name}`,
 })
 
 const apiData: ApiDataInterface = reactive({

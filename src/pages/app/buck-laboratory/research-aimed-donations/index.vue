@@ -19,7 +19,7 @@ const mainStore = useMainStore()
 const isLoading = ref(false)
 const viewWrapper = useViewWrapper()
 
-viewWrapper.setPageTitle(t('Users_List'))
+viewWrapper.setPageTitle(t('Buck-laboratory'))
 useHead({
   title: `${t('Donor_list_for_blood_sampling')} - ${mainStore.app.name}`,
 })
@@ -145,11 +145,11 @@ function openBloodSamplingFormModal(patient: PatientInterface) {
               to: { name: '/app/dashboard' },
             },
             {
-              label: $t('Screening'),
+              label: $t('Buck-laboratory'),
               // to: { name: '/app/users/' },
             },
             {
-              label: $t('Donor_list_for_blood_sampling'),
+              label: $t('Research-aimed-donations-list'),
               // to: { name: '/app/physician-therapist/donors-for-examination/' },
             },
           ]"

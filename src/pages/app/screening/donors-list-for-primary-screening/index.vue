@@ -17,7 +17,7 @@ const mainStore = useMainStore()
 const isLoading = ref(false)
 const viewWrapper = useViewWrapper()
 
-viewWrapper.setPageTitle(t('Users_List'))
+viewWrapper.setPageTitle(t('Screening'))
 useHead({
   title: `${t('Donors-list-for-primary-screening')} - ${mainStore.app.name}`,
 })

@@ -650,5 +650,12 @@
   "Informer_fullname": "ФИО сообщившего",
   "Notice_sent_from": "Извещение передано из",
   "Notice_sent_to": "Куда направлено извещение",
-  "Notice_for_required_fields": "Примечание. Знаком * отмечены поля обязательные для заполнения"
+  "Notice_for_required_fields": "Примечание. Знаком * отмечены поля обязательные для заполнения",
+  "Dose": "Доза",
+  "Quantity_ml": "Количество, мл",
+  "Component_name": "Название компонента",
+  "Come_from": "Откуда поступил",
+  "Sterility_test_result": "Результат проверки стерильности",
+  "Donation_date": "Дата донации",
+  "Serial_number": "Номер серии"
 }
