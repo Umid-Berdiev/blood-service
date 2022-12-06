@@ -657,5 +657,8 @@
   "Come_from": "Come from",
   "Sterility_test_result": "Sterility test result",
   "Donation_date": "Donation date",
-  "Serial_number": "Serial number"
+  "Serial_number": "Serial number",
+  "Immunological_research_specimens_list": "List of specimens for immunological research",
+  "Panagglutination": "Panagglutination",
+  "Rhesus_affiliation": "Rhesus-affiliation"
 }

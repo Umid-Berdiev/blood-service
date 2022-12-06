@@ -49,6 +49,8 @@ declare module 'vue-router/auto/routes' {
     '/app/dashboard': RouteRecordInfo<'/app/dashboard', '/app/dashboard', Record<never, never>, Record<never, never>>,
     '/app/donation/donation-list/': RouteRecordInfo<'/app/donation/donation-list/', '/app/donation/donation-list', Record<never, never>, Record<never, never>>,
     '/app/donation/journal-blood-&-components/': RouteRecordInfo<'/app/donation/journal-blood-&-components/', '/app/donation/journal-blood-&-components', Record<never, never>, Record<never, never>>,
+    '/app/immunological-research-department/research-aimed-donations/': RouteRecordInfo<'/app/immunological-research-department/research-aimed-donations/', '/app/immunological-research-department/research-aimed-donations', Record<never, never>, Record<never, never>>,
+    '/app/immunological-research-department/research-journal/': RouteRecordInfo<'/app/immunological-research-department/research-journal/', '/app/immunological-research-department/research-journal', Record<never, never>, Record<never, never>>,
     '/app/physician-therapist/donors-for-examination/': RouteRecordInfo<'/app/physician-therapist/donors-for-examination/', '/app/physician-therapist/donors-for-examination', Record<never, never>, Record<never, never>>,
     '/app/physician-therapist/donors-for-examination/[id]': RouteRecordInfo<'/app/physician-therapist/donors-for-examination/[id]', '/app/physician-therapist/donors-for-examination/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/app/physician-therapist/examined-donors-list/': RouteRecordInfo<'/app/physician-therapist/examined-donors-list/', '/app/physician-therapist/examined-donors-list', Record<never, never>, Record<never, never>>,

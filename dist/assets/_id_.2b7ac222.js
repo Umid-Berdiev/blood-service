@@ -1,1 +1,0 @@
-import{q as a,E as s,G as e,o as r,d as t,t as c,K as d}from"./index.7c55eebc.js";import{_ as l}from"./_plugin-vue_export-helper.cdc0426e.js";const n=l(a({__name:"[id]",setup(a){var l,n;s();const o=null!=(n=null==(l=e().params)?void 0:l.id)?n:null;return(a,s)=>(r(),t("div",null,"currentId - "+c(d(o)),1))}}),[["__scopeId","data-v-01c6bcca"]]);export{n as default};

@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import { reactive, ref } from 'vue'
 import { formatDate } from '@vueuse/core'
 import moment from 'moment'
-import { reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { PatientInterface } from '/@src/utils/interfaces'
@@ -46,7 +46,6 @@ const errors = reactive({
 async function onSubmit() {
   try {
     isLoading.value = true
-    // await storeHemotransmissionResearchResults(props.patient?.id, formFields)
     emits('update:list')
     onClose()
   } catch (error: any) {
@@ -143,8 +142,8 @@ function onEmergencyNoticing() {
       <br />
       <div class="box">
         <div class="columns is-multiline">
-          <div class="column is-narrow is-flex align-items-center">
-            <VField horizontal>
+          <div class="column is-narrow is-flex is-align-items-center">
+            <VField horizontal class="">
               <VControl>
                 <VCheckbox
                   v-model="formFields.reaction_hendelson_brutsellez"
@@ -153,18 +152,18 @@ function onEmergencyNoticing() {
                 />
               </VControl>
             </VField>
-            <VField horizontal>
+            <VField horizontal class="">
               <VControl>
                 <VCheckbox v-model="formFields.hilez" color="primary" label="Хилез" />
               </VControl>
             </VField>
-            <VField horizontal>
+            <VField horizontal class="">
               <VControl>
                 <VCheckbox v-model="formFields.gemoliz" color="primary" label="Гемолиз" />
               </VControl>
             </VField>
           </div>
-          <div class="column is-narrow">
+          <div class="column is-narrow is-flex is-align-items-center">
             <VField horizontal class="is-justify-content-end">
               <VLabel class="is-size-6 my-auto mr-3 has-text-right">
                 Титр антистафилококковый антител

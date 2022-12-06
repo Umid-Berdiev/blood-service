@@ -82,6 +82,7 @@ declare module '@vue/runtime-core' {
     Heatmap: typeof import('./src/components/partials/lifestyle/Heatmap.vue')['default']
     IllustrationWidget: typeof import('./src/components/partials/widgets/ui-creative/IllustrationWidget.vue')['default']
     IMaskDateInput: typeof import('./src/components/partials/forms/IMaskDateInput.vue')['default']
+    ImmunologicalResearchFormModal: typeof import('./src/components/modals/ImmunologicalResearchFormModal.vue')['default']
     InboxMessagesList: typeof import('./src/components/partials/inbox/messages/InboxMessagesList.vue')['default']
     InfluencerDropdown: typeof import('./src/components/partials/dropdowns/InfluencerDropdown.vue')['default']
     Invoice: typeof import('./src/components/pages/layouts/Invoice.vue')['default']

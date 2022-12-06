@@ -657,5 +657,8 @@
   "Come_from": "Откуда поступил",
   "Sterility_test_result": "Результат проверки стерильности",
   "Donation_date": "Дата донации",
-  "Serial_number": "Номер серии"
+  "Serial_number": "Номер серии",
+  "Immunological_research_specimens_list": "Список образцов на иммунологические исследования",
+  "Panagglutination": "Панагглютинация",
+  "Rhesus_affiliation": "Резус-принадлежность"
 }

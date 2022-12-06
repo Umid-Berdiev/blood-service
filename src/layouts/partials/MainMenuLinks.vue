@@ -256,7 +256,7 @@ watch(
         <i aria-hidden="true" class="iconify" data-icon="feather:chevron-right"></i>
       </template>
       <RouterLink
-        to="/app/immunological-research-department/research-aimed-donations-list"
+        to="/app/immunological-research-department/research-aimed-donations"
         class="is-submenu mb-3"
       >
         <i class="iconify" data-icon="feather:minus" aria-hidden="true"></i>
