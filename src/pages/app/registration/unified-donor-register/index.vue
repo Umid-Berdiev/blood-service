@@ -260,13 +260,6 @@ function printList() {
                 </div>
               </template>
 
-              <!-- We can inject content before any rows -->
-              <template #body-row-pre="{ row }">
-                <template v-if="row.id === incomingCallerId">
-                  <VProgress size="tiny" class="m-0 mb-1" />
-                </template>
-              </template>
-
               <!-- This is the body cell slot -->
               <template #body-cell="{ row, column, value }">
                 <template v-if="column.key === 'name'">

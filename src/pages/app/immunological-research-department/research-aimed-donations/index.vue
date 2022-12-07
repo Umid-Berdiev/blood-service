@@ -4,7 +4,6 @@ import { useHead } from '@vueuse/head'
 import { isEmpty } from 'lodash'
 import { useI18n } from 'vue-i18n'
 import FilterForm from '/@src/components/pages/research-aimed-donations/FilterForm.vue'
-import FormModal from '/@src/components/pages/serological-researches/FormModal.vue'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { useMainStore } from '/@src/stores/main'
 
@@ -35,9 +34,9 @@ const apiData: ApiDataInterface = reactive({
       birth_date: '24.01.1990',
       last_visit: {
         visit_type: 'Безвозмезные донации',
-        created_at: '2022.06.05',
+        created_at: '06.05.2022',
         donation_type: 'Тромбоцитаферез',
-        stage: 'Мед.освидетельствование',
+        stage: 'Мед. освидетельствование',
       },
     },
     {
@@ -50,7 +49,7 @@ const apiData: ApiDataInterface = reactive({
       birth_date: '12.08.1993',
       last_visit: {
         visit_type: 'Безвозмезные донации',
-        created_at: '2022.05.12',
+        created_at: '05.12.2022',
         donation_type: 'Донация цельной крови',
         stage: 'Донация',
       },
@@ -94,15 +93,12 @@ const columns = {
   },
   visit_type: {
     label: t('Visit_type'),
-    grow: true,
     format: (value: string, row: any) =>
       row.last_visit?.visit_type && t(row.last_visit?.visit_type),
   },
   visit_date: {
     label: t('Visit_date'),
-    format: (value: string, row: any) =>
-      row.last_visit?.created_at &&
-      formatDate(new Date(row.last_visit?.created_at), 'YYYY-MM-DD'),
+    format: (value: string, row: any) => row.last_visit?.created_at,
   },
   donation_type: {
     label: t('Donation_type'),
@@ -114,7 +110,6 @@ const columns = {
   },
 } as const
 
-const incomingCallerId = ref<number>()
 const errors = reactive({
   visit_type_id: [],
   donation_type_id: [],
@@ -261,13 +256,6 @@ function openBloodSamplingFormModal(patient: PatientInterface) {
                 </div>
               </template>
 
-              <!-- We can inject content before any rows -->
-              <template #body-row-pre="{ row }">
-                <template v-if="row.id === incomingCallerId">
-                  <VProgress size="tiny" class="m-0 mb-1" />
-                </template>
-              </template>
-
               <!-- This is the body cell slot -->
               <template #body-cell="{ row, column }">
                 <template v-if="column.key === 'name'">
@@ -285,7 +273,7 @@ function openBloodSamplingFormModal(patient: PatientInterface) {
 
             <!--Table Pagination-->
             <VFlexPagination
-              v-if="apiData.data.length"
+              v-if="apiData.total_pages > 1"
               v-model:current-page="currentPage"
               class="mt-5"
               :item-per-page="apiData.pagination.per_page"

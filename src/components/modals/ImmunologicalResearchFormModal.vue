@@ -11,6 +11,12 @@ interface ImmunologicalResearchFormInterface {
   analysis_date: string
   definitive_blood_group: string
   rhesus_affiliation: string
+  natural_antibodies_titer: {
+    value: string
+    a1: string
+    b1: string
+  }
+  incomplete_immune_antibodies: string
   comment: string
   gemoliz?: boolean
   hilez?: boolean
@@ -38,11 +44,26 @@ const isLoading = ref(false)
 const formFields: ImmunologicalResearchFormInterface = reactive({
   definitive_blood_group: 'oab1',
   rhesus_affiliation: 'rh+',
+  natural_antibodies_titer: {
+    value: '',
+    a1: '',
+    b1: '',
+  },
 })
 const errors = reactive({
   blood_samples_taken_date: [],
   analysis_date: [],
 })
+
+const optionsNaturalAntibodiesTiter = [
+  { value: 1, label: 'detected' },
+  { value: 1, label: 'not_detected' },
+]
+
+const optionsIncompleteImmuneAntibodies = [
+  { value: 1, label: 'detected' },
+  { value: 1, label: 'not_detected' },
+]
 
 async function onSubmit() {
   try {
@@ -152,110 +173,112 @@ function onEmergencyNoticing() {
       <h5 class="is-size-5 has-text-weight-medium">{{ $t('Analysis_results') }}</h5>
       <div class="box mt-5">
         <div class="columns is-multiline">
-          <div class="column is-6 is-flex">
-            <h5 class="has-text-danger mr-5">
-              {{ $t('Окончательная группа крови') }}
-            </h5>
-            <div class="field">
-              <div class="control">
-                <input
-                  id="oab1"
-                  v-model="formFields.definitive_blood_group"
-                  type="radio"
-                  value="oab1"
-                />
-                <label for="oab1" class="radio p-2">O<sub>&alpha;&beta;</sub>(I)</label>
-              </div>
-              <div class="control">
-                <input
-                  id="ab2"
-                  v-model="formFields.definitive_blood_group"
-                  type="radio"
-                  value="ab2"
-                />
-                <label for="ab2" class="radio p-2">A<sub>&beta;</sub>(II)</label>
-              </div>
-              <div class="control">
-                <input
-                  id="a2b2"
-                  v-model="formFields.definitive_blood_group"
-                  type="radio"
-                  value="a2b2"
-                />
-                <label for="a2b2" class="radio p-2">A<sub>2&beta;</sub>(II)</label>
-              </div>
-              <div class="control">
-                <input
-                  id="a2a1b2"
-                  v-model="formFields.definitive_blood_group"
-                  type="radio"
-                  value="a2a1b2"
-                />
-                <label for="a2a1b2" class="radio p-2"
-                  >A<sub>2&alpha;1&beta;</sub>(II)</label
-                >
-              </div>
-              <div class="control">
-                <input
-                  id="ba3"
-                  v-model="formFields.definitive_blood_group"
-                  type="radio"
-                  value="ba3"
-                />
-                <label for="ba3" class="radio p-2">B<sub>&alpha;</sub>(III)</label>
-              </div>
-              <div class="control">
-                <input
-                  id="ab04"
-                  v-model="formFields.definitive_blood_group"
-                  type="radio"
-                  value="ab04"
-                />
-                <label for="ab04" class="radio p-2">AB<sub>0</sub>(IV)</label>
-              </div>
-              <div class="control">
-                <input
-                  id="a2b04"
-                  v-model="formFields.definitive_blood_group"
-                  type="radio"
-                  value="a2b04"
-                />
-                <label for="a2b04" class="radio p-2"
-                  >A<sub>2</sub>B<sub>0</sub>(IV)</label
-                >
-              </div>
-              <div class="control">
-                <input
-                  id="a2ba14"
-                  v-model="formFields.definitive_blood_group"
-                  type="radio"
-                  value="a2ba14"
-                />
-                <label for="a2ba14" class="radio p-2"
-                  >A<sub>2</sub>B<sub>&alpha;1</sub>(IV)</label
-                >
-              </div>
-              <div class="control">
-                <input
-                  id="not_recognized"
-                  v-model="formFields.definitive_blood_group"
-                  type="radio"
-                  value="not_recognized"
-                />
-                <label for="not_recognized" class="radio p-2">{{
-                  $t('Группа крови не определяется')
-                }}</label>
-              </div>
-              <div class="control">
-                <input
-                  id="panagglutination"
-                  v-model="formFields.definitive_blood_group"
-                  type="radio"
-                  value="panagglutination"
-                />
-                <label for="panagglutination" class="radio p-2">{{
-                  $t('Panagglutination')
-                }}</label>
+          <div class="column is-6">
+            <div class="is-flex">
+              <h5 class="has-text-danger mr-5">
+                {{ $t('Окончательная группа крови') }}
+              </h5>
+              <div class="field">
+                <div class="control">
+                  <input
+                    id="oab1"
+                    v-model="formFields.definitive_blood_group"
+                    type="radio"
+                    value="oab1"
+                  />
+                  <label for="oab1" class="radio p-2">O<sub>&alpha;&beta;</sub>(I)</label>
+                </div>
+                <div class="control">
+                  <input
+                    id="ab2"
+                    v-model="formFields.definitive_blood_group"
+                    type="radio"
+                    value="ab2"
+                  />
+                  <label for="ab2" class="radio p-2">A<sub>&beta;</sub>(II)</label>
+                </div>
+                <div class="control">
+                  <input
+                    id="a2b2"
+                    v-model="formFields.definitive_blood_group"
+                    type="radio"
+                    value="a2b2"
+                  />
+                  <label for="a2b2" class="radio p-2">A<sub>2&beta;</sub>(II)</label>
+                </div>
+                <div class="control">
+                  <input
+                    id="a2a1b2"
+                    v-model="formFields.definitive_blood_group"
+                    type="radio"
+                    value="a2a1b2"
+                  />
+                  <label for="a2a1b2" class="radio p-2"
+                    >A<sub>2&alpha;1&beta;</sub>(II)</label
+                  >
+                </div>
+                <div class="control">
+                  <input
+                    id="ba3"
+                    v-model="formFields.definitive_blood_group"
+                    type="radio"
+                    value="ba3"
+                  />
+                  <label for="ba3" class="radio p-2">B<sub>&alpha;</sub>(III)</label>
+                </div>
+                <div class="control">
+                  <input
+                    id="ab04"
+                    v-model="formFields.definitive_blood_group"
+                    type="radio"
+                    value="ab04"
+                  />
+                  <label for="ab04" class="radio p-2">AB<sub>0</sub>(IV)</label>
+                </div>
+                <div class="control">
+                  <input
+                    id="a2b04"
+                    v-model="formFields.definitive_blood_group"
+                    type="radio"
+                    value="a2b04"
+                  />
+                  <label for="a2b04" class="radio p-2"
+                    >A<sub>2</sub>B<sub>0</sub>(IV)</label
+                  >
+                </div>
+                <div class="control">
+                  <input
+                    id="a2ba14"
+                    v-model="formFields.definitive_blood_group"
+                    type="radio"
+                    value="a2ba14"
+                  />
+                  <label for="a2ba14" class="radio p-2"
+                    >A<sub>2</sub>B<sub>&alpha;1</sub>(IV)</label
+                  >
+                </div>
+                <div class="control">
+                  <input
+                    id="not_recognized"
+                    v-model="formFields.definitive_blood_group"
+                    type="radio"
+                    value="not_recognized"
+                  />
+                  <label for="not_recognized" class="radio p-2">{{
+                    $t('Группа крови не определяется')
+                  }}</label>
+                </div>
+                <div class="control">
+                  <input
+                    id="panagglutination"
+                    v-model="formFields.definitive_blood_group"
+                    type="radio"
+                    value="panagglutination"
+                  />
+                  <label for="panagglutination" class="radio p-2">{{
+                    $t('Panagglutination')
+                  }}</label>
+                </div>
               </div>
             </div>
           </div>
@@ -327,6 +350,90 @@ function onEmergencyNoticing() {
                 </div>
               </div>
             </div>
+          </div>
+          <div class="column is-6">
+            <VField horizontal class="is-align-items-center is-justify-content-end">
+              <h5 class="has-text-danger mr-5">{{ $t('Natural_antibodies_titer') }}</h5>
+              <VControl>
+                <Multiselect
+                  v-model="formFields.natural_antibodies_titer.value"
+                  :options="optionsNaturalAntibodiesTiter"
+                  label="label"
+                  value-prop="value"
+                  style="width: 15rem"
+                />
+                <!-- <p class="help has-text-danger">{{ errors.visit_type[0] }}</p> -->
+              </VControl>
+            </VField>
+            <div class="is-flex">
+              <div class="is-flex is-horizontal is-align-items-center">
+                <div class="field-label is-normal">
+                  <label class="has-text-danger">&alpha; 1:</label>
+                </div>
+                <div class="field-body">
+                  <div class="field">
+                    <p class="control">
+                      <input
+                        v-model="formFields.natural_antibodies_titer.a1"
+                        class="input"
+                        type="text"
+                      />
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="is-flex is-horizontal is-align-items-center">
+                <div class="field-label is-normal">
+                  <label class="has-text-danger">&beta; 1:</label>
+                </div>
+                <div class="field-body">
+                  <div class="field">
+                    <p class="control">
+                      <input
+                        v-model="formFields.natural_antibodies_titer.b1"
+                        class="input"
+                        type="text"
+                      />
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="column is-6">
+            <VField horizontal class="is-align-items-center">
+              <h5 class="has-text-danger mr-5">
+                {{ $t('Incomplete_immune_antibodies') }}
+              </h5>
+              <VControl class="is-flex">
+                <Multiselect
+                  v-model="formFields.incomplete_immune_antibodies"
+                  :options="optionsIncompleteImmuneAntibodies"
+                  label="label"
+                  value-prop="value"
+                  style="min-width: 15rem"
+                />
+              </VControl>
+              <h5 class="ml-3 has-text-danger" for="">1:</h5>
+              <p class="control">
+                <input
+                  v-model="formFields.natural_antibodies_titer.a1"
+                  class="input"
+                  type="text"
+                  :style="{ width: '3rem' }"
+                />
+              </p>
+            </VField>
+            <VField horizontal class="">
+              <VControl>
+                <VCheckbox v-model="formFields.hilez" color="primary" label="Хилез" />
+              </VControl>
+            </VField>
+            <VField horizontal class="">
+              <VControl>
+                <VCheckbox v-model="formFields.gemoliz" color="primary" label="Гемолиз" />
+              </VControl>
+            </VField>
           </div>
         </div>
       </div>

@@ -660,5 +660,11 @@
   "Serial_number": "Serial number",
   "Immunological_research_specimens_list": "List of specimens for immunological research",
   "Panagglutination": "Panagglutination",
-  "Rhesus_affiliation": "Rhesus-affiliation"
+  "Rhesus_affiliation": "Rhesus-affiliation",
+  "Natural_antibodies_titer": "Titer of natural antibodies",
+  "Incomplete_immune_antibodies": "Incomplete immune antibodies",
+  "Blood_sampling": "Blood sampling",
+  "Donors_for_donation": "List of donors directed for donation",
+  "Donations": "Donations",
+  "Donor_category": "Donor's category"
 }

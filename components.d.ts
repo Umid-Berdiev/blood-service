@@ -50,6 +50,7 @@ declare module '@vue/runtime-core' {
     DatatableV2: typeof import('./src/components/pages/layouts/datatable/DatatableV2.vue')['default']
     DatatableV3: typeof import('./src/components/pages/layouts/datatable/DatatableV3.vue')['default']
     DatatableV4: typeof import('./src/components/pages/layouts/datatable/DatatableV4.vue')['default']
+    DonorsListFilterForm: typeof import('./src/components/pages/donation/DonorsListFilterForm.vue')['default']
     EditProfileExperience: typeof import('./src/components/pages/forms/edit-profile/EditProfileExperience.vue')['default']
     EditProfileGeneral: typeof import('./src/components/pages/forms/edit-profile/EditProfileGeneral.vue')['default']
     EditProfileSettings: typeof import('./src/components/pages/forms/edit-profile/EditProfileSettings.vue')['default']

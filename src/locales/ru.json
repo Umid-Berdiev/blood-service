@@ -660,5 +660,11 @@
   "Serial_number": "Номер серии",
   "Immunological_research_specimens_list": "Список образцов на иммунологические исследования",
   "Panagglutination": "Панагглютинация",
-  "Rhesus_affiliation": "Резус-принадлежность"
+  "Rhesus_affiliation": "Резус-принадлежность",
+  "Natural_antibodies_titer": "Титр естественных антител",
+  "Incomplete_immune_antibodies": "Иммунные антитела неполной формы",
+  "Blood_sampling": "Забор образцов крови",
+  "Donors_for_donation": "Список доноров, направленных на донации",
+  "Donations": "Донации",
+  "Donor_category": "Категория донора"
 }

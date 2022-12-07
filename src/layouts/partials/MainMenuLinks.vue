@@ -132,20 +132,23 @@ watch(
       </RouterLink>
     </VCollapseLinks>
 
-    <!-- donation -->
-    <VCollapseLinks v-model:open="openSideblockLinks" collapse-id="donation">
+    <!-- blood-sampling -->
+    <VCollapseLinks v-model:open="openSideblockLinks" collapse-id="blood-sampling">
       <template #header>
         <div class="icon">
           <i class="iconify" data-icon="feather:folder-plus" aria-hidden="true"></i>
         </div>
-        {{ $t('Donation') }}
+        {{ $t('Blood_sampling') }}
         <i aria-hidden="true" class="iconify" data-icon="feather:chevron-right"></i>
       </template>
-      <RouterLink to="/app/donation/donation-list" class="is-submenu mb-3">
+      <RouterLink to="/app/blood-sampling/list" class="is-submenu mb-3">
         <i class="iconify" data-icon="feather:minus" aria-hidden="true"></i>
         <span>{{ $t('Donor_list_for_blood_sampling') }}</span>
       </RouterLink>
-      <RouterLink to="/app/donation/journal-blood-&-components" class="is-submenu mb-3">
+      <RouterLink
+        to="/app/blood-sampling/journal-blood-&-components"
+        class="is-submenu mb-3"
+      >
         <i class="iconify" data-icon="feather:minus" aria-hidden="true"></i>
         <span>{{ $t('Journal-blood-&-components') }}</span>
       </RouterLink>
@@ -268,6 +271,21 @@ watch(
       >
         <i class="iconify" data-icon="feather:minus" aria-hidden="true"></i>
         <span>{{ $t('Research-journal') }}</span>
+      </RouterLink>
+    </VCollapseLinks>
+
+    <!-- Donations -->
+    <VCollapseLinks v-model:open="openSideblockLinks" collapse-id="donations">
+      <template #header>
+        <div class="icon">
+          <i class="iconify" data-icon="feather:folder-plus" aria-hidden="true"></i>
+        </div>
+        {{ $t('Donations') }}
+        <i aria-hidden="true" class="iconify" data-icon="feather:chevron-right"></i>
+      </template>
+      <RouterLink to="/app/donations/donors-for-donation" class="is-submenu mb-3">
+        <i class="iconify" data-icon="feather:minus" aria-hidden="true"></i>
+        <span>{{ $t('Donors_for_donation') }}</span>
       </RouterLink>
     </VCollapseLinks>
 
