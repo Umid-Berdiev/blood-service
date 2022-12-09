@@ -666,5 +666,12 @@
   "Blood_sampling": "Забор образцов крови",
   "Donors_for_donation": "Список доноров, направленных на донации",
   "Donations": "Донации",
-  "Donor_category": "Категория донора"
+  "Donor_category": "Категория донора",
+  "Donation_data_entry_form": "Форма ввода данных о донации",
+  "Recommended_single_donation_volume_ml": "Рекомендуемый объем разовой донации, мл",
+  "Donation_results": "Результаты проведенной донации",
+  "Completed_donation_status": "Статус завершенной донации",
+  "Post-infusion_reaction": "Постинфузионная реакция",
+  "Hemoconservative_taken_blood_amount_ml": "Количество взятой крови с гемоконсервантом, мл",
+  "Laboratory_taken_blood_amount_ml": "Количество взятой крови на лабораторные исследования, мл"
 }

@@ -666,5 +666,12 @@
   "Blood_sampling": "Blood sampling",
   "Donors_for_donation": "List of donors directed for donation",
   "Donations": "Donations",
-  "Donor_category": "Donor's category"
+  "Donor_category": "Donor's category",
+  "Donation_data_entry_form": "Donation data entry form",
+  "Recommended_single_donation_volume_ml": "Recommended volume of a single donation, ml",
+  "Donation_results": "Donation results",
+  "Completed_donation_status": "Completed donation status",
+  "Post-infusion_reaction": "Post-infusion reaction",
+  "Hemoconservative_taken_blood_amount_ml": "Amount of taken blood with hemoconservative, ml",
+  "Laboratory_taken_blood_amount_ml": "The amount of blood taken for laboratory research, ml"
 }

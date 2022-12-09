@@ -49,6 +49,7 @@ declare module 'vue-router/auto/routes' {
     '/app/clinical-biochemical-laboratory/research-aimed-donations/': RouteRecordInfo<'/app/clinical-biochemical-laboratory/research-aimed-donations/', '/app/clinical-biochemical-laboratory/research-aimed-donations', Record<never, never>, Record<never, never>>,
     '/app/clinical-biochemical-laboratory/research-journal/': RouteRecordInfo<'/app/clinical-biochemical-laboratory/research-journal/', '/app/clinical-biochemical-laboratory/research-journal', Record<never, never>, Record<never, never>>,
     '/app/dashboard': RouteRecordInfo<'/app/dashboard', '/app/dashboard', Record<never, never>, Record<never, never>>,
+    '/app/donations/containers/': RouteRecordInfo<'/app/donations/containers/', '/app/donations/containers', Record<never, never>, Record<never, never>>,
     '/app/donations/donors-for-donation/': RouteRecordInfo<'/app/donations/donors-for-donation/', '/app/donations/donors-for-donation', Record<never, never>, Record<never, never>>,
     '/app/immunological-research-department/research-aimed-donations/': RouteRecordInfo<'/app/immunological-research-department/research-aimed-donations/', '/app/immunological-research-department/research-aimed-donations', Record<never, never>, Record<never, never>>,
     '/app/immunological-research-department/research-journal/': RouteRecordInfo<'/app/immunological-research-department/research-journal/', '/app/immunological-research-department/research-journal', Record<never, never>, Record<never, never>>,

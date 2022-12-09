@@ -15,8 +15,8 @@ watch(
       if (newVal.startsWith('/app/screening')) {
         openSideblockLinks.value = 'screening'
       }
-      if (newVal.startsWith('/app/donation')) {
-        openSideblockLinks.value = 'donation'
+      if (newVal.startsWith('/app/donations')) {
+        openSideblockLinks.value = 'donations'
       }
       if (newVal.startsWith('/app/bloodborne-infections-laboratory')) {
         openSideblockLinks.value = 'bloodborne-infections-laboratory'
@@ -38,6 +38,9 @@ watch(
       }
       if (newVal.startsWith('/app/blood-bank')) {
         openSideblockLinks.value = 'blood-bank'
+      }
+      if (newVal.startsWith('/app/blood-sampling')) {
+        openSideblockLinks.value = 'blood-sampling'
       }
     }
   },
@@ -286,6 +289,10 @@ watch(
       <RouterLink to="/app/donations/donors-for-donation" class="is-submenu mb-3">
         <i class="iconify" data-icon="feather:minus" aria-hidden="true"></i>
         <span>{{ $t('Donors_for_donation') }}</span>
+      </RouterLink>
+      <RouterLink to="/app/donations/containers" class="is-submenu mb-3">
+        <i class="iconify" data-icon="feather:minus" aria-hidden="true"></i>
+        <span>{{ $t('Containers_list') }}</span>
       </RouterLink>
     </VCollapseLinks>
 

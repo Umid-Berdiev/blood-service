@@ -108,8 +108,8 @@ const errors = reactive({
 const currentFilterData = reactive({
   page: 1,
 })
-const clickedRowData: PatientInterface = reactive({})
-const isPrimaryScreeningModalOpen = ref(false)
+const selectedRow: PatientInterface = reactive({})
+const isFormModalOpen = ref(false)
 
 // await handleSearch(currentFilterData)
 
@@ -140,7 +140,8 @@ async function clearFilterForm() {
 }
 
 function openFormModal(row: any) {
-  //
+  isFormModalOpen.value = true
+  Object.assign(selectedRow, row)
 }
 </script>
 
@@ -269,9 +270,9 @@ function openFormModal(row: any) {
         </VFlexTableWrapper>
       </div>
     </div>
-    <PrimaryScreeningFormModal
-      v-model:is-open="isPrimaryScreeningModalOpen"
-      :patient="clickedRowData"
+    <DonationDataEntryFormModal
+      v-model:is-open="isFormModalOpen"
+      :patient="selectedRow"
     />
   </div>
 </template>

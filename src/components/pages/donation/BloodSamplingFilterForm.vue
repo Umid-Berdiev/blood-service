@@ -2,6 +2,7 @@
 import { isEmpty, values } from 'lodash'
 import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
+import { donationTypes, visitTypes } from '/@src/data/additionals'
 
 defineProps<{
   isLoading: boolean
@@ -16,25 +17,6 @@ const filterForm = reactive({
   visit_type_id: '',
   donation_type_id: '',
 })
-
-const visitTypes = ref([
-  { value: 'gratuitous', label: t('Gratuitous') },
-  { value: 'chargeable', label: t('Chargeable') },
-])
-const donationTypes = ref([
-  {
-    id: 1,
-    name: t('Whole_blood_donation'),
-  },
-  {
-    id: 2,
-    name: t('Plasmapheresis'),
-  },
-  {
-    id: 3,
-    name: t('Plateletpheresis'),
-  },
-])
 
 const handleSearch = async () => {
   if (!values(filterForm).every(isEmpty)) {
