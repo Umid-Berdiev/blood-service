@@ -60,7 +60,7 @@ const clearFilterForm = async () => {
 </script>
 
 <template>
-  <VCard radius="regular">
+  <VCard>
     <form @submit.prevent="handleSearch">
       <div class="columns">
         <div class="column">

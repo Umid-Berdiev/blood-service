@@ -17,7 +17,7 @@ const mainStore = useMainStore()
 const isLoading = ref(false)
 const viewWrapper = useViewWrapper()
 
-viewWrapper.setPageTitle(t('Screening'))
+viewWrapper.setPageTitle(t('Donations'))
 useHead({
   title: `${t('Donors-list-for-primary-screening')} - ${mainStore.app.name}`,
 })
@@ -110,6 +110,7 @@ const currentFilterData = reactive({
 })
 const selectedRow: PatientInterface = reactive({})
 const isFormModalOpen = ref(false)
+const isContainerFormModalOpen = ref(false)
 
 // await handleSearch(currentFilterData)
 
@@ -160,12 +161,10 @@ function openFormModal(row: any) {
               to: { name: '/app/dashboard' },
             },
             {
-              label: $t('Screening'),
-              // to: { name: '/app/users/' },
+              label: $t('Donations'),
             },
             {
-              label: $t('Donors-list-for-primary-screening'),
-              // to: { name: '/app/physician-therapist/donors-for-examination/' },
+              label: $t('Donors_for_donation'),
             },
           ]"
         />
@@ -197,10 +196,7 @@ function openFormModal(row: any) {
           <template #default>
             <VFlexTable rounded :no-header="!isLoading && apiData.data.length === 0">
               <template #header-column="{ column }">
-                <span
-                  v-if="column.key === 'orderNumber'"
-                  v-text="$t('Donor_register_number')"
-                />
+                <span v-if="column.key === 'orderNumber'" v-text="$t('Donor_#')" />
               </template>
 
               <template #body>

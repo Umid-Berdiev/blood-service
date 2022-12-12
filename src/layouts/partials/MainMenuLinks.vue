@@ -340,6 +340,31 @@ watch(
       </RouterLink>
     </VCollapseLinks>
 
+    <!-- Forwarding -->
+    <VCollapseLinks v-model:open="openSideblockLinks" collapse-id="forwarding">
+      <template #header>
+        <div class="icon">
+          <i class="iconify" data-icon="feather:folder-plus" aria-hidden="true"></i>
+        </div>
+        {{ $t('Forwarding') }}
+        <i aria-hidden="true" class="iconify" data-icon="feather:chevron-right"></i>
+      </template>
+      <RouterLink
+        to="/app/forwarding/storage-transferred-products"
+        class="is-submenu mb-3"
+      >
+        <i class="iconify" data-icon="feather:minus" aria-hidden="true"></i>
+        <span>{{ $t('Storage_transferred_products') }}</span>
+      </RouterLink>
+      <RouterLink
+        to="/app/forwarding/components-transferred-to-drugs-production"
+        class="is-submenu mb-3"
+      >
+        <i class="iconify" data-icon="feather:minus" aria-hidden="true"></i>
+        <span>{{ $t('Components_transferred_to_drugs_production') }}</span>
+      </RouterLink>
+    </VCollapseLinks>
+
     <!-- Quality control -->
     <VCollapseLinks v-model:open="openSideblockLinks" collapse-id="quality-control">
       <template #header>
@@ -349,16 +374,16 @@ watch(
         {{ $t('Quality-control') }}
         <i aria-hidden="true" class="iconify" data-icon="feather:chevron-right"></i>
       </template>
+      <RouterLink to="/app/quality-control/received-components" class="is-submenu mb-3">
+        <i class="iconify" data-icon="feather:minus" aria-hidden="true"></i>
+        <span>{{ $t('Received_components_list') }}</span>
+      </RouterLink>
       <RouterLink
-        to="/app/quality-control/quality-control-products"
+        to="/app/quality-control/inspected-components-log"
         class="is-submenu mb-3"
       >
         <i class="iconify" data-icon="feather:minus" aria-hidden="true"></i>
-        <span>{{ $t('Quality-control-products') }}</span>
-      </RouterLink>
-      <RouterLink to="/app/quality-control/print" class="is-submenu mb-3">
-        <i class="iconify" data-icon="feather:minus" aria-hidden="true"></i>
-        <span>{{ $t('Print') }}</span>
+        <span>{{ $t('Inspected_components_log') }}</span>
       </RouterLink>
     </VCollapseLinks>
 
