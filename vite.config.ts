@@ -11,7 +11,8 @@ import ViteRadar from 'vite-plugin-radar'
 import PurgeIcons from 'vite-plugin-purge-icons'
 import ImageMin from 'vite-plugin-imagemin'
 // import VueroDocumentation from './vite-plugin-vuero-doc/index'
-import vueI18n from '@intlify/vite-plugin-vue-i18n'
+// import vueI18n from '@intlify/unplugin-vue-i18n'
+import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
 import purgecss from 'rollup-plugin-purgecss'
 
 const MINIFY_IMAGES = process.env.MINIFY ? process.env.MINIFY === 'true' : false
@@ -119,7 +120,7 @@ export default defineConfig({
      *
      * @see https://github.com/intlify/bundle-tools/tree/main/packages/vite-plugin-vue-i18n
      */
-    vueI18n({
+    VueI18nPlugin({
       // @ts-ignore
       include: resolve(dirname(fileURLToPath(import.meta.url)), './src/locales/**'),
     }),

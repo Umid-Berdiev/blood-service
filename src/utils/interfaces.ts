@@ -229,3 +229,17 @@ export interface MedicalQuestionnaireFormInterface {
   checkbox29?: boolean
   textarea1?: string
 }
+
+export interface ProductInterface {
+  id?: number
+  donation_date: string
+  donation_code: string
+  blood_type: string
+  rh_factor: string
+  component_name: string
+  dose: string
+  quantity: string
+  come_from: string
+  personalized_donation: string
+  expiry_date: string
+}

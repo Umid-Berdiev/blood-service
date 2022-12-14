@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { formatDate } from '@vueuse/core'
-import { result } from 'lodash'
 import moment from 'moment'
 import { reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -60,22 +59,20 @@ function onClose() {
 
 function clearFields() {
   Object.assign(formState, {
-    blood_samples_taken_date: moment().format('YYYY-MM-DD'),
-    analysis_date: moment().format('YYYY-MM-DD'),
-    clinical_biochemical_laboratory_date: moment().format('YYYY-MM-DD'),
+    component_quality: 'satisfactory',
+    result_date: formatDate(new Date(), 'YYYY-MM-DD'),
   })
 }
 
 function clearErrors() {
   Object.assign(errors, {
-    blood_samples_taken_date: [],
-    analysis_date: [],
-    clinical_biochemical_laboratory_date: [],
+    component_quality: [],
+    result_date: [],
   })
 }
 
 function clearError(error: string) {
-  errors[error] = ''
+  errors[error] = []
 }
 </script>
 

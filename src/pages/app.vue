@@ -6,11 +6,11 @@ meta:
 <template>
   <AppLayout open-on-mounted>
     <!-- Content Wrapper -->
-    <!-- <RouterView v-slot="{ Component, route }">
-      <Transition name="fade-fast" mode="out-in">
+    <RouterView v-slot="{ Component, route }">
+      <Transition name="fade-slow" mode="out-in">
         <component :is="Component" :key="route.fullPath" />
       </Transition>
-    </RouterView> -->
-    <RouterView />
+    </RouterView>
+    <!-- <RouterView /> -->
   </AppLayout>
 </template>

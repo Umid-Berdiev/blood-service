@@ -57,12 +57,12 @@ const errors = reactive({
 
 const optionsNaturalAntibodiesTiter = [
   { value: 1, label: 'detected' },
-  { value: 1, label: 'not_detected' },
+  { value: 2, label: 'not_detected' },
 ]
 
 const optionsIncompleteImmuneAntibodies = [
   { value: 1, label: 'detected' },
-  { value: 1, label: 'not_detected' },
+  { value: 2, label: 'not_detected' },
 ]
 
 async function onSubmit() {

@@ -58,6 +58,7 @@ const errors = reactive({
   mobile_team: [],
 })
 
+// hooks
 onMounted(async () => {
   const res = await fetchHealthcareFacilities()
   if (!isEmpty(res.result)) healthcareFacilitiesList.value = res.result

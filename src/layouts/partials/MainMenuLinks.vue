@@ -42,6 +42,12 @@ watch(
       if (newVal.startsWith('/app/blood-sampling')) {
         openSideblockLinks.value = 'blood-sampling'
       }
+      if (newVal.startsWith('/app/scrapping')) {
+        openSideblockLinks.value = 'scrapping'
+      }
+      if (newVal.startsWith('/app/forwarding')) {
+        openSideblockLinks.value = 'forwarding'
+      }
     }
   },
   { immediate: true }
@@ -384,6 +390,28 @@ watch(
       >
         <i class="iconify" data-icon="feather:minus" aria-hidden="true"></i>
         <span>{{ $t('Inspected_components_log') }}</span>
+      </RouterLink>
+    </VCollapseLinks>
+
+    <!-- Scrapping components -->
+    <VCollapseLinks v-model:open="openSideblockLinks" collapse-id="scrapping">
+      <template #header>
+        <div class="icon">
+          <i class="iconify" data-icon="feather:folder-plus" aria-hidden="true"></i>
+        </div>
+        {{ $t('Scrapping') }}
+        <i aria-hidden="true" class="iconify" data-icon="feather:chevron-right"></i>
+      </template>
+      <RouterLink to="/app/scrapping/components-to-be-scrapped" class="is-submenu mb-3">
+        <i class="iconify" data-icon="feather:minus" aria-hidden="true"></i>
+        <span>{{ $t('Components_to_be_scrapped') }}</span>
+      </RouterLink>
+      <RouterLink
+        to="/app//app/scrapping/scrapped-components-log"
+        class="is-submenu mb-3"
+      >
+        <i class="iconify" data-icon="feather:minus" aria-hidden="true"></i>
+        <span>{{ $t('Scrapped_components_log') }}</span>
       </RouterLink>
     </VCollapseLinks>
 

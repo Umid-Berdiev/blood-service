@@ -14,6 +14,7 @@ interface ProductInterface {
   quantity: string
   component_name: string
 }
+
 const router = useRouter()
 const notif = useNotyf()
 const { t } = useI18n()
@@ -139,23 +140,23 @@ function openFormModal(item: any) {
               <tbody>
                 <template v-if="isLoading">
                   <tr v-for="key in apiData.pagination.per_page" :key="key">
-                    <td colspan="6">
+                    <td colspan="5">
                       <VPlaceloadText :lines="2" last-line-width="70%" />
                     </td>
                   </tr>
                 </template>
                 <template v-else>
                   <tr v-for="(item, itemIndex) in apiData.data" :key="itemIndex">
+                    <td>{{ item.donation_date }}</td>
                     <td>
                       <a
                         href="javascript:;"
                         class="has-text-primary"
                         @click="openFormModal(item)"
                       >
-                        {{ item.donation_date }}
+                        {{ item.donation_code }}
                       </a>
                     </td>
-                    <td>{{ item.donation_code }}</td>
                     <td>{{ item.dose }}</td>
                     <td>{{ item.quantity }}</td>
                     <td>{{ item.component_name }}</td>

@@ -14,7 +14,7 @@
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
     "lib": ["esnext", "dom"],
-    "types": ["vite/client", "@intlify/vite-plugin-vue-i18n/client", "typed-router.d.ts"],
+    "types": ["vite/client", "@intlify/unplugin-vue-i18n/messages", "typed-router.d.ts"],
     "paths": {
       "/@src/*": ["./src/*"]
     }

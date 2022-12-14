@@ -68,6 +68,8 @@ declare module 'vue-router/auto/routes' {
     '/app/roles/': RouteRecordInfo<'/app/roles/', '/app/roles', Record<never, never>, Record<never, never>>,
     '/app/roles/[id]/': RouteRecordInfo<'/app/roles/[id]/', '/app/roles/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/app/roles/[id]/permissions': RouteRecordInfo<'/app/roles/[id]/permissions', '/app/roles/:id/permissions', { id: ParamValue<true> }, { id: ParamValue<false> }>,
+    '/app/scrapping/components-to-be-scrapped/': RouteRecordInfo<'/app/scrapping/components-to-be-scrapped/', '/app/scrapping/components-to-be-scrapped', Record<never, never>, Record<never, never>>,
+    '/app/scrapping/scrapped-components-log/': RouteRecordInfo<'/app/scrapping/scrapped-components-log/', '/app/scrapping/scrapped-components-log', Record<never, never>, Record<never, never>>,
     '/app/screening/donors-list-for-primary-screening/': RouteRecordInfo<'/app/screening/donors-list-for-primary-screening/', '/app/screening/donors-list-for-primary-screening', Record<never, never>, Record<never, never>>,
     '/app/screening/screening-passed-donors-list/': RouteRecordInfo<'/app/screening/screening-passed-donors-list/', '/app/screening/screening-passed-donors-list', Record<never, never>, Record<never, never>>,
     '/app/users/': RouteRecordInfo<'/app/users/', '/app/users', Record<never, never>, Record<never, never>>,
