@@ -34,9 +34,9 @@ function onClose() {
 <template>
   <VModal :open="isOpen" size="extra-big" :title="title" actions="right" @close="onClose">
     <template #content>
-      <h1 class="has-text-centered is-size-3">
+      <h4 class="has-text-centered is-size-4">
         {{ $t('Laboratory_test_results') }}
-      </h1>
+      </h4>
       <br />
       <div class="columns">
         <div class="column">

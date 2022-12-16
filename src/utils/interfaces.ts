@@ -234,7 +234,9 @@ export interface ProductInterface {
   id?: number
   donation_date: string
   donation_code: string
+  donation_type: string
   blood_type: string
+  visit_type: string
   rh_factor: string
   component_name: string
   dose: string
@@ -242,4 +244,7 @@ export interface ProductInterface {
   come_from: string
   personalized_donation: string
   expiry_date: string
+  cryoprecipitate_quantities: string
+  supernatant_plasma_amount: string
+  plasma_sample_for_sterility_control: string
 }

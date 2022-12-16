@@ -242,7 +242,10 @@ function onClose() {
                 >
                   <VLabel>{{ $t('Issue_date') }}</VLabel>
                   <VControl>
-                    <VInput v-model="formState.issue_date" type="text" />
+                    <IMaskDateInput
+                      v-model="formState.issue_date"
+                      :style="{ width: '50%' }"
+                    />
                   </VControl>
                 </VField>
                 <VField

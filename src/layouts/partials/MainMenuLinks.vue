@@ -30,8 +30,8 @@ watch(
       if (newVal.startsWith('/app/immunological-research-department')) {
         openSideblockLinks.value = 'immunological-research-department'
       }
-      if (newVal.startsWith('/app/recycling')) {
-        openSideblockLinks.value = 'recycling'
+      if (newVal.startsWith('/app/processing')) {
+        openSideblockLinks.value = 'processing'
       }
       if (newVal.startsWith('/app/quality-control')) {
         openSideblockLinks.value = 'quality-control'
@@ -302,48 +302,48 @@ watch(
       </RouterLink>
     </VCollapseLinks>
 
-    <!-- Recycling -->
-    <VCollapseLinks v-model:open="openSideblockLinks" collapse-id="recycling">
+    <!-- Processing -->
+    <VCollapseLinks v-model:open="openSideblockLinks" collapse-id="processing">
       <template #header>
         <div class="icon">
           <i class="iconify" data-icon="feather:folder-plus" aria-hidden="true"></i>
         </div>
-        {{ $t('Recycling') }}
+        {{ $t('Processing') }}
         <i aria-hidden="true" class="iconify" data-icon="feather:chevron-right"></i>
       </template>
-      <RouterLink to="/app/recycling/recycling-donations-list" class="is-submenu mb-3">
+      <RouterLink to="/app/processing/donations-for-processing" class="is-submenu mb-3">
         <i class="iconify" data-icon="feather:minus" aria-hidden="true"></i>
-        <span>{{ $t('Recycling-donations-list') }}</span>
+        <span>{{ $t('Donations_list_for_processing') }}</span>
       </RouterLink>
       <RouterLink
-        to="/app/recycling/component-distribution-donations"
+        to="/app/processing/donations-for-component-distribution"
         class="is-submenu mb-3"
       >
         <i class="iconify" data-icon="feather:minus" aria-hidden="true"></i>
         <span>{{ $t('Component-distribution-donations') }}</span>
       </RouterLink>
-      <RouterLink to="/app/recycling/recycling-components" class="is-submenu mb-3">
+      <RouterLink to="/app/processing/components-for-recycling" class="is-submenu mb-3">
         <i class="iconify" data-icon="feather:minus" aria-hidden="true"></i>
         <span>{{ $t('Recycling-components') }}</span>
       </RouterLink>
       <RouterLink
-        to="/app/recycling/cryoprecipitate-processing-batches"
+        to="/app/processing/cryoprecipitate-batches-in-processing"
         class="is-submenu mb-3"
       >
         <i class="iconify" data-icon="feather:minus" aria-hidden="true"></i>
         <span>{{ $t('Cryoprecipitate-processing-batches') }}</span>
       </RouterLink>
-      <RouterLink to="/app/recycling/FFPs-in-storage" class="is-submenu mb-3">
+      <RouterLink to="/app/processing/FFPs-in-storage" class="is-submenu mb-3">
         <i class="iconify" data-icon="feather:minus" aria-hidden="true"></i>
         <span>{{ $t('FFPs-in-storage') }}</span>
       </RouterLink>
-      <RouterLink
-        to="/app/recycling/component-recycling-distribution-log"
+      <!-- <RouterLink
+        to="/app/processing/component-processing-distribution-log"
         class="is-submenu mb-3"
       >
         <i class="iconify" data-icon="feather:minus" aria-hidden="true"></i>
         <span>{{ $t('Component-Recycling-Distribution-Log') }}</span>
-      </RouterLink>
+      </RouterLink> -->
     </VCollapseLinks>
 
     <!-- Forwarding -->
