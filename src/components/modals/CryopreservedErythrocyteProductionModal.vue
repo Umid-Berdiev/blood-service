@@ -22,23 +22,19 @@ const emits = defineEmits<{
 const notif = useNotyf()
 const { t } = useI18n()
 const isLoading = ref(false)
-const title = ref(t('Production_of_washed_erythrocytes'))
+const title = ref(t('Cryopreserved_erythrocyte_mass_production'))
 const formState = reactive({
-  laundering_date: '',
-  processing_multiplicity: '',
-  consumed_saline: '',
-  saline_series: '',
-  expiration_date: '',
-  sample_for_quality_control: '',
+  dose: '',
+  for_freezing: '',
+  cassette_number: '',
+  date: '',
 })
 
 const formErrors = reactive({
-  laundering_date: [],
-  processing_multiplicity: [],
-  consumed_saline: [],
-  saline_series: [],
-  expiration_date: [],
-  sample_for_quality_control: [],
+  dose: [],
+  for_freezing: [],
+  cassette_number: [],
+  date: [],
 })
 const healthcareFacilitiesList = ref([])
 
@@ -95,7 +91,7 @@ function onClose() {
             </tr>
             <tr>
               <td>
-                <span class="">{{ $t('Received_erythrocyte_mass_ml') }}: </span>
+                <span class="">{{ $t('Received_blood_ml') }}: </span>
                 <span class="has-text-info">{{ product.quantity }}</span>
               </td>
               <td>
@@ -118,84 +114,52 @@ function onClose() {
           <tbody>
             <tr>
               <td class="">
-                <h5>{{ $t('Laundering_date') }}</h5>
+                <h5>{{ $t('Divided_into_doses') }}</h5>
               </td>
               <td>
                 <VField>
                   <VControl>
-                    <VInput v-model="formState.laundering_date" />
+                    <VRadio v-model="formState.dose" color="info" label="2" :value="2" />
+                    <VRadio v-model="formState.dose" color="info" label="4" :value="4" />
                   </VControl>
                 </VField>
               </td>
             </tr>
             <tr>
               <td class="">
-                <h5>{{ $t('Multiplicity_of_processing') }}</h5>
+                <h5>{{ $t('Fencing_saline_used_for_freezing_ml') }}</h5>
               </td>
               <td>
                 <VField>
                   <VControl>
-                    <VInput v-model="formState.processing_multiplicity" />
+                    <VInput v-model="formState.for_freezing" />
                   </VControl>
                 </VField>
               </td>
             </tr>
             <tr>
               <td class="">
-                <h5>{{ $t('Consumed_saline_ml') }}</h5>
+                <h5>{{ $t('Cassette_number') }}</h5>
               </td>
               <td>
                 <VField>
                   <VControl>
-                    <VInput v-model="formState.consumed_saline" />
+                    <VInput v-model="formState.cassette_number" />
                   </VControl>
                 </VField>
               </td>
             </tr>
             <tr>
               <td class="">
-                <h5>{{ $t('Saline_series') }}</h5>
+                <h5>{{ $t('Freeze_and_storage_date') }}</h5>
               </td>
               <td>
                 <VField>
                   <VControl>
-                    <VInput v-model="formState.saline_series" />
+                    <VInput v-model="formState.date" />
                   </VControl>
                 </VField>
               </td>
-            </tr>
-            <tr>
-              <td class="">
-                <h5>{{ $t('Expiration_date_of_saline_to_date') }}</h5>
-              </td>
-              <td>
-                <VField>
-                  <VControl>
-                    <VInput v-model="formState.expiration_date" />
-                  </VControl>
-                </VField>
-              </td>
-            </tr>
-            <tr>
-              <td class="">
-                <h5>{{ $t('Submit_sample_for_quality_control') }}</h5>
-              </td>
-              <td>
-                <VField>
-                  <VControl>
-                    <VCheckbox
-                      v-model="formState.sample_for_quality_control"
-                      color="info"
-                    />
-                  </VControl>
-                </VField>
-              </td>
-            </tr>
-            <tr>
-              <td class="">
-                <VButton color="info">{{ $t('Printing_label') }}</VButton>
-              </td>
-              <td></td>
             </tr>
           </tbody>
         </table>

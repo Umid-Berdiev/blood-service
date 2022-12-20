@@ -188,10 +188,7 @@ async function clearFilterForm() {
           <template #default>
             <VFlexTable rounded :no-header="!isLoading && apiData.data.length === 0">
               <template #header-column="{ column }">
-                <span
-                  v-if="column.key === 'orderNumber'"
-                  v-text="$t('Donor_register_number')"
-                />
+                <span v-if="column.key === 'orderNumber'" v-text="$t('donor_no')" />
               </template>
 
               <template #body>

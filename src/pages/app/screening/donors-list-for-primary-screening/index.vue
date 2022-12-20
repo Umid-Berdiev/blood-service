@@ -72,34 +72,34 @@ const columns = {
     // grow: true,
     // sortable: true,
   },
-  medical_inspection_date: {
-    label: t('Medical_inspection_date'),
-    format: (value: string, row: any) =>
-      row.last_visit?.directed_by && t(row.last_visit?.directed_by),
-    // grow: true,
-    // sortable: true,
-  },
-  medical_inspection_conclusion: {
-    label: t('Medical_inspection_conclusion'),
-    format: (value: string, row: any) => row.last_visit?.personalized_donation,
-    // grow: true,
-    // sortable: true,
-  },
-  linked_donation_number: {
-    label: t('Linked_donation_number'),
-    format: (value: string, row: any) => row.last_visit?.personalized_donation,
-    // grow: true,
-    // sortable: true,
-  },
+  // medical_inspection_date: {
+  //   label: t('Medical_inspection_date'),
+  //   format: (value: string, row: any) =>
+  //     row.last_visit?.directed_by && t(row.last_visit?.directed_by),
+  //   // grow: true,
+  //   // sortable: true,
+  // },
+  // medical_inspection_conclusion: {
+  //   label: t('Medical_inspection_conclusion'),
+  //   format: (value: string, row: any) => row.last_visit?.personalized_donation,
+  //   // grow: true,
+  //   // sortable: true,
+  // },
+  // linked_donation_number: {
+  //   label: t('Linked_donation_number'),
+  //   format: (value: string, row: any) => row.last_visit?.personalized_donation,
+  //   // grow: true,
+  //   // sortable: true,
+  // },
   donation_type: {
     label: t('Donation_type'),
-    format: (value: string, row: any) => row.last_visit?.personalized_donation,
+    format: (value: string, row: any) => row.last_visit?.donation_type?.name,
     // grow: true,
     // sortable: true,
   },
-  blood_component_amount: {
-    label: t('Blood_component_amount'),
-    format: (value: string, row: any) => row.status?.name,
+  donor_category: {
+    label: t('Donor_category'),
+    format: (value: string, row: any) => row.category?.name,
     // grow: true,
     // sortable: true,
   },
@@ -203,10 +203,7 @@ function openPrimaryScreeningModal(patient: PatientInterface) {
           <template #default>
             <VFlexTable rounded :no-header="!isLoading && apiData.data.length === 0">
               <template #header-column="{ column }">
-                <span
-                  v-if="column.key === 'orderNumber'"
-                  v-text="$t('Donor_register_number')"
-                />
+                <span v-if="column.key === 'orderNumber'" v-text="$t('donor_no')" />
               </template>
 
               <template #body>
@@ -252,14 +249,15 @@ function openPrimaryScreeningModal(patient: PatientInterface) {
               <!-- This is the body cell slot -->
               <template #body-cell="{ row, column }">
                 <template v-if="column.key === 'name'">
-                  <button
-                    class="button button-link"
+                  <a
+                    href="javascript:;"
+                    class="has-text-primary"
                     @click="openPrimaryScreeningModal(row)"
                   >
                     {{ row.first_name }} {{ row.last_name }} {{ row.father_name }}
                     <!-- <span class="dark-text">
                     </span> -->
-                  </button>
+                  </a>
                 </template>
               </template>
             </VFlexTable>

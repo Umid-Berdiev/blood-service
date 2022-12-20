@@ -3,6 +3,7 @@ import { useApi } from '/@src/composable/useApi'
 
 const api = useApi()
 
+// patients module
 export async function patientCategoriesList() {
   try {
     const { data } = await api({
@@ -45,19 +46,6 @@ export async function patientsListForCandidate(payload: any) {
   try {
     const { data } = await api({
       url: '/patients/candidate',
-      params: payload,
-    })
-
-    return data
-  } catch (error) {
-    throw error
-  }
-}
-
-export async function patientsListForScreening(payload: any) {
-  try {
-    const { data } = await api({
-      url: '/patients/primary-screening',
       params: payload,
     })
 
@@ -120,6 +108,47 @@ export async function fetchPatientById(id: number | null) {
   }
 }
 
+// screening module
+export async function patientsListForScreening(payload: any) {
+  try {
+    const { data } = await api({
+      url: '/patients/primary-screening',
+      params: payload,
+    })
+
+    return data
+  } catch (error) {
+    throw error
+  }
+}
+
+export async function patientDataByVisitID(visitcardID: number) {
+  try {
+    const { data } = await api({
+      url: `/visit-cards/${visitcardID}/primary-screening-results`,
+    })
+
+    return data
+  } catch (error) {
+    throw error
+  }
+}
+
+export async function primaryScreening(id: number | null, payload: any) {
+  try {
+    const { data } = await api({
+      url: `/visit-cards/${id}/primary-screening-results`,
+      method: 'POST',
+      data: payload,
+    })
+
+    return data
+  } catch (error) {
+    throw error
+  }
+}
+
+// visitcard module
 export async function visitcardsList(patient_id: number, payload: any) {
   try {
     const { data } = await api({
@@ -225,20 +254,6 @@ export async function fetchVisitcardStatuses() {
   try {
     const { data } = await api({
       url: `/visit-cards/statuses`,
-    })
-
-    return data
-  } catch (error) {
-    throw error
-  }
-}
-
-export async function primaryScreening(id: number | null, payload: any) {
-  try {
-    const { data } = await api({
-      url: `/visit-cards/${id}/primary-screening-results`,
-      method: 'POST',
-      data: payload,
     })
 
     return data

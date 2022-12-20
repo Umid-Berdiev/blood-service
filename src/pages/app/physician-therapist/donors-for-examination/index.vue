@@ -90,7 +90,7 @@ const columns = {
   },
   visit_status: {
     label: t('Visit_status'),
-    format: (value: string, row: any) => row.status?.name,
+    format: (value: string, row: any) => row.last_visit?.status?.name,
     // grow: true,
     // sortable: true,
   },

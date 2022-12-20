@@ -77,7 +77,9 @@ const apiData: { data: ProductInterface[]; pagination: ApiDataInterface['paginat
     },
   })
 const selectedRow = reactive({})
-const isFormModalOpen = ref(false)
+const isFormModal1Open = ref(false)
+const isFormModal2Open = ref(false)
+const isFormModal3Open = ref(false)
 const filterErrors = reactive({
   donation_code: [],
   donation_type_id: [],
@@ -86,16 +88,34 @@ const filterErrors = reactive({
 // await handleSearch(currentFilterData)
 
 // hooks
-watch(isFormModalOpen, function (newVal: boolean) {
+watch(isFormModal1Open, function (newVal: boolean) {
+  if (newVal === false) {
+    Object.assign(selectedRow, {})
+  }
+})
+watch(isFormModal2Open, function (newVal: boolean) {
+  if (newVal === false) {
+    Object.assign(selectedRow, {})
+  }
+})
+watch(isFormModal3Open, function (newVal: boolean) {
   if (newVal === false) {
     Object.assign(selectedRow, {})
   }
 })
 
 // functions
-function openFormModal(item: any) {
+function openFormModal1(item: any) {
   Object.assign(selectedRow, item)
-  isFormModalOpen.value = true
+  isFormModal1Open.value = true
+}
+function openFormModal2(item: any) {
+  Object.assign(selectedRow, item)
+  isFormModal2Open.value = true
+}
+function openFormModal3(item: any) {
+  Object.assign(selectedRow, item)
+  isFormModal3Open.value = true
 }
 
 async function handleSearch(filterForm: any) {
@@ -211,7 +231,13 @@ async function clearFilterForm() {
                       <a
                         href="javascript:;"
                         class="has-text-primary"
-                        @click="openFormModal(item)"
+                        @click="
+                          () => {
+                            if (itemIndex === 0) openFormModal1(item)
+                            if (itemIndex === 1) openFormModal2(item)
+                            if (itemIndex === 2) openFormModal3(item)
+                          }
+                        "
                       >
                         {{ item.donation_code }}
                       </a>
@@ -240,7 +266,17 @@ async function clearFilterForm() {
       </div>
     </div>
     <WashedErythrocytesProductionModal
-      v-model:is-open="isFormModalOpen"
+      v-model:is-open="isFormModal1Open"
+      :product="selectedRow"
+      @update:list="handleSearch"
+    />
+    <CryopreservedErythrocyteProductionModal
+      v-model:is-open="isFormModal2Open"
+      :product="selectedRow"
+      @update:list="handleSearch"
+    />
+    <ThawedRbcProductionModal
+      v-model:is-open="isFormModal3Open"
       :product="selectedRow"
       @update:list="handleSearch"
     />

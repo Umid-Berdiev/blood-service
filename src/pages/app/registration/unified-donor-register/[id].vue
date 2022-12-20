@@ -24,7 +24,7 @@ const patientForm: PatientInterface = reactive({
   father_name: '',
   birth_date: new Date(),
   gender: 'male',
-  pinfl: null,
+  pinfl: '',
   passport_series: '',
   passport_number: '',
   issued_by: '',

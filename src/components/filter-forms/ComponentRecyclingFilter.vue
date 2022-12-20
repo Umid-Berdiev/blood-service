@@ -20,7 +20,11 @@ const filterForm = reactive({
   donation_code: '',
   production_directed_component_id: null,
 })
-const productionDirectedComponents = ref([])
+const productionDirectedComponents = ref([
+  { id: 1, name: 'Отмытых эритроцитов' },
+  { id: 2, name: 'Криоконсервированной эритроцитной массы' },
+  { id: 3, name: 'Размороженных эритроцитов' },
+])
 
 // hooks
 onMounted(async () => {

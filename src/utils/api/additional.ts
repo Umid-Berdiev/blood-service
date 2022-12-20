@@ -50,3 +50,15 @@ export async function fetchHealthcareFacilities() {
     throw error
   }
 }
+
+export async function fetchBloodTypes() {
+  try {
+    const { data } = await api({
+      url: `/blood-types`,
+    })
+
+    return data
+  } catch (error) {
+    throw error
+  }
+}

@@ -25,7 +25,7 @@ const patientForm: PatientInterface = reactive({
   father_name: '',
   birth_date: new Date(),
   gender: 'male',
-  pinfl: null,
+  pinfl: '',
   passport_series: '',
   passport_number: '',
   issued_by: '',
@@ -87,7 +87,7 @@ const validateStep = async () => {
       const res = await createPatient(patientForm)
       notif.success('New patient data is successfully stored!')
 
-      router.push(`/app/registration/unified-donor-register/${res.id}`)
+      router.push(`/app/registration/unified-donor-register/${res.result.id}`)
     } catch (error: any) {
       Object.assign(errors, error.response?.data.errors)
       if (
@@ -126,24 +126,10 @@ function clearError(error: string) {
 }
 
 function clearErrors() {
-  Object.assign(errors, {
-    last_name: [],
-    first_name: [],
-    father_name: [],
-    birth_date: [],
-    gender: [],
-    passport_series: [],
-    passport_number: [],
-    issued_by: [],
-    when_issued: [],
-    region_id: [],
-    district_id: [],
-    address: [],
-    work_study_place: [],
-    email: [],
-    phone_number: [],
-    phone_home: [],
-    phone_work: [],
+  Object.getOwnPropertyNames(errors).forEach((prop) => {
+    if (prop in errors) {
+      errors[prop] = []
+    }
   })
 }
 </script>
@@ -177,6 +163,7 @@ function clearErrors() {
                   :placeholder="$t('Select_category')"
                   label="name"
                   value-prop="id"
+                  @change="clearError('patient_category_id')"
                 />
                 <p class="help has-text-danger">{{ errors.patient_category_id[0] }}</p>
               </VControl>

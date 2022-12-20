@@ -3,6 +3,7 @@ import moment from 'moment'
 import { reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
+import { fetchBloodTypes } from '/@src/utils/api/additional'
 import { primaryScreening } from '/@src/utils/api/patient'
 import { PatientInterface, PrimaryScreeningFormInterface } from '/@src/utils/interfaces'
 
@@ -24,32 +25,45 @@ const notif = useNotyf()
 const { t } = useI18n()
 const title = ref(t('Primary_screening_form'))
 const isLoading = ref(false)
-const preliminaryBloodTypes = ref([
-  { value: 'o1', label: 'O(I)' },
-  { value: 'a2', label: 'A(II)' },
-  { value: 'b3', label: 'B(III)' },
-  { value: 'ab4', label: 'AB(IV)' },
-])
+const preliminaryBloodTypes = ref([])
 const optionsHemoglobin = ref([
   { value: 'normal', label: t('Normal') },
   { value: 'below_normal', label: t('Below_normal') },
   { value: 'above_normal', label: t('Above_normal') },
 ])
-const formFields: PrimaryScreeningFormInterface = reactive({
-  analysis_date: moment().format('YYYY-MM-DD'),
-  preliminary_blood_type: 'o1',
-  hemoglobin: 'normal',
+const formState: PrimaryScreeningFormInterface = reactive({
+  date: moment().format('YYYY-MM-DD'),
+  blood_type_id: null,
+  type: 'normal',
+  value: '',
 })
 const errors = reactive({
-  analysis_date: [],
-  preliminary_blood_type: [],
-  hemoglobin: [],
+  date: [],
+  blood_type_id: [],
+  type: [],
+  value: [],
 })
 
+// hooks
+onMounted(async () => {
+  const res = await fetchBloodTypes()
+  preliminaryBloodTypes.value = res.result
+})
+
+watch(
+  () => props.patient.last_visit,
+  (newVal) => {
+    if (newVal) {
+      Object.assign(formState, newVal)
+    }
+  }
+)
+
+// functions
 async function onSubmit() {
   try {
     isLoading.value = true
-    await primaryScreening(props.patient?.id, formFields)
+    await primaryScreening(props.patient?.id, formState)
     emits('update:list')
     onClose()
   } catch (error: any) {
@@ -67,18 +81,20 @@ function onClose() {
 }
 
 function clearFields() {
-  Object.assign(formFields, {
-    analysis_date: moment().format('YYYY-MM-DD'),
-    preliminary_blood_type: 'o1',
-    hemoglobin: 'normal',
+  Object.assign(formState, {
+    date: moment().format('YYYY-MM-DD'),
+    blood_type_id: null,
+    type: 'normal',
+    value: '',
   })
 }
 
 function clearErrors() {
   Object.assign(errors, {
-    analysis_date: [],
-    preliminary_blood_type: [],
-    hemoglobin: [],
+    date: [],
+    blood_type_id: [],
+    type: [],
+    value: [],
   })
 }
 
@@ -152,8 +168,8 @@ function clearError(error: string) {
               <td>
                 <VField required>
                   <VControl>
-                    <IMaskDateInput v-model="formFields.analysis_date" />
-                    <p class="help has-text-danger">{{ errors.analysis_date[0] }}</p>
+                    <IMaskDateInput v-model="formState.date" />
+                    <p class="help has-text-danger">{{ errors.date[0] }}</p>
                   </VControl>
                 </VField>
               </td>
@@ -164,10 +180,12 @@ function clearError(error: string) {
                 <VField required>
                   <VControl>
                     <Multiselect
-                      v-model="formFields.preliminary_blood_type"
+                      v-model="formState.blood_type_id"
                       :options="preliminaryBloodTypes"
+                      :placeholder="$t('Select')"
+                      value-prop="id"
                     />
-                    <p class="help has-text-danger">{{ errors.analysis_date[0] }}</p>
+                    <p class="help has-text-danger">{{ errors.blood_type_id[0] }}</p>
                   </VControl>
                 </VField>
               </td>
@@ -177,23 +195,19 @@ function clearError(error: string) {
               <td>
                 <VField required>
                   <VControl>
-                    <VFlex>
+                    <VFlex column-gap="1rem" align-items="center">
                       <VFlexItem :flex-grow="1">
                         <Multiselect
-                          v-model="formFields.hemoglobin"
+                          v-model="formState.type"
                           :options="optionsHemoglobin"
                         />
                       </VFlexItem>
                       <VFlexItem>
-                        <input
-                          class="input"
-                          type="text"
-                          :value="$t('g/l')"
-                          style="width: 3rem"
-                        />
+                        <VInput v-model="formState.value" type="text" />
                       </VFlexItem>
+                      <VFlexItem>{{ $t('g/l') }}</VFlexItem>
                     </VFlex>
-                    <p class="help has-text-danger">{{ errors.analysis_date[0] }}</p>
+                    <p class="help has-text-danger">{{ errors.value[0] }}</p>
                   </VControl>
                 </VField>
               </td>
@@ -202,7 +216,7 @@ function clearError(error: string) {
         </table>
       </form>
     </template>
-    <template #action="{ close }">
+    <template #action>
       <SubmitButton :loading="isLoading" form="primary-screening-form" />
     </template>
   </VModal>

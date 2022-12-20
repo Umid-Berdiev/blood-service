@@ -186,9 +186,10 @@ export interface WithdrawalFormInterface {
 }
 
 export interface PrimaryScreeningFormInterface {
-  blood_sampling_date: string
-  bloodborne_infections_laboratory_date: string
-  clinical_biochemical_laboratory_date: string
+  date: string
+  blood_type_id: number | null
+  type: string
+  value: string
 }
 
 export interface MedicalQuestionnaireFormInterface {

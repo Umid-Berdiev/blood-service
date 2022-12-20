@@ -22,22 +22,20 @@ const emits = defineEmits<{
 const notif = useNotyf()
 const { t } = useI18n()
 const isLoading = ref(false)
-const title = ref(t('Production_of_washed_erythrocytes'))
+const title = ref(t('Thawed_rbc_production'))
 const formState = reactive({
-  laundering_date: '',
-  processing_multiplicity: '',
-  consumed_saline: '',
-  saline_series: '',
-  expiration_date: '',
+  laundering_1: '',
+  laundering_2: '',
+  laundering_3: '',
+  spent_weighing_solution: '',
   sample_for_quality_control: '',
 })
 
 const formErrors = reactive({
-  laundering_date: [],
-  processing_multiplicity: [],
-  consumed_saline: [],
-  saline_series: [],
-  expiration_date: [],
+  laundering_1: [],
+  laundering_2: [],
+  laundering_3: [],
+  spent_weighing_solution: [],
   sample_for_quality_control: [],
 })
 const healthcareFacilitiesList = ref([])
@@ -95,7 +93,9 @@ function onClose() {
             </tr>
             <tr>
               <td>
-                <span class="">{{ $t('Received_erythrocyte_mass_ml') }}: </span>
+                <span class=""
+                  >{{ $t('Received_cryopreserved_erythrocyte_mass') }}:
+                </span>
                 <span class="has-text-info">{{ product.quantity }}</span>
               </td>
               <td>
@@ -118,7 +118,7 @@ function onClose() {
           <tbody>
             <tr>
               <td class="">
-                <h5>{{ $t('Laundering_date') }}</h5>
+                <h5>{{ $t('Defrost_and_laundering_date') }}</h5>
               </td>
               <td>
                 <VField>
@@ -128,54 +128,60 @@ function onClose() {
                 </VField>
               </td>
             </tr>
+            <tr class="has-background-info-dark">
+              <th class="has-text-dark" colspan="2">
+                {{ $t('Salt_solution_consumed_ml') }}
+              </th>
+            </tr>
             <tr>
               <td class="">
-                <h5>{{ $t('Multiplicity_of_processing') }}</h5>
+                <h5>1 {{ $t('Laundering') }}</h5>
               </td>
               <td>
                 <VField>
                   <VControl>
-                    <VInput v-model="formState.processing_multiplicity" />
+                    <VInput v-model="formState.laundering_1" />
                   </VControl>
                 </VField>
               </td>
             </tr>
             <tr>
               <td class="">
-                <h5>{{ $t('Consumed_saline_ml') }}</h5>
+                <h5>2 {{ $t('Laundering') }}</h5>
               </td>
               <td>
                 <VField>
                   <VControl>
-                    <VInput v-model="formState.consumed_saline" />
+                    <VInput v-model="formState.laundering_2" />
                   </VControl>
                 </VField>
               </td>
             </tr>
             <tr>
               <td class="">
-                <h5>{{ $t('Saline_series') }}</h5>
+                <h5>3 {{ $t('Laundering') }}</h5>
               </td>
               <td>
                 <VField>
                   <VControl>
-                    <VInput v-model="formState.saline_series" />
+                    <VInput v-model="formState.laundering_3" />
                   </VControl>
                 </VField>
               </td>
             </tr>
             <tr>
               <td class="">
-                <h5>{{ $t('Expiration_date_of_saline_to_date') }}</h5>
+                <h5>{{ $t('Spent_weighing_solution_ml') }}</h5>
               </td>
               <td>
                 <VField>
                   <VControl>
-                    <VInput v-model="formState.expiration_date" />
+                    <VInput v-model="formState.spent_weighing_solution" />
                   </VControl>
                 </VField>
               </td>
             </tr>
+            <!-- <hr class="is-divider" /> -->
             <tr>
               <td class="">
                 <h5>{{ $t('Submit_sample_for_quality_control') }}</h5>
