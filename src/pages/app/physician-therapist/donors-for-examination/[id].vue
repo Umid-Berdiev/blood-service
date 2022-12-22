@@ -83,6 +83,7 @@ const isLaboratoryTestResultsModalOpen = ref(false)
 const isMedicalInspectionFormModalOpen = ref(false)
 const isWithdrawalModalOpen = ref(false)
 const isLaboratoryResearchModalOpen = ref(false)
+const isDirectionForDonationModalOpen = ref(false)
 const selectedTab = ref('#details')
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle(t('Patient_info'))
@@ -152,6 +153,10 @@ function openLaboratoryResearchModal() {
 }
 
 function toDonation() {
+  isDirectionForDonationModalOpen.value = true
+}
+
+function onDirectionForDonationSubmit() {
   //
 }
 </script>
@@ -220,13 +225,30 @@ function toDonation() {
           <div class="box">
             <VFlex class="mb-3" justify-content="space-between">
               <VFlexItem>
-                <p class="is-size-5">{{ $t('Directed_by') }}: Sombody</p>
+                <p class="is-size-6">
+                  {{ $t('Directed_by') }}:
+                  {{ patientForm.last_visit?.medical_organization?.name }}
+                </p>
               </VFlexItem>
               <VFlexItem>
-                <p class="is-size-5">{{ $t('Personalized_donation') }}: Sombody</p>
+                <p class="is-size-6">
+                  {{ $t('Personalized_donation') }}:
+                  {{
+                    patientForm.last_visit?.is_personalized_donation
+                      ? patientForm.last_visit?.personalized_donation
+                      : $t('No')
+                  }}
+                </p>
               </VFlexItem>
               <VFlexItem>
-                <p class="is-size-5">{{ $t('Blood_collect_condition') }}: Sombody</p>
+                <p class="is-size-6">
+                  {{ $t('Blood_collect_condition') }}:
+                  {{
+                    patientForm.last_visit?.is_mobile_team
+                      ? $t('Mobile_team')
+                      : $t('Stationary')
+                  }}
+                </p>
               </VFlexItem>
             </VFlex>
             <table class="table is-bordered is-fullwidth">
@@ -242,7 +264,7 @@ function toDonation() {
                     </a>
                   </td>
                 </tr>
-                <tr>
+                <tr v-if="patientForm.last_visit?.visit_status_id === 3">
                   <td>
                     <a
                       href="javascript:;"
@@ -302,8 +324,9 @@ function toDonation() {
       @laboratory-research="openLaboratoryResearchModal"
     />
     <PrimaryScreeningResultsModal
+      v-if="patientForm.last_visit?.visit_status_id === 3"
       v-model:is-open="isPrimaryScreeningResultsModalOpen"
-      :patient-id="Number(patientID)"
+      :visitcard-id="patientForm.last_visit?.id"
       @withdrawal="openWithdrawalModal"
       @medical-examination="openMedicalInspectionFormModal"
     />
@@ -315,7 +338,7 @@ function toDonation() {
     />
     <MedicalInspectionFormModal
       v-model:is-open="isMedicalInspectionFormModalOpen"
-      :patient-id="Number(patientID)"
+      :visitcard-id="patientForm.last_visit?.id"
       @withdrawal="openWithdrawalModal"
       @donation="toDonation"
     />
@@ -326,6 +349,11 @@ function toDonation() {
     <LaboratoryResearchModal
       v-model:is-open="isLaboratoryResearchModalOpen"
       :visitcard="patientForm.last_visit"
+    />
+    <DirectionForDonationModal
+      v-model:is-open="isDirectionForDonationModalOpen"
+      :visitcard="patientForm.last_visit"
+      @submit="onDirectionForDonationSubmit"
     />
   </div>
 </template>

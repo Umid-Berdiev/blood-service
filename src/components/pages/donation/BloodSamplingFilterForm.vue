@@ -1,12 +1,15 @@
 <script setup lang="ts">
-import { isEmpty, values } from 'lodash'
 import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { donationTypes, visitTypes } from '/@src/data/additionals'
 
 defineProps<{
   isLoading: boolean
-  errors: {}
+  errors: {
+    visit_type: string[]
+    donation_type_id: string[]
+    donation_code: string[]
+  }
 }>()
 
 const emits = defineEmits(['search', 'clearError', 'clearForm'])
@@ -14,20 +17,22 @@ const emits = defineEmits(['search', 'clearError', 'clearForm'])
 const { t } = useI18n()
 const notif = useNotyf()
 const filterForm = reactive({
-  visit_type_id: '',
-  donation_type_id: '',
+  visit_type: '',
+  donation_type_id: null,
+  donation_code: '',
 })
 
 const handleSearch = async () => {
-  if (!values(filterForm).every(isEmpty)) {
+  if (Object.values(filterForm).some((value) => Boolean(value))) {
     emits('search', filterForm)
   } else notif.error(t('Form_fields_are_empty'))
 }
 
 const clearFilterForm = async () => {
   Object.assign(filterForm, {
-    visit_type_id: '',
-    donation_type_id: '',
+    visit_type: '',
+    donation_type_id: null,
+    donation_code: '',
   })
   emits('clearForm')
 }
@@ -41,12 +46,14 @@ const clearFilterForm = async () => {
           <VField v-slot="{ id }" class="is-curved-select" :label="$t('Visit_type')">
             <VControl>
               <Multiselect
-                v-model="filterForm.visit_type_id"
+                v-model="filterForm.visit_type"
                 :attrs="{ id }"
                 :options="visitTypes"
                 :placeholder="$t('All')"
               />
-              <p class="help has-text-danger">{{ errors.visit_type_id[0] }}</p>
+              <p class="help has-text-danger">
+                {{ errors.visit_type[0] }}
+              </p>
             </VControl>
           </VField>
         </div>
@@ -61,7 +68,23 @@ const clearFilterForm = async () => {
                 label="name"
                 value-prop="id"
               />
-              <p class="help has-text-danger">{{ errors.donation_type_id[0] }}</p>
+              <p class="help has-text-danger">
+                {{ errors.donation_type_id[0] }}
+              </p>
+            </VControl>
+          </VField>
+        </div>
+        <div class="column is-3">
+          <VField v-slot="{ id }" class="is-curved-select" :label="$t('Donation_code')">
+            <VControl>
+              <VInput
+                v-model="filterForm.donation_code"
+                :attrs="{ id }"
+                :placeholder="$t('Donation_code')"
+              />
+              <p class="help has-text-danger">
+                {{ errors.donation_code[0] }}
+              </p>
             </VControl>
           </VField>
         </div>

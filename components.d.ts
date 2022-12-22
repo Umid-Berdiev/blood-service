@@ -53,6 +53,7 @@ declare module '@vue/runtime-core' {
     DatatableV2: typeof import('./src/components/pages/layouts/datatable/DatatableV2.vue')['default']
     DatatableV3: typeof import('./src/components/pages/layouts/datatable/DatatableV3.vue')['default']
     DatatableV4: typeof import('./src/components/pages/layouts/datatable/DatatableV4.vue')['default']
+    DirectionForDonationModal: typeof import('./src/components/modals/DirectionForDonationModal.vue')['default']
     DonationContainerFormModal: typeof import('./src/components/modals/DonationContainerFormModal.vue')['default']
     DonationDataEntryFormModal: typeof import('./src/components/modals/DonationDataEntryFormModal.vue')['default']
     DonationForProcessingFilter: typeof import('./src/components/filter-forms/DonationForProcessingFilter.vue')['default']

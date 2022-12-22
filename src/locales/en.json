@@ -773,5 +773,9 @@
   "Freeze_and_storage_date": "Freeze and storage date",
   "donor_no": "Donor's No",
   "Primary_screening_form": "Primary screening form",
-  "Information_about_donor": "Information about donor"
+  "Information_about_donor": "Information about donor",
+  "Blood_collect_condition": "Blood collect condition",
+  "Stationary": "Stationary",
+  "Direction_for_donation": "Direction for donation",
+  "Recommended_blood_capacity": "Recommended blood capacity"
 }

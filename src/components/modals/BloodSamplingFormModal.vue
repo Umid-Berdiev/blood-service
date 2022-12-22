@@ -3,8 +3,8 @@ import moment from 'moment'
 import { reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
-import { createWithdrawalForPatient } from '/@src/utils/api/patient'
-import { PatientInterface, PrimaryScreeningFormInterface } from '/@src/utils/interfaces'
+import { storeBloodSampleData } from '/@src/utils/api/blood-sampling'
+import { PatientInterface } from '/@src/utils/interfaces'
 
 interface WithdrawalFormProps {
   isOpen: boolean
@@ -24,21 +24,21 @@ const notif = useNotyf()
 const { t } = useI18n()
 const title = ref(t('Sampling_data_entry_form'))
 const isLoading = ref(false)
-const formFields: PrimaryScreeningFormInterface = reactive({
-  blood_sampling_date: moment().format('YYYY-MM-DD'),
-  bloodborne_infections_laboratory_date: moment().format('YYYY-MM-DD'),
-  clinical_biochemical_laboratory_date: moment().format('YYYY-MM-DD'),
+const formFields = reactive({
+  date: moment().format('YYYY-MM-DD'),
+  hemotransmissible_date: moment().format('YYYY-MM-DD'),
+  chemical_date: moment().format('YYYY-MM-DD'),
 })
 const errors = reactive({
-  blood_sampling_date: [],
-  bloodborne_infections_laboratory_date: [],
-  clinical_biochemical_laboratory_date: [],
+  date: [],
+  hemotransmissible_date: [],
+  chemical_date: [],
 })
 
 async function onSubmit() {
   try {
     isLoading.value = true
-    await createWithdrawalForPatient(props.patient?.id, formFields)
+    await storeBloodSampleData(props.patient?.last_visit?.id, formFields)
     emits('update:list')
     onClose()
   } catch (error: any) {
@@ -57,23 +57,23 @@ function onClose() {
 
 function clearFields() {
   Object.assign(formFields, {
-    blood_sampling_date: moment().format('YYYY-MM-DD'),
-    bloodborne_infections_laboratory_date: moment().format('YYYY-MM-DD'),
-    clinical_biochemical_laboratory_date: moment().format('YYYY-MM-DD'),
+    date: moment().format('YYYY-MM-DD'),
+    hemotransmissible_date: moment().format('YYYY-MM-DD'),
+    chemical_date: moment().format('YYYY-MM-DD'),
   })
 }
 
 function clearErrors() {
   Object.assign(errors, {
-    blood_sampling_date: [],
-    bloodborne_infections_laboratory_date: [],
-    clinical_biochemical_laboratory_date: [],
+    date: [],
+    hemotransmissible_date: [],
+    chemical_date: [],
   })
 }
 
-function clearError(error: string) {
-  errors[error] = ''
-}
+// function clearError(error: string) {
+//   errors[error] = ''
+// }
 </script>
 
 <template>
@@ -115,7 +115,7 @@ function clearError(error: string) {
           </tr>
           <tr>
             <th>{{ $t('Visit_type') }}</th>
-            <td>{{ patient.visit?.visit_type }}</td>
+            <td>{{ patient.last_visit?.visit_type }}</td>
           </tr>
           <tr>
             <th>{{ $t('Donor_category') }}</th>
@@ -142,9 +142,9 @@ function clearError(error: string) {
           <VFlexItem>
             <VField>
               <VControl>
-                <IMaskDateInput v-model="formFields.blood_sampling_date" />
+                <IMaskDateInput v-model="formFields.date" />
                 <p class="help has-text-danger">
-                  {{ errors.blood_sampling_date[0] }}
+                  {{ errors.date[0] }}
                 </p>
               </VControl>
             </VField>
@@ -166,11 +166,9 @@ function clearError(error: string) {
               <td>
                 <VField required>
                   <VControl>
-                    <IMaskDateInput
-                      v-model="formFields.bloodborne_infections_laboratory_date"
-                    />
+                    <IMaskDateInput v-model="formFields.hemotransmissible_date" />
                     <p class="help has-text-danger">
-                      {{ errors.bloodborne_infections_laboratory_date[0] }}
+                      {{ errors.hemotransmissible_date[0] }}
                     </p>
                   </VControl>
                 </VField>
@@ -183,11 +181,9 @@ function clearError(error: string) {
               <td>
                 <VField required>
                   <VControl>
-                    <IMaskDateInput
-                      v-model="formFields.clinical_biochemical_laboratory_date"
-                    />
+                    <IMaskDateInput v-model="formFields.chemical_date" />
                     <p class="help has-text-danger">
-                      {{ errors.clinical_biochemical_laboratory_date[0] }}
+                      {{ errors.chemical_date[0] }}
                     </p>
                   </VControl>
                 </VField>
@@ -197,7 +193,7 @@ function clearError(error: string) {
         </table>
       </form>
     </template>
-    <template #action="{ close }">
+    <template #action>
       <SubmitButton :loading="isLoading" form="blood-sampling-form" />
     </template>
   </VModal>

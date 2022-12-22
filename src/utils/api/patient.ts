@@ -29,6 +29,20 @@ export async function patientsList(payload: any) {
   }
 }
 
+export async function storeDonation(visitcardID: number, payload: any) {
+  try {
+    const { data } = await api({
+      url: `/api/visit-cards/${visitcardID}/donation`,
+      method: 'PUT',
+      data: payload,
+    })
+
+    return data
+  } catch (error) {
+    throw error
+  }
+}
+
 export async function fetchDonorsList(payload: any) {
   try {
     const { data } = await api({
@@ -122,7 +136,7 @@ export async function patientsListForScreening(payload: any) {
   }
 }
 
-export async function patientDataByVisitID(visitcardID: number) {
+export async function getPrimaryScreeningResult(visitcardID: number) {
   try {
     const { data } = await api({
       url: `/visit-cards/${visitcardID}/primary-screening-results`,
@@ -134,7 +148,7 @@ export async function patientDataByVisitID(visitcardID: number) {
   }
 }
 
-export async function primaryScreening(id: number | null, payload: any) {
+export async function storePrimaryScreeningResult(id: number | null, payload: any) {
   try {
     const { data } = await api({
       url: `/visit-cards/${id}/primary-screening-results`,

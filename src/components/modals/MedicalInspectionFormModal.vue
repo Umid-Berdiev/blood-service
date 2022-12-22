@@ -1,14 +1,28 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
+import { storeMedicalInspectionData } from '/@src/utils/api/medical-inspection'
+
+interface MedicalInspectionFormInterface {
+  weight: string
+  height: string
+  temperature: string
+  blood_pressure: string
+  pulse: string
+  lymph_node: number | null
+  liver: number | null
+  skin: number | null
+  lung: number | null
+  heart: number | null
+}
 
 const props = withDefaults(
   defineProps<{
-    patientId: number | null
+    visitcardId: number | null
     isOpen: boolean
   }>(),
   {
-    patientId: null,
+    visitcardId: null,
     isOpen: false,
   }
 )
@@ -24,33 +38,53 @@ const router = useRouter()
 const notif = useNotyf()
 const { locale, t } = useI18n()
 const isLoading = ref(false)
-const title = ref('')
-const formData = reactive({
+const title = ref(t('Medical_inspection'))
+const formData: MedicalInspectionFormInterface = reactive({
   weight: '',
   height: '',
   temperature: '',
-  arterial_pressure: '',
+  blood_pressure: '',
   pulse: '',
-  lymph_nodes: 0,
-  liver_spleen: 0,
-  skin_mucous_membranes: 0,
-  in_lungs: 0,
+  lymph_node: 0,
+  liver: 0,
+  skin: 0,
+  lung: 0,
   heart: 0,
+})
+
+const formErrors = reactive({
+  weight: [],
+  height: [],
+  temperature: [],
+  blood_pressure: [],
+  pulse: [],
+  lymph_node: [],
+  liver: [],
+  skin: [],
+  lung: [],
+  heart: [],
 })
 
 function onClose() {
   emits('update:isOpen', false)
 }
+
+async function onSubmit() {
+  try {
+    isLoading.value = true
+    const res = await storeMedicalInspectionData(props.visitcardId as number, formData)
+    notif.success(t('Data_saved_successfully'))
+  } catch (error: any) {
+    notif.error(t('Something_went_wrong'))
+    Object.assign(formErrors, error.response?.data?.errors)
+  } finally {
+    isLoading.value = false
+  }
+}
 </script>
 
 <template>
-  <VModal
-    :open="isOpen"
-    size="big"
-    :title="$t('Medical_inspection')"
-    actions="right"
-    @close="onClose"
-  >
+  <VModal :open="isOpen" size="big" :title="title" actions="right" @close="onClose">
     <template #content>
       <!-- <h1 class="has-text-centered is-size-3">
         {{ $t('Medical_inspection') }}
@@ -127,14 +161,14 @@ function onClose() {
                 <tr>
                   <td>
                     <p class="">
-                      {{ $t('Arterial_pressure') }}
+                      {{ $t('blood_pressure') }}
                     </p>
                   </td>
                   <td>
                     <VField>
                       <VControl>
                         <VIMaskInput
-                          v-model.trim="formData.arterial_pressure"
+                          v-model.trim="formData.blood_pressure"
                           class="input"
                           :options="{
                             mask: '000 / 000',
@@ -177,13 +211,13 @@ function onClose() {
                     <VField>
                       <VControl raw>
                         <VRadio
-                          v-model="formData.lymph_nodes"
+                          v-model="formData.lymph_node"
                           :value="0"
                           :label="$t('Not_increased')"
                           color="primary"
                         />
                         <VRadio
-                          v-model="formData.lymph_nodes"
+                          v-model="formData.lymph_node"
                           :value="1"
                           :label="$t('Increased')"
                           color="primary"
@@ -204,7 +238,7 @@ function onClose() {
                         <div class="columns">
                           <div class="column">
                             <VRadio
-                              v-model="formData.liver_spleen"
+                              v-model="formData.liver"
                               :value="0"
                               :label="$t('Not_palpated')"
                               color="primary"
@@ -212,7 +246,7 @@ function onClose() {
                           </div>
                           <div class="column">
                             <VRadio
-                              v-model="formData.liver_spleen"
+                              v-model="formData.liver"
                               :value="1"
                               :label="$t('Increased')"
                               color="primary"
@@ -235,7 +269,7 @@ function onClose() {
                         <div class="columns">
                           <div class="column">
                             <VRadio
-                              v-model="formData.skin_mucous_membranes"
+                              v-model="formData.skin"
                               :value="0"
                               :label="$t('Pure')"
                               color="primary"
@@ -243,7 +277,7 @@ function onClose() {
                           </div>
                           <div class="column">
                             <VRadio
-                              v-model="formData.skin_mucous_membranes"
+                              v-model="formData.skin"
                               :value="1"
                               :label="$t('With signs of damage')"
                               color="primary"
@@ -266,7 +300,7 @@ function onClose() {
                         <div class="columns">
                           <div class="column">
                             <VRadio
-                              v-model="formData.in_lungs"
+                              v-model="formData.lung"
                               :value="0"
                               :label="$t('No_wheezing')"
                               color="primary"
@@ -274,7 +308,7 @@ function onClose() {
                           </div>
                           <div class="column">
                             <VRadio
-                              v-model="formData.in_lungs"
+                              v-model="formData.lung"
                               :value="1"
                               :label="$t('Wheezing')"
                               color="primary"
@@ -324,6 +358,7 @@ function onClose() {
     </template>
     <template #action="{ close }">
       <VButtons>
+        <SubmitButton type="button" :loading="isLoading" @click="onSubmit" />
         <VButton
           type="button"
           color="primary"

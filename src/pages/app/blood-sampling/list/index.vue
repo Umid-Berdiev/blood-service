@@ -7,7 +7,7 @@ import { useNotyf } from '/@src/composable/useNotyf'
 import { useMainStore } from '/@src/stores/main'
 
 import { useViewWrapper } from '/@src/stores/viewWrapper'
-import { fetchDonorsList } from '/@src/utils/api/patient'
+import { getPatientsForBloodSample } from '/@src/utils/api/blood-sampling'
 import { ApiDataInterface, PatientInterface } from '/@src/utils/interfaces'
 
 const router = useRouter()
@@ -72,14 +72,14 @@ const columns = {
     // grow: true,
     // sortable: true,
   },
-  donation_number: {
-    label: t('Donation_number'),
+  donation_type: {
+    label: t('Donation_type'),
     format: (value: string, row: any) => row.last_visit?.personalized_donation,
     // grow: true,
     // sortable: true,
   },
-  donation_type: {
-    label: t('Donation_type'),
+  donation_number: {
+    label: t('Donation_number'),
     format: (value: string, row: any) => row.last_visit?.personalized_donation,
     // grow: true,
     // sortable: true,
@@ -88,8 +88,9 @@ const columns = {
 
 const incomingCallerId = ref<number>()
 const errors = reactive({
-  visit_type_id: [],
+  visit_type: [],
   donation_type_id: [],
+  donation_code: [],
 })
 const currentFilterData = reactive({
   page: 1,
@@ -101,7 +102,7 @@ async function handleSearch(filterForm: any) {
   try {
     Object.assign(currentFilterData, filterForm)
     isLoading.value = true
-    const res = await fetchDonorsList(filterForm)
+    const res = await getPatientsForBloodSample(filterForm)
     Object.assign(apiData, res.result)
 
     if (isEmpty(res.result.data)) {

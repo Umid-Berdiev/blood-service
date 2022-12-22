@@ -4,7 +4,7 @@ import { reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { fetchBloodTypes } from '/@src/utils/api/additional'
-import { primaryScreening } from '/@src/utils/api/patient'
+import { storePrimaryScreeningResult } from '/@src/utils/api/patient'
 import { PatientInterface, PrimaryScreeningFormInterface } from '/@src/utils/interfaces'
 
 interface PrimaryScreeningFormProps {
@@ -63,7 +63,7 @@ watch(
 async function onSubmit() {
   try {
     isLoading.value = true
-    await primaryScreening(props.patient?.id, formState)
+    await storePrimaryScreeningResult(props.patient?.id, formState)
     emits('update:list')
     onClose()
   } catch (error: any) {

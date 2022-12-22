@@ -513,7 +513,7 @@
   "View_patient_details": "Просмотр информации о пациенте",
   "Select_donor_status": "Укажите статус донора",
   "Gratuitous": "Безвозмездная донация",
-  "Chargeable": "Платное пожертвование",
+  "Chargeable": "Платная донация",
   "gratuitous": "Безвозмездная донация",
   "chargeable": "Платное пожертвование",
   "Healthcare_facilities": "Лечебно-профилактическая учреждение",
@@ -771,5 +771,9 @@
   "Freeze_and_storage_date": "Дата заморозки и закладки на хранение",
   "donor_no": "№ донора",
   "Primary_screening_form": "Форма первичного скрининга",
-  "Information_about_donor": "Информация о доноре"
+  "Information_about_donor": "Информация о доноре",
+  "Blood_collect_condition": "Условия взятия крови",
+  "Stationary": "Стационарно",
+  "Direction_for_donation": "Направление на донацию",
+  "Recommended_blood_capacity": "Рекомендуемый объем донации, мл"
 }

@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
+import { getPrimaryScreeningResult } from '/@src/utils/api/patient'
 
 const props = withDefaults(
   defineProps<{
-    patientId: number | null
+    visitcardId: number | null
     isOpen: boolean
   }>(),
   {
-    patientId: null,
+    visitcardId: null,
     isOpen: false,
   }
 )
@@ -25,7 +26,21 @@ const notif = useNotyf()
 const { locale, t } = useI18n()
 const isLoading = ref(false)
 const title = ref('')
+const primaryScreeningResult = reactive({})
 
+// hooks
+watch(
+  () => props.visitcardId,
+  async (newVal) => {
+    try {
+      const res = await getPrimaryScreeningResult(newVal as number)
+      Object.assign(primaryScreeningResult, res.result)
+    } catch (error) {}
+  },
+  { immediate: true }
+)
+
+// functions
 function onClose() {
   emits('update:isOpen', false)
 }
@@ -42,19 +57,19 @@ function onClose() {
         <div class="column">
           <p class="is-size-5">
             {{ $t('Researched_at') }}:
-            <strong>06.03.2013</strong>
+            <strong>{{ primaryScreeningResult.date }}</strong>
           </p>
           <p class="is-size-5">
             {{ $t('Researched_by') }}:
-            <strong>Specialist</strong>
+            <strong>{{ primaryScreeningResult.specialist ?? $t('Specialist') }}</strong>
           </p>
           <p class="is-size-5">
             {{ $t('Preliminary_blood_type') }}:
-            <strong>B(III)</strong>
+            <strong>{{ primaryScreeningResult.blood_type?.label }}</strong>
           </p>
           <p class="is-size-5">
             {{ $t('Hemoglobin_gl') }}:
-            <strong class="has-text-primary">142</strong>
+            <strong class="has-text-primary">{{ primaryScreeningResult.value }}</strong>
           </p>
         </div>
       </div>
