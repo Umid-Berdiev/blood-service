@@ -32,7 +32,7 @@ export async function patientsList(payload: any) {
 export async function storeDonation(visitcardID: number, payload: any) {
   try {
     const { data } = await api({
-      url: `/api/visit-cards/${visitcardID}/donation`,
+      url: `/visit-cards/${visitcardID}/donation`,
       method: 'PUT',
       data: payload,
     })

@@ -1,1 +1,0 @@
-import{o as r,d as s,b as e}from"./index-568ad137.js";import{_ as o}from"./_plugin-vue_export-helper-1b428a4d.js";const t={class:"auth-wrapper"};const a=o({},[["render",function(o,a){return r(),s("div",t,[e(o.$slots,"default")])}]]);export{a as _};
