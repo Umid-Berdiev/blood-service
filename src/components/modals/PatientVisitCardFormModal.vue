@@ -6,7 +6,7 @@ import {
   createVisitcard,
   updateVisitcardById,
   fetchVisitcardById,
-} from '/@src/utils/api/patient'
+} from '/@src/utils/api/visitcard'
 import { fetchHealthcareFacilities } from '/@src/utils/api/additional'
 import { PatientVisitCardInterface } from '/@src/utils/interfaces'
 

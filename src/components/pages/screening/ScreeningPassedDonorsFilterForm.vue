@@ -25,10 +25,11 @@ const visitTypes = ref([
   { value: 'gratuitous', label: t('Gratuitous') },
   { value: 'chargeable', label: t('Chargeable') },
 ])
+
+// functions
 const handleSearch = async () => {
-  if (!values(filterForm).every(isEmpty)) {
-    emits('search', filterForm)
-  } else notif.error(t('Form_fields_are_empty'))
+  emits('search', filterForm)
+  // else notif.error(t('Form_fields_are_empty'))
 }
 
 const clearFilterForm = async () => {

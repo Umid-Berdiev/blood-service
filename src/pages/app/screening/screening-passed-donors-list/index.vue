@@ -7,7 +7,7 @@ import { useNotyf } from '/@src/composable/useNotyf'
 import { useMainStore } from '/@src/stores/main'
 
 import { useViewWrapper } from '/@src/stores/viewWrapper'
-import { fetchDonorsList } from '/@src/utils/api/patient'
+import { fetchScreeningCompletedDonorsList } from '/@src/utils/api/screening'
 import { ApiDataInterface } from '/@src/utils/interfaces'
 
 const router = useRouter()
@@ -46,10 +46,17 @@ const currentPage = computed({
 const columns = {
   orderNumber: {
     format: (value: any, row: any, index: number) => `${index + 1}`,
+    align: 'center',
     // cellClass: 'is-flex-grow-0',
   },
   screening_date: {
     label: t('Screening_date'),
+    format: (value: string, row: any) =>
+      row.last_visit?.primary_screening_result &&
+      formatDate(
+        new Date(row.last_visit?.primary_screening_result?.created_at),
+        'YYYY-MM-DD'
+      ),
     // media: true,
     // grow: true,
     // sortable: true,
@@ -80,18 +87,23 @@ const columns = {
   },
   hemoglobin: {
     label: `${t('Hemoglobin')}, ${t('g/l')}`,
-    // format: (value: string, row: any) => row.last_visit?.personalized_donation,
+    format: (value: string, row: any) => row.last_visit?.primary_screening_result?.value,
+    align: 'center',
     // grow: true,
     // sortable: true,
   },
   preliminary_blood_type: {
     label: t('Preliminary_blood_type'),
-    // format: (value: string, row: any) => row.last_visit?.personalized_donation,
+    format: (value: string, row: any) =>
+      row.last_visit?.primary_screening_result?.blood_type?.label,
+    align: 'center',
     // grow: true,
     // sortable: true,
   },
   laboratory_assistant_fullname: {
     label: t('Laboratory_assistant_fullname'),
+    format: (value: string, row: any) =>
+      row.last_visit?.primary_screening_result?.created_by,
     // format: (value: string, row: any) => row.status?.name,
     // grow: true,
     // sortable: true,
@@ -109,11 +121,13 @@ const currentFilterData = reactive({
   page: 1,
 })
 
+await handleSearch(currentFilterData)
+
 async function handleSearch(filterForm: any) {
   try {
     Object.assign(currentFilterData, filterForm)
     isLoading.value = true
-    const res = await fetchDonorsList(filterForm)
+    const res = await fetchScreeningCompletedDonorsList(filterForm)
     Object.assign(apiData, res.result)
 
     if (isEmpty(res.result.data)) {
@@ -211,8 +225,8 @@ async function clearFilterForm() {
                 <!-- This is the empty state -->
                 <div v-if="apiData.data.length === 0" class="flex-list-inner">
                   <VPlaceholderSection
-                    title="No matches"
-                    subtitle="There is no data that match your query."
+                    :title="$t('No_data')"
+                    :subtitle="$t('There_is_no_data_that_match_your_query')"
                     class="my-6"
                   >
                     <template #image>

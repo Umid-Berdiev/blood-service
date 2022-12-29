@@ -5,7 +5,7 @@ import { useNotyf } from '/@src/composable/useNotyf'
 import { useMainStore } from '/@src/stores/main'
 
 import { useViewWrapper } from '/@src/stores/viewWrapper'
-import { visitcardsList, removeVisitcardById } from '/@src/utils/api/patient'
+import { visitcardsList, removeVisitcardById } from '/@src/utils/api/visitcard'
 import { ApiDataInterface } from '/@src/utils/interfaces'
 
 const route = useRoute()
@@ -183,8 +183,8 @@ function updateList() {
                 <!-- This is the empty state -->
                 <div v-else-if="apiData.data.length === 0" class="flex-list-inner">
                   <VPlaceholderSection
-                    title="No matches"
-                    subtitle="There is no data that match your query."
+                    :title="$t('No_data')"
+                    :subtitle="$t('There_is_no_data_that_match_your_query')"
                     class="my-6"
                   >
                     <template #image>

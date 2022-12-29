@@ -4,7 +4,7 @@ import { reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { fetchBloodTypes } from '/@src/utils/api/additional'
-import { storePrimaryScreeningResult } from '/@src/utils/api/patient'
+import { storePrimaryScreeningResult } from '/@src/utils/api/screening'
 import { PatientInterface, PrimaryScreeningFormInterface } from '/@src/utils/interfaces'
 
 interface PrimaryScreeningFormProps {

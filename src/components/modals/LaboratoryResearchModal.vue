@@ -3,6 +3,7 @@ import { flatten } from 'lodash'
 import { useI18n } from 'vue-i18n'
 import VFlexItem from '../base/flex/VFlexItem.vue'
 import { useNotyf } from '/@src/composable/useNotyf'
+import { fetchDonationTypes, fetchImmunizations } from '/@src/utils/api/additional'
 import {
   sendingToLaboratoryResearch,
   fetchLaboratoryResearchFields,
@@ -40,30 +41,8 @@ const notif = useNotyf()
 const { t } = useI18n()
 const isLoading = ref(false)
 const title = ref(t('Direction_for_laboratory_research'))
-const immunizationOptions = ref([
-  {
-    id: 1,
-    name: t('Антигенами системы резус'),
-  },
-  {
-    id: 2,
-    name: t('Стафилококковым анатоксином'),
-  },
-])
-const donationTypes = ref([
-  {
-    id: 1,
-    name: t('Whole_blood_donation'),
-  },
-  {
-    id: 2,
-    name: t('Plasmapheresis'),
-  },
-  {
-    id: 3,
-    name: t('Plateletpheresis'),
-  },
-])
+const immunizationOptions = ref([])
+const donationTypes = ref([])
 
 const laboratoryResearchFormFields = ref<LaboratoryResearchForm[]>([])
 
@@ -82,16 +61,18 @@ const formData: {
 const errors = reactive({})
 
 // hooks
-onMounted(() => {
+onMounted(async () => {
   formData.donation_code = props.visitcard.donation_code
   formData.donation_type_id = props.visitcard.donation_type_id
   formData.immunization_id = props.visitcard.immunization_id
+  donationTypes.value = await fetchDonationTypes().then((res) => res.result)
+  immunizationOptions.value = await fetchImmunizations().then((res) => res.result)
 })
 
 watch(
   () => formData.donation_type_id,
   async (newVal) => {
-    if (newVal === 3) await getLaboratoryResearchFields()
+    if (newVal === 1) await getLaboratoryResearchFields()
   }
 )
 
@@ -163,7 +144,7 @@ function onClose() {
             </VControl>
           </VField>
         </VFlexItem>
-        <VFlexItem v-show="formData.donation_type_id === 3">
+        <VFlexItem v-show="formData.donation_type_id === 1">
           <VField horizontal>
             <VLabel class="my-auto mr-5">{{ $t('Donation_code') }}</VLabel>
             <VControl>
@@ -174,7 +155,7 @@ function onClose() {
       </VFlex>
       <br />
       <div
-        v-if="formData.donation_type_id === 3 && laboratoryResearchFormFields.length"
+        v-if="formData.donation_type_id === 1 && laboratoryResearchFormFields.length"
         class="table-container"
       >
         <table class="table is-bordered is-fullwidth">

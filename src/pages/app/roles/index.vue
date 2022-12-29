@@ -226,8 +226,8 @@ function successNotify() {
                 <!-- This is the empty state -->
                 <div v-else-if="data.result.length === 0" class="flex-list-inner">
                   <VPlaceholderSection
-                    title="No matches"
-                    subtitle="There is no data that match your query."
+                    :title="$t('No_data')"
+                    :subtitle="$t('There_is_no_data_that_match_your_query')"
                     class="my-6"
                   >
                     <template #image>

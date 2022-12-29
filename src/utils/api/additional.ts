@@ -62,3 +62,27 @@ export async function fetchBloodTypes() {
     throw error
   }
 }
+
+export async function fetchDonationTypes() {
+  try {
+    const { data } = await api({
+      url: `/donation-types`,
+    })
+
+    return data
+  } catch (error) {
+    throw error
+  }
+}
+
+export async function fetchImmunizations() {
+  try {
+    const { data } = await api({
+      url: `/immunizations`,
+    })
+
+    return data
+  } catch (error) {
+    throw error
+  }
+}

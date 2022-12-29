@@ -23,9 +23,9 @@ const filterForm = reactive({
 })
 
 const handleSearch = async () => {
-  if (Object.values(filterForm).some((value) => Boolean(value))) {
-    emits('search', filterForm)
-  } else notif.error(t('Form_fields_are_empty'))
+  // if (Object.values(filterForm).some((value) => Boolean(value))) {
+  emits('search', filterForm)
+  // } else notif.error(t('Form_fields_are_empty'))
 }
 
 const clearFilterForm = async () => {

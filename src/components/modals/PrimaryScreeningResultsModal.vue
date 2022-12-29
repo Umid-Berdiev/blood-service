@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
-import { getPrimaryScreeningResult } from '/@src/utils/api/patient'
+import { getPrimaryScreeningResult } from '/@src/utils/api/screening'
 
 const props = withDefaults(
   defineProps<{

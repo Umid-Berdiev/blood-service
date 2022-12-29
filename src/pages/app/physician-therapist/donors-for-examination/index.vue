@@ -6,7 +6,8 @@ import { useNotyf } from '/@src/composable/useNotyf'
 import { useMainStore } from '/@src/stores/main'
 
 import { useViewWrapper } from '/@src/stores/viewWrapper'
-import { patientsListForCandidate, fetchVisitcardStatuses } from '/@src/utils/api/patient'
+import { patientsListForCandidate } from '/@src/utils/api/patient'
+import { fetchVisitcardStatuses } from '/@src/utils/api/visitcard'
 import { ApiDataInterface } from '/@src/utils/interfaces'
 
 const router = useRouter()
@@ -216,8 +217,8 @@ async function fetchData(page: number = 1) {
                 <!-- This is the empty state -->
                 <div v-if="apiData.data.length === 0" class="flex-list-inner">
                   <VPlaceholderSection
-                    title="No matches"
-                    subtitle="There is no data that match your query."
+                    :title="$t('No_data')"
+                    :subtitle="$t('There_is_no_data_that_match_your_query')"
                     class="my-6"
                   >
                     <template #image>
