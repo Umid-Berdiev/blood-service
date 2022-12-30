@@ -20,7 +20,7 @@ const viewWrapper = useViewWrapper()
 
 viewWrapper.setPageTitle(t('Bloodborne-infections-laboratory'))
 useHead({
-  title: `${t('Donor_list_for_blood_sampling')} - ${mainStore.app.name}`,
+  title: `${t('Research-aimed-donations-list')} - ${mainStore.app.name}`,
 })
 
 const apiData: ApiDataInterface = reactive({
@@ -51,53 +51,35 @@ const columns = {
   },
   donation_code: {
     label: t('Donation_code'),
-    // media: true,
-    // grow: true,
-    // sortable: true,
+    format: (value: string, row: any) => row.last_visit?.donation_code,
   },
   blood_sampling_date: {
     label: t('Blood_sampling_date'),
-    // sortable: true,
   },
   name: {
     label: t('Donor_fullname'),
-    // format: (value: string, row: any) =>
-    //   row.last_visit?.created_at &&
-    //   formatDate(new Date(row.last_visit?.created_at), 'YYYY-MM-DD'),
-    // sortable: true,
   },
   birth_date: {
     label: t('Date-of-birth'),
-    // format: (value: string, row: any) =>
-    //   row.last_visit?.visit_type && t(row.last_visit?.visit_type),
-    // grow: true,
-    // sortable: true,
   },
   visit_type: {
     label: t('Visit_type'),
     format: (value: string, row: any) =>
       row.last_visit?.visit_type && t(row.last_visit?.visit_type),
-    // grow: true,
-    // sortable: true,
   },
   visit_date: {
     label: t('Visit_date'),
     format: (value: string, row: any) =>
       row.last_visit?.created_at &&
       formatDate(new Date(row.last_visit?.created_at), 'YYYY-MM-DD'),
-    // sortable: true,
   },
   donation_type: {
     label: t('Donation_type'),
-    format: (value: string, row: any) => row.last_visit?.personalized_donation,
-    // grow: true,
-    // sortable: true,
+    format: (value: string, row: any) => row.last_visit?.donation_type?.name,
   },
   visit_stage: {
     label: t('Visit_stage'),
     format: (value: string, row: any) => row.last_visit?.stage?.name,
-    // grow: true,
-    // sortable: true,
   },
 } as const
 
@@ -109,12 +91,14 @@ const errors = reactive({
 })
 const currentFilterData = reactive({
   page: 1,
+  status_id: 5,
 })
 const clickedRowData: PatientInterface = reactive({})
 const isBloodSamplingFormModalOpen = ref(false)
 const isEmergencyNoticeFormModalOpen = ref(true)
 
 await handleSearch(currentFilterData)
+
 // functions
 async function handleSearch(filterForm: any) {
   try {
@@ -123,9 +107,9 @@ async function handleSearch(filterForm: any) {
     const res = await fetchDonorsList(filterForm)
     Object.assign(apiData, res.result)
 
-    if (isEmpty(res.result.data)) {
-      notif.warning(t('Data_not_found'))
-    } else notif.success(`${t('Found')}: ${res.result.pagination.total} ${t('records')}`)
+    // if (isEmpty(res.result.data)) {
+    //   notif.warning(t('Data_not_found'))
+    // } else notif.success(`${t('Found')}: ${res.result.pagination.total} ${t('records')}`)
   } catch (error: any) {
     Object.assign(errors, error.response?.data?.errors)
   } finally {
@@ -167,7 +151,7 @@ function openBloodSamplingFormModal(patient: PatientInterface) {
               // to: { name: '/app/users/' },
             },
             {
-              label: $t('Donor_list_for_blood_sampling'),
+              label: $t('Research-aimed-donations-list'),
               // to: { name: '/app/physician-therapist/donors-for-examination/' },
             },
           ]"

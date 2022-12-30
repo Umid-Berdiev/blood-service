@@ -107,9 +107,8 @@ async function handleSearch(filterForm: any) {
     const res = await getPatientsForBloodSample(filterForm)
     Object.assign(apiData, res.result)
 
-    if (isEmpty(res.result.data)) {
-      notif.warning(t('Data_not_found'))
-    } else notif.success(`${t('Found')}: ${res.result.pagination.total} ${t('records')}`)
+    if (isEmpty(res.result.data)) notif.warning(t('Data_not_found'))
+    // else notif.success(`${t('Found')}: ${res.result.pagination.total} ${t('records')}`)
   } catch (error: any) {
     Object.assign(errors, error.response?.data?.errors)
   } finally {
