@@ -18,11 +18,10 @@ interface MedicalInspectionFormInterface {
 
 const props = withDefaults(
   defineProps<{
-    visitcardId: number | null
+    visitcard: PatientVisitCardInterface
     isOpen: boolean
   }>(),
   {
-    visitcardId: null,
     isOpen: false,
   }
 )
@@ -35,11 +34,11 @@ const emits = defineEmits<{
 
 const route = useRoute()
 const router = useRouter()
-const notif = useNotyf()
 const { locale, t } = useI18n()
+const notif = useNotyf()
 const isLoading = ref(false)
 const title = ref(t('Medical_inspection'))
-const formData: MedicalInspectionFormInterface = reactive({
+const formData = ref<MedicalInspectionFormInterface>({
   weight: '',
   height: '',
   temperature: '',
@@ -65,6 +64,14 @@ const formErrors = reactive({
   heart: [],
 })
 
+// hooks
+watchEffect(() => {
+  if (props.visitcard && props.visitcard.medical_examination) {
+    formData.value = props.visitcard.medical_examination
+  }
+})
+
+// functions
 function onClose() {
   emits('update:isOpen', false)
 }
@@ -72,7 +79,10 @@ function onClose() {
 async function onSubmit() {
   try {
     isLoading.value = true
-    const res = await storeMedicalInspectionData(props.visitcardId as number, formData)
+    const res = await storeMedicalInspectionData(
+      props.visitcard.id as number,
+      formData.value
+    )
     notif.success(t('Data_saved_successfully'))
   } catch (error: any) {
     notif.error(t('Something_went_wrong'))
@@ -212,13 +222,13 @@ async function onSubmit() {
                       <VControl raw>
                         <VRadio
                           v-model="formData.lymph_node"
-                          :value="0"
+                          :value="false"
                           :label="$t('Not_increased')"
                           color="primary"
                         />
                         <VRadio
                           v-model="formData.lymph_node"
-                          :value="1"
+                          :value="true"
                           :label="$t('Increased')"
                           color="primary"
                         />
@@ -239,7 +249,7 @@ async function onSubmit() {
                           <div class="column">
                             <VRadio
                               v-model="formData.liver"
-                              :value="0"
+                              :value="false"
                               :label="$t('Not_palpated')"
                               color="primary"
                             />
@@ -247,7 +257,7 @@ async function onSubmit() {
                           <div class="column">
                             <VRadio
                               v-model="formData.liver"
-                              :value="1"
+                              :value="true"
                               :label="$t('Increased')"
                               color="primary"
                             />
@@ -270,7 +280,7 @@ async function onSubmit() {
                           <div class="column">
                             <VRadio
                               v-model="formData.skin"
-                              :value="0"
+                              :value="false"
                               :label="$t('Pure')"
                               color="primary"
                             />
@@ -278,7 +288,7 @@ async function onSubmit() {
                           <div class="column">
                             <VRadio
                               v-model="formData.skin"
-                              :value="1"
+                              :value="true"
                               :label="$t('With signs of damage')"
                               color="primary"
                             />
@@ -301,7 +311,7 @@ async function onSubmit() {
                           <div class="column">
                             <VRadio
                               v-model="formData.lung"
-                              :value="0"
+                              :value="false"
                               :label="$t('No_wheezing')"
                               color="primary"
                             />
@@ -309,7 +319,7 @@ async function onSubmit() {
                           <div class="column">
                             <VRadio
                               v-model="formData.lung"
-                              :value="1"
+                              :value="true"
                               :label="$t('Wheezing')"
                               color="primary"
                             />
@@ -332,7 +342,7 @@ async function onSubmit() {
                           <div class="column">
                             <VRadio
                               v-model="formData.heart"
-                              :value="0"
+                              :value="false"
                               :label="$t('Fine')"
                               color="primary"
                             />
@@ -340,7 +350,7 @@ async function onSubmit() {
                           <div class="column">
                             <VRadio
                               v-model="formData.heart"
-                              :value="1"
+                              :value="true"
                               :label="$t('Not_fine')"
                               color="primary"
                             />

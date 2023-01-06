@@ -86,3 +86,15 @@ export async function fetchImmunizations() {
     throw error
   }
 }
+
+export async function fetchWithdrawalReasons() {
+  try {
+    const { data } = await api({
+      url: `/reject-reasons`,
+    })
+
+    return data
+  } catch (error) {
+    throw error
+  }
+}

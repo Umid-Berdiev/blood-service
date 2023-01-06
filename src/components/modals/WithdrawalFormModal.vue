@@ -3,6 +3,7 @@ import moment from 'moment'
 import { reactive, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
+import { fetchWithdrawalReasons } from '/@src/utils/api/additional'
 import { createWithdrawalForPatient } from '/@src/utils/api/patient'
 import { WithdrawalFormInterface } from '/@src/utils/interfaces'
 
@@ -33,17 +34,17 @@ const datePickerModelConfig = reactive({
   type: 'string',
   mask: masks.value.input, // Uses 'iso' if missing
 })
-const reasonOptions = ref([{ id: 'brucellosis', name: t('Brucellosis') }])
-const formFields: WithdrawalFormInterface = reactive({
+const withdrawalReasons = ref([])
+const formData: WithdrawalFormInterface = reactive({
   type: 'temporary',
-  reason: '',
+  reason_id: null,
   start_date: moment().format('YYYY-MM-DD'),
   end_date: '',
   source: '',
 })
 const errors = reactive({
   type: [],
-  reason: [],
+  reason_id: [],
   start_date: [],
   end_date: [],
   source: [],
@@ -53,10 +54,17 @@ const range = reactive({
   end: new Date(),
 })
 
+// hooks
+onMounted(async () => {
+  const res = await fetchWithdrawalReasons()
+  withdrawalReasons.value = res.result
+})
+
+// functions
 async function onSubmit() {
   try {
     isLoading.value = true
-    await createWithdrawalForPatient(props.patientId, formFields)
+    await createWithdrawalForPatient(props.patientId, formData)
     emits('update:list')
     onClose()
   } catch (error: any) {
@@ -74,9 +82,9 @@ function onClose() {
 }
 
 function clearFields() {
-  Object.assign(formFields, {
+  Object.assign(formData, {
     type: 'temporary',
-    reason: '',
+    reason_id: null,
     start_date: moment().format('YYYY-MM-DD'),
     end_date: '',
     source: '',
@@ -86,7 +94,7 @@ function clearFields() {
 function clearErrors() {
   Object.assign(errors, {
     type: [],
-    reason: [],
+    reason_id: [],
     start_date: [],
     end_date: [],
     source: [],
@@ -106,13 +114,13 @@ function clearError(error: string) {
           <VField :label="$t('Withdrawal_type')" required>
             <VControl>
               <VRadio
-                v-model="formFields.type"
+                v-model="formData.type"
                 value="permanent"
                 :label="$t('Permanent')"
                 @change="clearError('type')"
               />
               <VRadio
-                v-model="formFields.type"
+                v-model="formData.type"
                 value="temporary"
                 :label="$t('Temporary')"
                 @change="clearError('type')"
@@ -123,17 +131,18 @@ function clearError(error: string) {
           <VField v-slot="{ id }" class="is-curved-select">
             <VControl>
               <Multiselect
-                v-model="formFields.reason"
+                v-model="formData.reason_id"
                 :attrs="{ id }"
-                :options="reasonOptions"
+                :options="withdrawalReasons"
                 :placeholder="$t('Select_reason')"
                 label="name"
                 value-prop="id"
               />
+              <span class="help has-text-danger">{{ errors.reason_id[0] }}</span>
             </VControl>
           </VField>
           <VDatePicker
-            v-model="formFields.start_date"
+            v-model="formData.start_date"
             :locale="locale"
             mode="date"
             :masks="masks"
@@ -156,7 +165,8 @@ function clearError(error: string) {
             </template>
           </VDatePicker>
           <VDatePicker
-            v-model="formFields.end_date"
+            v-if="formData.type === 'temporary'"
+            v-model="formData.end_date"
             :locale="locale"
             mode="date"
             :masks="masks"
@@ -171,7 +181,7 @@ function clearError(error: string) {
                   <VInput
                     class="is-primary-focus"
                     :value="inputValue"
-                    :disabled="formFields.type === 'permanent'"
+                    :disabled="formData.type === 'permanent'"
                     v-on="inputEvents"
                     @change="clearError('end_date')"
                   />
@@ -183,7 +193,7 @@ function clearError(error: string) {
           <VField :label="$t('Source')" required>
             <VControl>
               <VTextarea
-                v-model="formFields.source"
+                v-model="formData.source"
                 :placeholder="t('Enter_source')"
                 :rows="3"
                 @input="clearError('source')"

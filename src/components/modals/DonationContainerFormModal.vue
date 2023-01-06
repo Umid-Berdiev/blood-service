@@ -4,7 +4,6 @@ import { isEmpty } from 'lodash'
 import { reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
-// import { createWithdrawalForPatient } from '/@src/utils/api/donations'
 
 export interface ContainerFormInterface {
   title: {
@@ -73,7 +72,6 @@ watch(
 async function onSubmit() {
   try {
     isLoading.value = true
-    // await createWithdrawalForPatient(props.container?.id, formFields)
     emits('update:list')
     onClose()
   } catch (error: any) {

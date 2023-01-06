@@ -275,7 +275,7 @@ const themeClasses = computed(() => {
               font-weight: 400;
               font-family: var(--font);
               align-items: center;
-              padding: 0 2rem 0 3.5rem;
+              padding: 0 2rem 0 5rem;
               font-size: 0.9rem;
 
               &.is-active,

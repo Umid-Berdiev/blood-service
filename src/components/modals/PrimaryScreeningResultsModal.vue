@@ -2,14 +2,17 @@
 import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { getPrimaryScreeningResult } from '/@src/utils/api/screening'
+import {
+  PatientVisitCardInterface,
+  PrimaryScreeningFormInterface,
+} from '/@src/utils/interfaces'
 
 const props = withDefaults(
   defineProps<{
-    visitcardId: number | null
+    visitcard: PatientVisitCardInterface
     isOpen: boolean
   }>(),
   {
-    visitcardId: null,
     isOpen: false,
   }
 )
@@ -26,19 +29,14 @@ const notif = useNotyf()
 const { locale, t } = useI18n()
 const isLoading = ref(false)
 const title = ref('')
-const primaryScreeningResult = reactive({})
+const primaryScreeningResult = ref<PrimaryScreeningFormInterface | null>(null)
 
 // hooks
-watch(
-  () => props.visitcardId,
-  async (newVal) => {
-    try {
-      const res = await getPrimaryScreeningResult(newVal as number)
-      Object.assign(primaryScreeningResult, res.result)
-    } catch (error) {}
-  },
-  { immediate: true }
-)
+watchEffect(() => {
+  if (props.visitcard) {
+    primaryScreeningResult.value = props.visitcard.primary_screening_result
+  }
+})
 
 // functions
 function onClose() {
@@ -57,19 +55,19 @@ function onClose() {
         <div class="column">
           <p class="is-size-5">
             {{ $t('Researched_at') }}:
-            <strong>{{ primaryScreeningResult.date }}</strong>
+            <strong>{{ primaryScreeningResult?.date }}</strong>
           </p>
           <p class="is-size-5">
             {{ $t('Researched_by') }}:
-            <strong>{{ primaryScreeningResult.specialist ?? $t('Specialist') }}</strong>
+            <strong>{{ primaryScreeningResult?.created_by ?? $t('Specialist') }}</strong>
           </p>
           <p class="is-size-5">
             {{ $t('Preliminary_blood_type') }}:
-            <strong>{{ primaryScreeningResult.blood_type?.label }}</strong>
+            <strong>{{ primaryScreeningResult?.blood_type?.label }}</strong>
           </p>
           <p class="is-size-5">
             {{ $t('Hemoglobin_gl') }}:
-            <strong class="has-text-primary">{{ primaryScreeningResult.value }}</strong>
+            <strong class="has-text-primary">{{ primaryScreeningResult?.value }}</strong>
           </p>
         </div>
       </div>

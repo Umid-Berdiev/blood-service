@@ -67,8 +67,18 @@ onMounted(async () => {
 watchEffect(async () => {
   if (Number(props.cardId)) {
     title.value = t('Edit')
-    const res = await fetchVisitcardById(Number(props.cardId), patientID)
-    Object.assign(formData, res.result)
+    const { result } = await fetchVisitcardById(Number(props.cardId), patientID)
+    Object.assign(formData, {
+      patient_id: result.patient_id,
+      visit_type: result.visit_type,
+      directed_by: result.directed_by,
+      medical_organization_id: result.medical_organization_id,
+      public_organization: result.public_organization,
+      is_personalized_donation: result.is_personalized_donation,
+      is_mobile_team: result.is_mobile_team,
+      personalized_donation: result.personalized_donation,
+      mobile_team: result.mobile_team,
+    })
   }
 })
 

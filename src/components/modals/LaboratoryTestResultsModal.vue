@@ -1,14 +1,17 @@
 <script setup lang="ts">
-import { useI18n } from 'vue-i18n'
-import { useNotyf } from '/@src/composable/useNotyf'
+// import { useI18n } from 'vue-i18n'
+// import { useNotyf } from '/@src/composable/useNotyf'
+import {
+  PatientVisitCardInterface,
+  PrimaryScreeningFormInterface,
+} from '/@src/utils/interfaces'
 
 const props = withDefaults(
   defineProps<{
-    patientId: number | null
+    visitcard: PatientVisitCardInterface
     isOpen: boolean
   }>(),
   {
-    patientId: null,
     isOpen: false,
   }
 )
@@ -19,13 +22,22 @@ const emits = defineEmits<{
   (e: 'withdrawal'): void
 }>()
 
-const route = useRoute()
-const router = useRouter()
-const notif = useNotyf()
-const { locale, t } = useI18n()
+// const route = useRoute()
+// const router = useRouter()
+// const notif = useNotyf()
+// const { locale, t } = useI18n()
 const isLoading = ref(false)
 const title = ref('')
+const primaryScreeningResult = ref<PrimaryScreeningFormInterface | null>(null)
 
+// hooks
+watchEffect(() => {
+  if (props.visitcard) {
+    primaryScreeningResult.value = props.visitcard.primary_screening_result
+  }
+})
+
+// functions
 function onClose() {
   emits('update:isOpen', false)
 }
@@ -64,19 +76,21 @@ function onClose() {
                   <td>
                     <p class="">
                       {{ $t('Researched_at') }}:
-                      <strong>06.03.2013</strong>
+                      <strong>{{ primaryScreeningResult?.date }}</strong>
                     </p>
                     <p class="">
                       {{ $t('Researched_by') }}:
-                      <strong>Specialist</strong>
+                      <strong>{{ $t('Specialist') }}</strong>
                     </p>
                     <p class="">
                       {{ $t('Preliminary_blood_type') }}:
-                      <strong>B(III)</strong>
+                      <strong>{{ primaryScreeningResult?.blood_type?.label }}</strong>
                     </p>
                     <p class="">
                       {{ $t('Hemoglobin_gl') }}:
-                      <strong class="has-text-primary">142</strong>
+                      <strong class="has-text-primary">{{
+                        primaryScreeningResult?.value
+                      }}</strong>
                     </p>
                   </td>
                   <td>

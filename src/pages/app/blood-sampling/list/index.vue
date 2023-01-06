@@ -95,7 +95,7 @@ const errors = reactive({
 const currentFilterData = reactive({
   page: 1,
 })
-const clickedRowData: PatientInterface = reactive({})
+const selectedRow: PatientInterface = reactive({})
 const isBloodSamplingFormModalOpen = ref(false)
 
 // await handleSearch(currentFilterData)
@@ -126,7 +126,7 @@ async function clearFilterForm() {
 }
 
 function openBloodSamplingFormModal(patient: PatientInterface) {
-  Object.assign(clickedRowData, patient)
+  Object.assign(selectedRow, patient)
   isBloodSamplingFormModalOpen.value = true
 }
 </script>
@@ -259,7 +259,7 @@ function openBloodSamplingFormModal(patient: PatientInterface) {
     </div>
     <BloodSamplingFormModal
       v-model:is-open="isBloodSamplingFormModalOpen"
-      :patient="clickedRowData"
+      :patient="selectedRow"
     />
   </div>
 </template>

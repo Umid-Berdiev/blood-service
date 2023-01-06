@@ -59,7 +59,6 @@ onMounted(async function () {
 async function onSubmit() {
   try {
     isLoading.value = true
-    // await createWithdrawalForPatient(props.patient?.id, formState)
     emits('update:list')
     onClose()
   } catch (error: any) {

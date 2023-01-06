@@ -128,7 +128,7 @@ export async function createWithdrawalForPatient(
 ) {
   try {
     const { data } = await api({
-      url: `/patients/${id}/withdrawal`,
+      url: `/patients/${id}/rejects`,
       method: 'POST',
       data: payload,
     })

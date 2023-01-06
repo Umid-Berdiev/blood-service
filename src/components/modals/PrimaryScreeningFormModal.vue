@@ -63,7 +63,8 @@ watch(
 async function onSubmit() {
   try {
     isLoading.value = true
-    await storePrimaryScreeningResult(props.patient?.id, formState)
+    await storePrimaryScreeningResult(props.patient?.last_visit?.id, formState)
+    notif.success(t('Data_saved_successfully'))
     emits('update:list')
     onClose()
   } catch (error: any) {

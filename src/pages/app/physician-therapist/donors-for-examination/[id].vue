@@ -94,11 +94,13 @@ useHead({
 
 await fetchPatientInfo()
 
+// hooks
 onMounted(async () => {
   const res = await patientCategoriesList()
   categoryOptions.value = res.result
 })
 
+// functions
 async function fetchPatientInfo() {
   try {
     const res = await fetchPatientById(patientID)
@@ -264,7 +266,7 @@ function onDirectionForDonationSubmit() {
                     </a>
                   </td>
                 </tr>
-                <tr v-if="patientForm.last_visit?.visit_status_id === 3">
+                <tr v-if="patientForm.last_visit?.primary_screening_result">
                   <td>
                     <a
                       href="javascript:;"
@@ -275,7 +277,7 @@ function onDirectionForDonationSubmit() {
                     </a>
                   </td>
                 </tr>
-                <tr>
+                <tr v-if="patientForm.last_visit?.visit_status_id >= 3">
                   <td>
                     <a
                       href="javascript:;"
@@ -284,20 +286,9 @@ function onDirectionForDonationSubmit() {
                     >
                       {{ $t('Laboratory_test_results') }}
                     </a>
-                    <!-- <CollapseLink
-                      :title="$t('Laboratory_test_results')"
-                      title-classes="has-text-primary is-uppercase"
-                      with-chevron
-                    >
-                      <template #collapse-item-content>
-                        <RouterLink class="has-text-primary" to="/"
-                          >Goto somewhere</RouterLink
-                        >
-                      </template>
-                    </CollapseLink> -->
                   </td>
                 </tr>
-                <tr>
+                <!-- <tr>
                   <td>
                     <a href="javascript:;" class="has-text-primary is-uppercase">
                       {{ $t('Infectious_diseases') }}
@@ -310,7 +301,7 @@ function onDirectionForDonationSubmit() {
                       {{ $t('Medical_clearance') }}
                     </a>
                   </td>
-                </tr>
+                </tr> -->
               </tbody>
             </table>
           </div>
@@ -326,19 +317,19 @@ function onDirectionForDonationSubmit() {
     <PrimaryScreeningResultsModal
       v-if="patientForm.last_visit?.visit_status_id === 3"
       v-model:is-open="isPrimaryScreeningResultsModalOpen"
-      :visitcard-id="patientForm.last_visit?.id"
+      :visitcard="patientForm.last_visit"
       @withdrawal="openWithdrawalModal"
       @medical-examination="openMedicalInspectionFormModal"
     />
     <LaboratoryTestResultsModal
       v-model:is-open="isLaboratoryTestResultsModalOpen"
-      :patient-id="Number(patientID)"
+      :visitcard="patientForm.last_visit"
       @withdrawal="openWithdrawalModal"
       @medical-examination="openMedicalInspectionFormModal"
     />
     <MedicalInspectionFormModal
       v-model:is-open="isMedicalInspectionFormModalOpen"
-      :visitcard-id="patientForm.last_visit?.id"
+      :visitcard="patientForm.last_visit"
       @withdrawal="openWithdrawalModal"
       @donation="toDonation"
     />
