@@ -37,14 +37,14 @@ const datePickerModelConfig = reactive({
 const withdrawalReasons = ref([])
 const formData: WithdrawalFormInterface = reactive({
   type: 'temporary',
-  reason_id: null,
+  reason_text: '',
   start_date: moment().format('YYYY-MM-DD'),
   end_date: '',
   source: '',
 })
 const errors = reactive({
   type: [],
-  reason_id: [],
+  reason_text: [],
   start_date: [],
   end_date: [],
   source: [],
@@ -84,7 +84,7 @@ function onClose() {
 function clearFields() {
   Object.assign(formData, {
     type: 'temporary',
-    reason_id: null,
+    reason_text: null,
     start_date: moment().format('YYYY-MM-DD'),
     end_date: '',
     source: '',
@@ -94,7 +94,7 @@ function clearFields() {
 function clearErrors() {
   Object.assign(errors, {
     type: [],
-    reason_id: [],
+    reason_text: [],
     start_date: [],
     end_date: [],
     source: [],
@@ -128,17 +128,10 @@ function clearError(error: string) {
               <p class="help has-text-danger">{{ errors.type[0] }}</p>
             </VControl>
           </VField>
-          <VField v-slot="{ id }" class="is-curved-select">
+          <VField class="is-curved-select">
             <VControl>
-              <Multiselect
-                v-model="formData.reason_id"
-                :attrs="{ id }"
-                :options="withdrawalReasons"
-                :placeholder="$t('Select_reason')"
-                label="name"
-                value-prop="id"
-              />
-              <span class="help has-text-danger">{{ errors.reason_id[0] }}</span>
+              <VInput v-model="formData.reason_text" :placeholder="$t('Select_reason')" />
+              <span class="help has-text-danger">{{ errors.reason_text[0] }}</span>
             </VControl>
           </VField>
           <VDatePicker

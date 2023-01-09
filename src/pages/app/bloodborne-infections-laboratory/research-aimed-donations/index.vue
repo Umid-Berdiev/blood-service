@@ -1,14 +1,13 @@
 <script setup lang="ts">
 import { formatDate } from '@vueuse/core'
 import { useHead } from '@vueuse/head'
-import { isEmpty } from 'lodash'
 import { useI18n } from 'vue-i18n'
 import FilterForm from '/@src/components/pages/research-aimed-donations/FilterForm.vue'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { useMainStore } from '/@src/stores/main'
 
 import { useViewWrapper } from '/@src/stores/viewWrapper'
-import { fetchDonorsList } from '/@src/utils/api/patient'
+import { fetchPatientsListForLaboratories } from '/@src/utils/api/laboratories'
 import { ApiDataInterface, PatientInterface } from '/@src/utils/interfaces'
 
 const router = useRouter()
@@ -55,6 +54,7 @@ const columns = {
   },
   blood_sampling_date: {
     label: t('Blood_sampling_date'),
+    format: (value: string, row: any) => row.last_visit?.blood_sample?.date,
   },
   name: {
     label: t('Donor_fullname'),
@@ -95,7 +95,7 @@ const currentFilterData = reactive({
 })
 const clickedRowData: PatientInterface = reactive({})
 const isBloodSamplingFormModalOpen = ref(false)
-const isEmergencyNoticeFormModalOpen = ref(true)
+const isEmergencyNoticeFormModalOpen = ref(false)
 
 await handleSearch(currentFilterData)
 
@@ -104,12 +104,8 @@ async function handleSearch(filterForm: any) {
   try {
     Object.assign(currentFilterData, filterForm)
     isLoading.value = true
-    const res = await fetchDonorsList(filterForm)
+    const res = await fetchPatientsListForLaboratories(filterForm)
     Object.assign(apiData, res.result)
-
-    // if (isEmpty(res.result.data)) {
-    //   notif.warning(t('Data_not_found'))
-    // } else notif.success(`${t('Found')}: ${res.result.pagination.total} ${t('records')}`)
   } catch (error: any) {
     Object.assign(errors, error.response?.data?.errors)
   } finally {
@@ -148,11 +144,9 @@ function openBloodSamplingFormModal(patient: PatientInterface) {
             },
             {
               label: $t('Screening'),
-              // to: { name: '/app/users/' },
             },
             {
               label: $t('Research-aimed-donations-list'),
-              // to: { name: '/app/physician-therapist/donors-for-examination/' },
             },
           ]"
         />

@@ -154,6 +154,7 @@ export interface PatientVisitCardInterface {
   immunization_id: number | null
   donation_code: number | null
   primary_screening_result?: PrimaryScreeningFormInterface
+  questionnaire: { id: number; visit_id: number } | null
 }
 
 export interface ApiLinkInterface {
@@ -179,7 +180,7 @@ type WithdrawalType = 'permanent' | 'temporary'
 
 export interface WithdrawalFormInterface {
   type: WithdrawalType
-  reason_id: number | null
+  reason_text: string
   start_date: string
   end_date: string
   source: string
@@ -195,9 +196,9 @@ export interface BloodType {
 export interface PrimaryScreeningFormInterface {
   date: string
   blood_type_id: number | null
-  blood_type: BloodType
+  blood_type?: BloodType
   type: string
-  value: string
+  value: number | null
   created_by?: string
 }
 

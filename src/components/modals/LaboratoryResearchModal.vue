@@ -58,7 +58,11 @@ const formData: {
   laboratory_researches: [],
 })
 
-const errors = reactive({})
+const errors = reactive({
+  donation_type_id: [],
+  immunization_id: [],
+  donation_code: [],
+})
 
 // hooks
 onMounted(async () => {
@@ -80,6 +84,7 @@ watch(
 async function submitForm() {
   try {
     isLoading.value = true
+    clearErrors()
 
     formData.laboratory_researches = flatten(
       laboratoryResearchFormFields.value.map((block) =>
@@ -108,6 +113,14 @@ async function getLaboratoryResearchFields() {
 function onClose() {
   emits('update:isOpen', false)
 }
+
+function clearErrors() {
+  Object.assign(errors, {
+    donation_type_id: [],
+    immunization_id: [],
+    donation_code: [],
+  })
+}
 </script>
 
 <template>
@@ -127,6 +140,7 @@ function onClose() {
                 value-prop="id"
               />
             </VControl>
+            <p class="help has-text-danger">{{ errors.donation_type_id[0] }}</p>
           </VField>
         </VFlexItem>
         <VFlexItem>
@@ -141,21 +155,23 @@ function onClose() {
                 label="name"
                 value-prop="id"
               />
+              <p class="help has-text-danger">{{ errors.immunization_id[0] }}</p>
             </VControl>
           </VField>
         </VFlexItem>
-        <VFlexItem v-show="formData.donation_type_id === 1">
+        <VFlexItem v-show="formData.donation_type_id !== 3">
           <VField horizontal>
             <VLabel class="my-auto mr-5">{{ $t('Donation_code') }}</VLabel>
             <VControl>
               <VInput v-model="formData.donation_code" />
+              <p class="help has-text-danger">{{ errors.donation_code[0] }}</p>
             </VControl>
           </VField>
         </VFlexItem>
       </VFlex>
       <br />
       <div
-        v-if="formData.donation_type_id === 1 && laboratoryResearchFormFields.length"
+        v-if="formData.donation_type_id !== 3 && laboratoryResearchFormFields.length"
         class="table-container"
       >
         <table class="table is-bordered is-fullwidth">

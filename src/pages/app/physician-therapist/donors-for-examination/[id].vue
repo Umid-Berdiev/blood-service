@@ -310,7 +310,7 @@ function onDirectionForDonationSubmit() {
     </VTabs>
     <MedicalQuestionnaireModal
       v-model:is-open="isMedicalQuestionnaireModalOpen"
-      :visitcard-id="patientForm.last_visit.id"
+      :visitcard="patientForm.last_visit"
       @withdrawal="openWithdrawalModal"
       @laboratory-research="openLaboratoryResearchModal"
     />

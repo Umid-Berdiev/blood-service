@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import moment from 'moment'
 import { reactive, ref } from 'vue'
+import { formatDate } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
+import moment from 'moment'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { fetchBloodTypes } from '/@src/utils/api/additional'
 import { storePrimaryScreeningResult } from '/@src/utils/api/screening'
@@ -35,7 +36,7 @@ const formState: PrimaryScreeningFormInterface = reactive({
   date: moment().format('YYYY-MM-DD'),
   blood_type_id: null,
   type: 'normal',
-  value: '',
+  value: null,
 })
 const errors = reactive({
   date: [],
@@ -51,11 +52,36 @@ onMounted(async () => {
 })
 
 watch(
-  () => props.patient.last_visit,
+  () => props.patient.last_visit.primary_screening_result,
   (newVal) => {
     if (newVal) {
       Object.assign(formState, newVal)
     }
+  }
+)
+
+watch(
+  () => formState.value,
+  (newVal) => {
+    let hemVal = 'normal'
+
+    if (newVal) {
+      if (props.patient?.gender === 'male') {
+        if (newVal < 128) {
+          hemVal = 'below_normal'
+        } else if (newVal > 160) {
+          hemVal = 'above_normal'
+        }
+      } else if (props.patient?.gender === 'female') {
+        if (newVal < 120) {
+          hemVal = 'below_normal'
+        } else if (newVal > 140) {
+          hemVal = 'above_normal'
+        }
+      } else hemVal = 'normal'
+    }
+
+    formState.type = hemVal
   }
 )
 
@@ -109,13 +135,14 @@ function clearError(error: string) {
     <template #content>
       <div class="columns">
         <div class="column">
-          <h5 class="is-size-5 has-text-weight-medium">
-            {{ $t('Information_about_donor') }} # {{ patient.id }}
+          <h5 class="is-size-5 has-text-weight-medium ml-3">
+            {{ $t('Information_about_donor') }} # {{ patient.last_visit?.donation_code }}
           </h5>
         </div>
         <div class="column">
           <h5 class="is-size-5 has-text-weight-medium">
-            {{ $t('Visit_date') }}: {{ patient.created_at }}
+            {{ $t('Visit_date') }}:
+            {{ formatDate(new Date(patient.created_at), 'YYYY-MM-DD') }}
           </h5>
         </div>
       </div>
@@ -139,15 +166,26 @@ function clearError(error: string) {
           </tr>
           <tr>
             <th>{{ $t('Gender') }}</th>
-            <td>{{ patient.gender }}</td>
+            <td>{{ patient.gender && $t(patient.gender) }}</td>
           </tr>
           <tr>
             <th>{{ $t('Visit_type') }}</th>
-            <td>{{ patient.visit?.visit_type }}</td>
+            <td>
+              {{ patient.last_visit?.visit_type && $t(patient.last_visit?.visit_type) }}
+            </td>
+          </tr>
+          <tr>
+            <th>{{ $t('Donation_type') }}</th>
+            <td>
+              {{
+                patient.last_visit?.donation_type?.name &&
+                $t(patient.last_visit?.donation_type?.name)
+              }}
+            </td>
           </tr>
           <tr>
             <th>{{ $t('Donor_category') }}</th>
-            <td>{{ patient.patient_category_id }}</td>
+            <td>{{ patient.category?.name }}</td>
           </tr>
           <tr>
             <th>{{ $t('Passport_series_number') }}</th>
@@ -159,7 +197,7 @@ function clearError(error: string) {
         </tbody>
       </table>
       <form id="primary-screening-form" class="modal-form" @submit.prevent="onSubmit">
-        <h5 class="is-size-5 has-text-weight-medium">
+        <h5 class="is-size-5 has-text-weight-medium ml-3">
           {{ $t('Primary_screening_results') }}
         </h5>
         <table class="table is-fullwidth">
@@ -197,16 +235,22 @@ function clearError(error: string) {
                 <VField required>
                   <VControl>
                     <VFlex column-gap="1rem" align-items="center">
-                      <VFlexItem :flex-grow="1">
-                        <Multiselect
-                          v-model="formState.type"
-                          :options="optionsHemoglobin"
-                        />
-                      </VFlexItem>
                       <VFlexItem>
-                        <VInput v-model="formState.value" type="text" />
+                        <VInput v-model="formState.value" type="number" min="0" />
                       </VFlexItem>
                       <VFlexItem>{{ $t('g/l') }}</VFlexItem>
+                      <VFlexItem :flex-grow="1">
+                        <VInput
+                          :class="[
+                            formState.type === 'normal' && 'has-text-primary',
+                            (formState.type === 'below_normal' ||
+                              formState.type === 'above_normal') &&
+                              'has-text-danger',
+                          ]"
+                          :value="formState.type"
+                          disabled
+                        />
+                      </VFlexItem>
                     </VFlex>
                     <p class="help has-text-danger">{{ errors.value[0] }}</p>
                   </VControl>

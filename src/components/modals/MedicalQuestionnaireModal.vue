@@ -3,6 +3,7 @@ import { flatten } from 'lodash'
 import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { fetchQuestionsList, storePatientQuestionnaire } from '/@src/utils/api/patient'
+import { PatientVisitCardInterface } from '/@src/utils/interfaces'
 
 interface AnswerInterface {
   id?: number
@@ -26,11 +27,10 @@ interface MedicalQuestionnaireFormInterface {
 
 const props = withDefaults(
   defineProps<{
-    visitcardId: number | null
+    visitcard: PatientVisitCardInterface
     isOpen: boolean
   }>(),
   {
-    visitcardId: null,
     isOpen: false,
   }
 )
@@ -48,12 +48,17 @@ const { t } = useI18n()
 const isLoading = ref(false)
 const title = t('Medical_questionnaire_before_donation')
 const medicalQuestionnaireForm = ref<MedicalQuestionnaireFormInterface[]>([])
-// const medicalQuestionnaireFormAnswers = ref<AnswerInterface[]>([])
-
+const isQuestionnaireSaved = ref(false)
 await questionsList()
 
+// hooks
+onMounted(() => {
+  isQuestionnaireSaved.value = props.visitcard?.questionnaire ? true : false
+})
+
+// functions
 async function questionsList() {
-  const res = await fetchQuestionsList(props.visitcardId as number)
+  const res = await fetchQuestionsList(props.visitcard?.id as number)
   medicalQuestionnaireForm.value = res.result
 }
 
@@ -70,9 +75,10 @@ async function onSubmit() {
     )
     // console.log({ medicalQuestionnaireFormAnswers })
 
-    await storePatientQuestionnaire(props.visitcardId as number, {
+    await storePatientQuestionnaire(props.visitcard?.id as number, {
       answers: medicalQuestionnaireFormAnswers,
     })
+    isQuestionnaireSaved.value = true
     notif.success(t('Success'))
   } catch (error: any) {
     notif.error(error.message)
@@ -80,6 +86,7 @@ async function onSubmit() {
     isLoading.value = false
   }
 }
+
 function onClose() {
   emits('update:isOpen', false)
 }
@@ -103,7 +110,7 @@ function onClose() {
             <tbody>
               <tr v-for="(question, questionIndex) in block.questions" :key="question.id">
                 <td>{{ question.name }}</td>
-                <td>
+                <td class="has-text-centered">
                   <VField>
                     <VControl>
                       <VTextarea
@@ -140,7 +147,7 @@ function onClose() {
         <VButton
           type="button"
           color="warning"
-          :disabled="isLoading"
+          :disabled="isLoading || !isQuestionnaireSaved"
           @click="
             () => {
               close()
@@ -153,7 +160,7 @@ function onClose() {
         <VButton
           type="button"
           color="danger"
-          :disabled="isLoading"
+          :disabled="isLoading || !isQuestionnaireSaved"
           @click="
             () => {
               close()
@@ -178,5 +185,10 @@ table {
       }
     }
   }
+}
+
+.button:disabled {
+  cursor: not-allowed !important;
+  pointer-events: all;
 }
 </style>

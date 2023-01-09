@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { formatDate } from '@vueuse/core'
 import moment from 'moment'
 import { reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -87,49 +88,67 @@ function clearErrors() {
         </div>
         <div class="column">
           <h5 class="is-size-5 has-text-weight-medium">
-            {{ $t('Visit_date') }}: {{ patient.created_at }}
+            {{ $t('Visit_date') }}:
+            {{ formatDate(new Date(patient.created_at), 'YYYY-MM-DD') }}
           </h5>
         </div>
       </div>
-      <table class="table">
-        <tbody>
-          <tr>
-            <th>{{ $t('Last_name') }}</th>
-            <td>{{ patient.last_name }}</td>
-          </tr>
-          <tr>
-            <th>{{ $t('First_name') }}</th>
-            <td>{{ patient.first_name }}</td>
-          </tr>
-          <tr>
-            <th>{{ $t('Middlename') }}</th>
-            <td>{{ patient.father_name }}</td>
-          </tr>
-          <tr>
-            <th>{{ $t('Date-of-birth') }}</th>
-            <td>{{ patient.birth_date }}</td>
-          </tr>
-          <tr>
-            <th>{{ $t('Gender') }}</th>
-            <td>{{ patient.gender }}</td>
-          </tr>
-          <tr>
-            <th>{{ $t('Visit_type') }}</th>
-            <td>{{ patient.last_visit?.visit_type }}</td>
-          </tr>
-          <tr>
-            <th>{{ $t('Donor_category') }}</th>
-            <td>{{ patient.patient_category_id }}</td>
-          </tr>
-          <tr>
-            <th>{{ $t('Passport_series_number') }}</th>
-            <td>
-              {{ patient.passport_series }}{{ patient.passport_number }},
-              {{ patient.issued_by }}, {{ patient.when_issued }}
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="columns">
+        <column>
+          <table class="table">
+            <tbody>
+              <tr>
+                <th>{{ $t('Last_name') }}</th>
+                <td>{{ patient.last_name }}</td>
+              </tr>
+              <tr>
+                <th>{{ $t('First_name') }}</th>
+                <td>{{ patient.first_name }}</td>
+              </tr>
+              <tr>
+                <th>{{ $t('Middlename') }}</th>
+                <td>{{ patient.father_name }}</td>
+              </tr>
+              <tr>
+                <th>{{ $t('Date-of-birth') }}</th>
+                <td>{{ patient.birth_date }}</td>
+              </tr>
+              <tr>
+                <th>{{ $t('Gender') }}</th>
+                <td>{{ patient.gender && $t(patient.gender) }}</td>
+              </tr>
+              <tr>
+                <th>{{ $t('Visit_type') }}</th>
+                <td>
+                  {{
+                    patient.last_visit?.visit_type && $t(patient.last_visit?.visit_type)
+                  }}
+                </td>
+              </tr>
+              <tr>
+                <th>{{ $t('Donation_type') }}</th>
+                <td>
+                  {{
+                    patient.last_visit?.donation_type?.name &&
+                    $t(patient.last_visit?.donation_type?.name)
+                  }}
+                </td>
+              </tr>
+              <tr>
+                <th>{{ $t('Donor_category') }}</th>
+                <td>{{ patient.category?.name }}</td>
+              </tr>
+              <tr>
+                <th>{{ $t('Passport_series_number') }}</th>
+                <td>
+                  {{ patient.passport_series }}{{ patient.passport_number }},
+                  {{ patient.issued_by }}, {{ patient.when_issued }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </column>
+      </div>
       <form id="blood-sampling-form" class="modal-form" @submit.prevent="onSubmit">
         <h5 class="is-size-5 has-text-weight-medium">
           {{ $t('Information_about_blood_sampling') }}

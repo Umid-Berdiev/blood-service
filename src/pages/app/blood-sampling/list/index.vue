@@ -98,7 +98,7 @@ const currentFilterData = reactive({
 const selectedRow: PatientInterface = reactive({})
 const isBloodSamplingFormModalOpen = ref(false)
 
-// await handleSearch(currentFilterData)
+await handleSearch(currentFilterData)
 
 async function handleSearch(filterForm: any) {
   try {
@@ -260,6 +260,7 @@ function openBloodSamplingFormModal(patient: PatientInterface) {
     <BloodSamplingFormModal
       v-model:is-open="isBloodSamplingFormModalOpen"
       :patient="selectedRow"
+      @update:list="handleSearch(currentFilterData)"
     />
   </div>
 </template>
