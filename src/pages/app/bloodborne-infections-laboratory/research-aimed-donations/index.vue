@@ -93,11 +93,13 @@ const currentFilterData = reactive({
   page: 1,
   status_id: 5,
 })
-const clickedRowData: PatientInterface = reactive({})
-const isBloodSamplingFormModalOpen = ref(false)
+const clickedRowData = ref<PatientInterface | null>(null)
+const isLaboratoryFormModalOpen = ref(false)
 const isEmergencyNoticeFormModalOpen = ref(false)
 
 await handleSearch(currentFilterData)
+
+// hooks
 
 // functions
 async function handleSearch(filterForm: any) {
@@ -123,8 +125,12 @@ async function clearFilterForm() {
 }
 
 function openBloodSamplingFormModal(patient: PatientInterface) {
-  Object.assign(clickedRowData, patient)
-  isBloodSamplingFormModalOpen.value = true
+  clickedRowData.value = patient
+  isLaboratoryFormModalOpen.value = true
+}
+
+function clearClickedRowData() {
+  clickedRowData.value = null
 }
 </script>
 
@@ -255,8 +261,9 @@ function openBloodSamplingFormModal(patient: PatientInterface) {
       </div>
     </div>
     <ResearchAimedFormModal
-      v-model:is-open="isBloodSamplingFormModalOpen"
+      v-model:is-open="isLaboratoryFormModalOpen"
       :patient="clickedRowData"
+      @close="clearClickedRowData"
     />
     <EmergencyNoticeFormModal
       v-model:is-open="isEmergencyNoticeFormModalOpen"

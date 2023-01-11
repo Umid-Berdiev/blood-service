@@ -105,9 +105,9 @@ export interface PatientInterface {
   father_name: string
   birth_date: Date
   gender: 'male' | 'female'
-  phone_number: string
-  phone_work: string
-  phone_home: string
+  phone_number: string | null
+  phone_work: string | null
+  phone_home: string | null
   passport_series: string
   passport_number: string
   issued_by: string

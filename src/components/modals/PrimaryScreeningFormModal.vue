@@ -52,7 +52,7 @@ onMounted(async () => {
 })
 
 watch(
-  () => props.patient.last_visit.primary_screening_result,
+  () => props.patient?.last_visit?.primary_screening_result,
   (newVal) => {
     if (newVal) {
       Object.assign(formState, newVal)

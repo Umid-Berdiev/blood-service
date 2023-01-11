@@ -1,30 +1,33 @@
 <script setup lang="ts">
 import { formatDate } from '@vueuse/core'
+import { includes } from 'lodash'
 import moment from 'moment'
 import { reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
-import { storeHemotransmissionResearchResults } from '/@src/utils/api/patient'
+import {
+  storeHemotransmissionResearchResults,
+  fetchRequestsForHemotransmissiveLaboratory,
+} from '/@src/utils/api/laboratories'
 import { PatientInterface } from '/@src/utils/interfaces'
 
 interface ResearchAimedFormInterface {
-  blood_samples_taken_date: string
-  analysis_date: string
+  date_analysis: string
   hbsag?: boolean
-  oids?: boolean
-  hemolis?: boolean
-  hiles?: boolean
+  hiv?: boolean
+  hemolysis?: boolean
+  chilez?: boolean
   antihcv?: boolean
   rw?: boolean
-  testing_system_hbsag?: string
-  testing_system_oids?: string
-  testing_system_antihcv?: string
-  testing_system_rw?: string
+  hbsag_testing_system?: string
+  hiv_testing_system?: string
+  antihcv_testing_system?: string
+  rw_testing_system?: string
 }
 
 interface FormProps {
   isOpen: boolean
-  patient: PatientInterface
+  patient: PatientInterface | null
 }
 
 const props = withDefaults(defineProps<FormProps>(), {
@@ -41,15 +44,27 @@ const { t } = useI18n()
 const title = ref(t('Hemotransmission_research_results'))
 const isLoading = ref(false)
 const formFields: ResearchAimedFormInterface = reactive({
-  blood_samples_taken_date: moment().format('YYYY-MM-DD'),
-  analysis_date: moment().format('YYYY-MM-DD'),
+  date_analysis: moment().format('YYYY-MM-DD'),
 })
 const errors = reactive({
-  blood_samples_taken_date: [],
-  analysis_date: [],
-  clinical_biochemical_laboratory_date: [],
+  date_analysis: [],
+})
+const medicalExamination = ref({
+  data: {},
+  required_fields: [] as string[],
 })
 
+// hooks
+watchEffect(async () => {
+  if (props.patient?.last_visit) {
+    const res = await fetchRequestsForHemotransmissiveLaboratory(
+      props.patient?.last_visit?.id
+    )
+    medicalExamination.value = res.result
+  }
+})
+
+// functions
 async function onSubmit() {
   try {
     isLoading.value = true
@@ -72,17 +87,13 @@ function onClose() {
 
 function clearFields() {
   Object.assign(formFields, {
-    blood_samples_taken_date: moment().format('YYYY-MM-DD'),
-    analysis_date: moment().format('YYYY-MM-DD'),
-    clinical_biochemical_laboratory_date: moment().format('YYYY-MM-DD'),
+    date_analysis: moment().format('YYYY-MM-DD'),
   })
 }
 
 function clearErrors() {
   Object.assign(errors, {
-    blood_samples_taken_date: [],
-    analysis_date: [],
-    clinical_biochemical_laboratory_date: [],
+    date_analysis: [],
   })
 }
 
@@ -92,12 +103,19 @@ function clearError(error: string) {
 </script>
 
 <template>
-  <VModal :open="isOpen" size="big" :title="title" actions="right" @close="onClose">
+  <VModal
+    ref="hemotransmissionLaboratoryForm"
+    :open="isOpen"
+    size="big"
+    :title="title"
+    actions="right"
+    @close="onClose"
+  >
     <template #content>
       <div class="columns">
         <div class="column">
           <h5 class="is-size-5 has-text-weight-medium">
-            {{ $t('Donor_code') }}: {{ patient.last_visit?.donation_code }}
+            {{ $t('Donor_code') }}: {{ patient?.last_visit?.donation_code }}
           </h5>
         </div>
       </div>
@@ -109,12 +127,7 @@ function clearError(error: string) {
                 $t('Blood_sampling_date')
               }}</VLabel>
               <VControl>
-                <VInput
-                  :value="
-                    formatDate(new Date(patient.last_visit?.updated_at), 'YYYY-MM-DD')
-                  "
-                  disabled
-                />
+                <VInput :value="patient?.last_visit?.blood_sample?.date" disabled />
               </VControl>
             </VField>
           </VFlexItem>
@@ -124,7 +137,10 @@ function clearError(error: string) {
                 $t('Blood_samples_taken_date')
               }}</VLabel>
               <VControl>
-                <IMaskDateInput v-model="formFields.blood_samples_taken_date" />
+                <VInput
+                  :value="patient?.last_visit?.blood_sample?.hemotransmissible_date"
+                  disabled
+                />
               </VControl>
             </VField>
           </VFlexItem>
@@ -132,14 +148,14 @@ function clearError(error: string) {
             <VField horizontal>
               <VLabel class="my-auto mr-3 is-size-6">{{ $t('Analysis_date') }}</VLabel>
               <VControl>
-                <IMaskDateInput v-model="formFields.analysis_date" />
+                <IMaskDateInput v-model="formFields.date_analysis" />
               </VControl>
             </VField>
           </VFlexItem>
           <VFlexItem flex-basis="45%">
             <h5>
               <span class="has-text-weight-bold">{{ $t('Visit_stage') }}</span>
-              <span>{{ patient.last_visit?.stage }}</span>
+              <span>{{ patient?.last_visit?.stage }}</span>
             </h5>
           </VFlexItem>
         </VFlex>
@@ -154,9 +170,17 @@ function clearError(error: string) {
                   <VControl>
                     <VCheckbox
                       v-model="formFields.hbsag"
-                      class="p-2"
-                      color="primary"
-                      label="HBsAg"
+                      :class="[
+                        medicalExamination.required_fields.includes('hbsag') &&
+                          'has-text-danger',
+                        'p-2',
+                      ]"
+                      :color="
+                        medicalExamination.required_fields.includes('hbsag')
+                          ? 'danger'
+                          : 'primary'
+                      "
+                      :label="$t('HBsAg')"
                     />
                   </VControl>
                 </VField>
@@ -164,10 +188,10 @@ function clearError(error: string) {
               <td>
                 <VField horizontal class="is-justify-content-end">
                   <VLabel class="is-size-6 my-auto mr-3"
-                    >{{ $t('Testing_system') }} (HBsAg)</VLabel
+                    >{{ $t('Testing_system') }} ({{ $t('HBsAg') }})</VLabel
                   >
                   <VControl>
-                    <VInput v-model="formFields.testing_system_hbsag" />
+                    <VInput v-model="formFields.hbsag_testing_system" />
                   </VControl>
                 </VField>
               </td>
@@ -177,9 +201,17 @@ function clearError(error: string) {
                 <VField>
                   <VControl>
                     <VCheckbox
-                      v-model="formFields.oids"
-                      class="p-2"
-                      color="primary"
+                      v-model="formFields.hiv"
+                      :class="[
+                        medicalExamination.required_fields.includes('hiv') &&
+                          'has-text-danger',
+                        'p-2',
+                      ]"
+                      :color="
+                        medicalExamination.required_fields.includes('hiv')
+                          ? 'danger'
+                          : 'primary'
+                      "
                       :label="$t('OIDS')"
                     />
                   </VControl>
@@ -191,7 +223,7 @@ function clearError(error: string) {
                     >{{ $t('Testing_system') }} ({{ $t('OIDS') }})</VLabel
                   >
                   <VControl>
-                    <VInput v-model="formFields.testing_system_oids" />
+                    <VInput v-model="formFields.hiv_testing_system" />
                   </VControl>
                 </VField>
               </td>
@@ -202,8 +234,16 @@ function clearError(error: string) {
                   <VControl>
                     <VCheckbox
                       v-model="formFields.antihcv"
-                      class="has-text-danger p-2"
-                      color="danger"
+                      :class="[
+                        medicalExamination.required_fields.includes('antihcv') &&
+                          'has-text-danger',
+                        'p-2',
+                      ]"
+                      :color="
+                        medicalExamination.required_fields.includes('antihcv')
+                          ? 'danger'
+                          : 'primary'
+                      "
                       :label="$t('AntiHCV')"
                     />
                   </VControl>
@@ -215,7 +255,7 @@ function clearError(error: string) {
                     >{{ $t('Testing_system') }} ({{ $t('AntiHCV') }})</VLabel
                   >
                   <VControl>
-                    <VInput v-model="formFields.testing_system_antihcv" />
+                    <VInput v-model="formFields.antihcv_testing_system" />
                   </VControl>
                 </VField>
               </td>
@@ -226,8 +266,16 @@ function clearError(error: string) {
                   <VControl>
                     <VCheckbox
                       v-model="formFields.rw"
-                      class="p-2"
-                      color="primary"
+                      :class="[
+                        medicalExamination.required_fields.includes('rw') &&
+                          'has-text-danger',
+                        'p-2',
+                      ]"
+                      :color="
+                        medicalExamination.required_fields.includes('rw')
+                          ? 'danger'
+                          : 'primary'
+                      "
                       :label="$t('RW')"
                     />
                   </VControl>
@@ -239,7 +287,7 @@ function clearError(error: string) {
                     >{{ $t('Testing_system') }} ({{ $t('RW') }})</VLabel
                   >
                   <VControl>
-                    <VInput v-model="formFields.testing_system_rw" />
+                    <VInput v-model="formFields.rw_testing_system" />
                   </VControl>
                 </VField>
               </td>
@@ -249,9 +297,17 @@ function clearError(error: string) {
                 <VField>
                   <VControl>
                     <VCheckbox
-                      v-model="formFields.hemolis"
-                      class="p-2"
-                      color="primary"
+                      v-model="formFields.hemolysis"
+                      :class="[
+                        medicalExamination.required_fields.includes('hemolysis') &&
+                          'has-text-danger',
+                        'p-2',
+                      ]"
+                      :color="
+                        medicalExamination.required_fields.includes('hemolysis')
+                          ? 'danger'
+                          : 'primary'
+                      "
                       :label="$t('Hemolis')"
                     />
                   </VControl>
@@ -263,9 +319,17 @@ function clearError(error: string) {
                 <VField>
                   <VControl>
                     <VCheckbox
-                      v-model="formFields.hiles"
-                      class="p-2"
-                      color="primary"
+                      v-model="formFields.chilez"
+                      :class="[
+                        medicalExamination.required_fields.includes('chilez') &&
+                          'has-text-danger',
+                        'p-2',
+                      ]"
+                      :color="
+                        medicalExamination.required_fields.includes('chilez')
+                          ? 'danger'
+                          : 'primary'
+                      "
                       :label="$t('Hiles')"
                     />
                   </VControl>
@@ -281,7 +345,7 @@ function clearError(error: string) {
       </div>
     </template>
     <template #action>
-      <SubmitButton :loading="isLoading" form="blood-sampling-form" />
+      <SubmitButton :loading="isLoading" form="hemotransmission_laboratory_form" />
     </template>
   </VModal>
 </template>
