@@ -182,13 +182,13 @@ watch(
         <i class="iconify" data-icon="feather:minus" aria-hidden="true"></i>
         <span>{{ $t('Research-aimed-donations-list') }}</span>
       </RouterLink>
-      <RouterLink
+      <!-- <RouterLink
         to="/app/bloodborne-infections-laboratory/research-journal"
         class="is-submenu mb-3"
       >
         <i class="iconify" data-icon="feather:minus" aria-hidden="true"></i>
         <span>{{ $t('Bloodborne-infections-research-journal') }}</span>
-      </RouterLink>
+      </RouterLink> -->
     </VCollapseLinks>
 
     <!-- Clinical and biochemical laboratory -->
@@ -210,13 +210,13 @@ watch(
         <i class="iconify" data-icon="feather:minus" aria-hidden="true"></i>
         <span>{{ $t('Research-aimed-donations-list') }}</span>
       </RouterLink>
-      <RouterLink
+      <!-- <RouterLink
         to="/app/clinical-biochemical-laboratory/research-journal"
         class="is-submenu mb-3"
       >
         <i class="iconify" data-icon="feather:minus" aria-hidden="true"></i>
         <span>{{ $t('Clinical-biochemical-research-journal') }}</span>
-      </RouterLink>
+      </RouterLink> -->
     </VCollapseLinks>
 
     <!-- Buck laboratory -->

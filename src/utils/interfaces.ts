@@ -138,6 +138,26 @@ export type PatientDirectorType =
   | 'public_organization'
   | 'independently'
 
+export interface HemotransmissiveLaboratoryFormInterface {
+  date_analysis: string
+  hbsag?: boolean
+  hbsag_test_system?: string
+  hiv?: boolean
+  hiv_test_system?: string
+  antihcv?: boolean
+  antihcv_test_system?: string
+  rw?: boolean
+  rw_test_system?: string
+  hemolysis?: boolean
+  chilez?: boolean
+}
+
+export interface BloodSampleInterface {
+  date: string
+  hemotransmissible_date: string
+  chemical_date: string
+}
+
 export interface PatientVisitCardInterface {
   id: number
   patient_id: number | string | null
@@ -155,6 +175,7 @@ export interface PatientVisitCardInterface {
   donation_code: number | null
   primary_screening_result?: PrimaryScreeningFormInterface
   questionnaire: { id: number; visit_id: number } | null
+  blood_sample: BloodSampleInterface
 }
 
 export interface ApiLinkInterface {

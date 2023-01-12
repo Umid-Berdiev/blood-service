@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import { formatDate } from '@vueuse/core'
 import moment from 'moment'
 import { reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { boolean } from 'zod'
 import SubmitButton from '../partials/buttons/SubmitButton.vue'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { storeHemotransmissionResearchResults } from '/@src/utils/api/patient'

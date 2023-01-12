@@ -38,7 +38,6 @@ const currentPage = computed({
     return apiData.pagination.current_page
   },
   set: async (page) => {
-    currentFilterData.page = page
     await handleSearch(currentFilterData)
   },
 })
@@ -83,15 +82,15 @@ const columns = {
   },
 } as const
 
-const incomingCallerId = ref<number>()
 const errors = reactive({
   visit_type_id: [],
   donation_type_id: [],
   donation_code: [],
 })
 const currentFilterData = reactive({
-  page: 1,
-  status_id: 5,
+  visit_type_id: '',
+  donation_type_id: null,
+  donation_code: '',
 })
 const clickedRowData = ref<PatientInterface | null>(null)
 const isLaboratoryFormModalOpen = ref(false)
@@ -99,14 +98,17 @@ const isEmergencyNoticeFormModalOpen = ref(false)
 
 await handleSearch(currentFilterData)
 
-// hooks
-
 // functions
 async function handleSearch(filterForm: any) {
   try {
-    Object.assign(currentFilterData, filterForm)
     isLoading.value = true
-    const res = await fetchPatientsListForLaboratories(filterForm)
+    Object.assign(currentFilterData, filterForm)
+    const params = {
+      ...filterForm,
+      page: currentPage.value,
+    }
+
+    const res = await fetchPatientsListForLaboratories(params)
     Object.assign(apiData, res.result)
   } catch (error: any) {
     Object.assign(errors, error.response?.data?.errors)

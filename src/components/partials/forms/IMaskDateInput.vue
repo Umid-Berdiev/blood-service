@@ -4,7 +4,7 @@ import moment from 'moment'
 
 const props = withDefaults(
   defineProps<{
-    modelValue: string
+    modelValue: string | null
   }>(),
   {
     modelValue: '',
@@ -17,14 +17,13 @@ const emits = defineEmits<{
 
 const computedModelValue = computed({
   get() {
-    return props.modelValue
+    return props.modelValue ?? ''
   },
   set(val: string) {
     emits('update:modelValue', val)
   },
 })
 
-const thisYear = new Date().getFullYear() as number
 const momentFormat = 'YYYY-MM-DD'
 
 const imaskOptions = reactive({

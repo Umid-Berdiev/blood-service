@@ -37,8 +37,38 @@ export async function storeHemotransmissionResearchResults(
 ) {
   try {
     const { data } = await api({
-      url: `/visit-cards/${visitcardID}/hemotransmission-research`,
-      method: 'POST',
+      url: `/visit-cards/${visitcardID}/hemotransmissive-laboratory`,
+      method: 'PUT',
+      data: payload,
+    })
+
+    return data
+  } catch (error) {
+    throw error
+  }
+}
+
+export async function fetchRequestsForBiochemicalLaboratory(
+  visitcardID: number,
+  payload?: any
+) {
+  try {
+    const { data } = await api({
+      url: `/visit-cards/${visitcardID}/biochemical-laboratory`,
+      params: payload,
+    })
+
+    return data
+  } catch (error) {
+    throw error
+  }
+}
+
+export async function storeBiochemicalResearchResults(visitcardID: number, payload: any) {
+  try {
+    const { data } = await api({
+      url: `/visit-cards/${visitcardID}/biochemical-laboratory`,
+      method: 'PUT',
       data: payload,
     })
 
