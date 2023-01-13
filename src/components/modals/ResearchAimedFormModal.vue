@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import moment from 'moment'
 import { reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
@@ -32,7 +31,7 @@ const errors = reactive({
 })
 const medicalExamination = reactive({
   data: {
-    date_analysis: moment().format('YYYY-MM-DD'),
+    date_analysis: '',
     hbsag: false,
     hbsag_test_system: '',
     hiv: false,
@@ -101,7 +100,7 @@ function onClose() {
 }
 
 function clearFields() {
-  medicalExamination.data.date_analysis = moment().format('YYYY-MM-DD')
+  medicalExamination.data.date_analysis = ''
 }
 
 function clearErrors() {

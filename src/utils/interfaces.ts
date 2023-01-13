@@ -280,3 +280,13 @@ export interface ProductInterface {
   supernatant_plasma_amount: string
   plasma_sample_for_sterility_control: string
 }
+
+export interface SerologicalResearchFormInterface {
+  blood_samples_taken_date: string
+  analysis_date: string
+  reaction_hendelson_brutsellez: boolean
+  anti_staphylococcal_antibody_titer: string
+  gemoliz?: boolean
+  hilez?: boolean
+}
+

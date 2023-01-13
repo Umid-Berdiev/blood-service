@@ -260,6 +260,7 @@ function successNotify() {
 
             <!--Table Pagination-->
             <VFlexPagination
+              v-if="data.result.length"
               v-model:current-page="currentPage"
               class="mt-5"
               :item-per-page="data.pagination.per_page"

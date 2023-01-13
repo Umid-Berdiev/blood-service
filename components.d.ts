@@ -206,6 +206,7 @@ declare module '@vue/runtime-core' {
     SVGErrorPlaceholder: typeof import('./src/components/svg/SVGErrorPlaceholder.vue')['default']
     TabbedGridItem: typeof import('./src/components/partials/grids-users/TabbedGridItem.vue')['default']
     TableActionsBlock: typeof import('./src/components/partials/blocks/TableActionsBlock.vue')['default']
+    TableForLaboratories: typeof import('./src/components/tables/TableForLaboratories.vue')['default']
     TableWidget: typeof import('./src/components/partials/widgets/table/TableWidget.vue')['default']
     TableWidgetRowMembers: typeof import('./src/components/partials/widgets/table/content/TableWidgetRowMembers.vue')['default']
     TaskPanel: typeof import('./src/components/partials/panels/TaskPanel.vue')['default']

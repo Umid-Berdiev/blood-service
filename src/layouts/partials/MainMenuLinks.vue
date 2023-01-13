@@ -239,20 +239,20 @@ watch(
         <i class="iconify" data-icon="feather:minus" aria-hidden="true"></i>
         <span>{{ $t('Supernatant-plasma-list') }}</span>
       </RouterLink>
-      <RouterLink
+      <!-- <RouterLink
         to="/app/buck-laboratory/serological-research-journal"
         class="is-submenu mb-3"
       >
         <i class="iconify" data-icon="feather:minus" aria-hidden="true"></i>
         <span>{{ $t('Serological-Research-Journal') }}</span>
-      </RouterLink>
-      <RouterLink
+      </RouterLink> -->
+      <!-- <RouterLink
         to="/app/buck-laboratory/buck-control-sterility"
         class="is-submenu mb-3"
       >
         <i class="iconify" data-icon="feather:minus" aria-hidden="true"></i>
         <span>{{ $t('Buck-control-sterility') }}</span>
-      </RouterLink>
+      </RouterLink> -->
     </VCollapseLinks>
 
     <!-- Immunological-Research-Department -->
@@ -274,13 +274,13 @@ watch(
         <i class="iconify" data-icon="feather:minus" aria-hidden="true"></i>
         <span>{{ $t('Research-aimed-donations-list') }}</span>
       </RouterLink>
-      <RouterLink
+      <!-- <RouterLink
         to="/app/immunological-research-department/research-journal"
         class="is-submenu mb-3"
       >
         <i class="iconify" data-icon="feather:minus" aria-hidden="true"></i>
         <span>{{ $t('Research-journal') }}</span>
-      </RouterLink>
+      </RouterLink> -->
     </VCollapseLinks>
 
     <!-- Donations -->

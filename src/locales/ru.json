@@ -285,7 +285,7 @@
   "Handbook_page": "Страница Справочники",
   "Not_voted_yet": "Ещё не проголосовал(а)",
   "Add_vote": "Добавить голос",
-  "Comment": "Комментарий",
+  "Comment": "Примечание",
   "Add_comment": "Добавить комментарий",
   "Accept": "Одобрить",
   "Reject": "Отказать",
@@ -775,5 +775,13 @@
   "Blood_collect_condition": "Условия взятия крови",
   "Stationary": "Стационарно",
   "Direction_for_donation": "Направление на донацию",
-  "Recommended_blood_capacity": "Рекомендуемый объем донации, мл"
+  "Recommended_blood_capacity": "Рекомендуемый объем донации, мл",
+  "negative": "отрицательный",
+  "positive": "положительный",
+  "doubtful": "сомнительный",
+  "Analysis_results": "Результаты анализа",
+  "Final_blood_type": "Окончательная группа крови",
+  "Blood_type_is_not_determined": "Группа крови не определяется",
+  "Hemolysis": "Гемолиз",
+  "Hiles": "Хилез"
 }

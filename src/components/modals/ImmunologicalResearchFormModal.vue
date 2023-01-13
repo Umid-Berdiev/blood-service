@@ -1,30 +1,16 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-import { formatDate } from '@vueuse/core'
-import moment from 'moment'
 import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { PatientInterface } from '/@src/utils/interfaces'
-
-interface ImmunologicalResearchFormInterface {
-  blood_samples_taken_date: string
-  analysis_date: string
-  definitive_blood_group: string
-  rhesus_affiliation: string
-  natural_antibodies_titer: {
-    value: string
-    a1: string
-    b1: string
-  }
-  incomplete_immune_antibodies: string
-  comment: string
-  gemoliz?: boolean
-  hilez?: boolean
-}
+import {
+  fetchRequestsForImmunologicalLaboratory,
+  storeImmunologicalResearchResults,
+} from '/@src/utils/api/laboratories'
 
 interface FormProps {
   isOpen: boolean
-  patient: PatientInterface
+  patient: PatientInterface | null
 }
 
 const props = withDefaults(defineProps<FormProps>(), {
@@ -39,20 +25,10 @@ const emits = defineEmits<{
 
 const notif = useNotyf()
 const { t } = useI18n()
-const title = ref(t('Hemotransmission_research_results'))
+const title = ref(t('Immunological_research_results'))
 const isLoading = ref(false)
-const formFields: ImmunologicalResearchFormInterface = reactive({
-  definitive_blood_group: 'oab1',
-  rhesus_affiliation: 'rh+',
-  natural_antibodies_titer: {
-    value: '',
-    a1: '',
-    b1: '',
-  },
-})
 const errors = reactive({
-  blood_samples_taken_date: [],
-  analysis_date: [],
+  date_analysis: [],
 })
 
 const optionsNaturalAntibodiesTiter = [
@@ -65,9 +41,58 @@ const optionsIncompleteImmuneAntibodies = [
   { value: 2, label: 'not_detected' },
 ]
 
+const medicalExamination = reactive({
+  data: {
+    date_analysis: '',
+    blood_group: '',
+    rh_factor: '',
+    note: '',
+    titer_body: '',
+    titer_body_alpha: '',
+    titer_body_beta: '',
+    immune: '',
+    immune_result: '',
+    hemolysis: false,
+    chilez: false,
+  },
+  required_fields: [] as string[],
+})
+const hasHemolisOrHiles = ref(false)
+
+// hooks
+watch(
+  () => props.patient?.last_visit?.id,
+  async (newVal) => {
+    if (newVal) {
+      const res = await fetchRequestsForImmunologicalLaboratory(newVal)
+      Object.assign(medicalExamination, res.result)
+    }
+  }
+)
+
+watch(
+  [() => medicalExamination.data.hemolysis, () => medicalExamination.data.chilez],
+  async (newVal) => {
+    if (newVal.includes(true)) {
+      // medicalExamination.data.hbsag = false
+      // medicalExamination.data.hiv = false
+      // medicalExamination.data.antihcv = false
+      // medicalExamination.data.rw = false
+
+      hasHemolisOrHiles.value = true
+    } else hasHemolisOrHiles.value = false
+  }
+)
+
+// functions
 async function onSubmit() {
   try {
     isLoading.value = true
+    await storeImmunologicalResearchResults(
+      props.patient?.last_visit?.id as number,
+      medicalExamination.data
+    )
+    notif.success(t('Data_saved_successfully'))
     emits('update:list')
     onClose()
   } catch (error: any) {
@@ -85,22 +110,18 @@ function onClose() {
 }
 
 function clearFields() {
-  Object.assign(formFields, {
-    blood_samples_taken_date: moment().format('YYYY-MM-DD'),
-    analysis_date: moment().format('YYYY-MM-DD'),
-  })
+  medicalExamination.data.date_analysis = ''
 }
 
 function clearErrors() {
   Object.assign(errors, {
-    blood_samples_taken_date: [],
-    analysis_date: [],
+    date_analysis: [],
   })
 }
 
-function clearError(error: string) {
-  errors[error] = ''
-}
+// function clearError(error: string) {
+//   errors[error] = ''
+// }
 
 function onEmergencyNoticing() {
   emits('emergency-noticing')
@@ -114,7 +135,7 @@ function onEmergencyNoticing() {
       <div class="columns">
         <div class="column">
           <h5 class="is-size-5 has-text-weight-medium">
-            {{ $t('Donor_code') }}: {{ patient.last_visit?.donation_code }}
+            {{ $t('Donation_code') }}: {{ patient?.last_visit?.donation_code }}
           </h5>
         </div>
       </div>
@@ -126,12 +147,7 @@ function onEmergencyNoticing() {
                 $t('Blood_sampling_date')
               }}</VLabel>
               <VControl>
-                <VInput
-                  :value="
-                    formatDate(new Date(patient.last_visit?.updated_at), 'YYYY-MM-DD')
-                  "
-                  disabled
-                />
+                <VInput :value="patient?.last_visit?.blood_sample?.date" disabled />
               </VControl>
             </VField>
           </VFlexItem>
@@ -140,23 +156,24 @@ function onEmergencyNoticing() {
               <VLabel class="my-auto mr-3 is-size-6">{{
                 $t('Blood_samples_taken_date')
               }}</VLabel>
-              <VControl>
-                <IMaskDateInput v-model="formFields.blood_samples_taken_date" />
-              </VControl>
+              <VInput
+                :value="patient?.last_visit?.blood_sample?.chemical_date"
+                disabled
+              />
             </VField>
           </VFlexItem>
           <VFlexItem flex-basis="45%">
             <VField horizontal>
               <VLabel class="my-auto mr-3 is-size-6">{{ $t('Analysis_date') }}</VLabel>
               <VControl>
-                <IMaskDateInput v-model="formFields.analysis_date" />
+                <IMaskDateInput v-model="medicalExamination.data.date_analysis" />
               </VControl>
             </VField>
           </VFlexItem>
           <VFlexItem flex-basis="45%">
             <h5>
               <span class="has-text-weight-bold mr-3">{{ $t('Visit_stage') }}:</span>
-              <span>{{ patient.last_visit?.stage }}</span>
+              <span>{{ patient?.last_visit?.stage }}</span>
             </h5>
           </VFlexItem>
           <VFlexItem flex-basis="45%">
@@ -164,7 +181,9 @@ function onEmergencyNoticing() {
               <span class="has-text-weight-bold mr-3"
                 >{{ $t('Preliminary_blood_type') }}:</span
               >
-              <span>{{ patient.last_visit?.preliminary_blood_type ?? 'O(I)' }}</span>
+              <span>{{
+                patient?.last_visit?.primary_screening_result?.blood_type?.label
+              }}</span>
             </h5>
           </VFlexItem>
         </VFlex>
@@ -176,13 +195,13 @@ function onEmergencyNoticing() {
           <div class="column is-6">
             <div class="is-flex">
               <h5 class="has-text-danger mr-5">
-                {{ $t('Окончательная группа крови') }}
+                {{ $t('Final_blood_type') }}
               </h5>
               <div class="field">
                 <div class="control">
                   <input
                     id="oab1"
-                    v-model="formFields.definitive_blood_group"
+                    v-model="medicalExamination.data.blood_group"
                     type="radio"
                     value="oab1"
                   />
@@ -191,7 +210,7 @@ function onEmergencyNoticing() {
                 <div class="control">
                   <input
                     id="ab2"
-                    v-model="formFields.definitive_blood_group"
+                    v-model="medicalExamination.data.blood_group"
                     type="radio"
                     value="ab2"
                   />
@@ -200,7 +219,7 @@ function onEmergencyNoticing() {
                 <div class="control">
                   <input
                     id="a2b2"
-                    v-model="formFields.definitive_blood_group"
+                    v-model="medicalExamination.data.blood_group"
                     type="radio"
                     value="a2b2"
                   />
@@ -209,7 +228,7 @@ function onEmergencyNoticing() {
                 <div class="control">
                   <input
                     id="a2a1b2"
-                    v-model="formFields.definitive_blood_group"
+                    v-model="medicalExamination.data.blood_group"
                     type="radio"
                     value="a2a1b2"
                   />
@@ -220,7 +239,7 @@ function onEmergencyNoticing() {
                 <div class="control">
                   <input
                     id="ba3"
-                    v-model="formFields.definitive_blood_group"
+                    v-model="medicalExamination.data.blood_group"
                     type="radio"
                     value="ba3"
                   />
@@ -229,7 +248,7 @@ function onEmergencyNoticing() {
                 <div class="control">
                   <input
                     id="ab04"
-                    v-model="formFields.definitive_blood_group"
+                    v-model="medicalExamination.data.blood_group"
                     type="radio"
                     value="ab04"
                   />
@@ -238,7 +257,7 @@ function onEmergencyNoticing() {
                 <div class="control">
                   <input
                     id="a2b04"
-                    v-model="formFields.definitive_blood_group"
+                    v-model="medicalExamination.data.blood_group"
                     type="radio"
                     value="a2b04"
                   />
@@ -249,7 +268,7 @@ function onEmergencyNoticing() {
                 <div class="control">
                   <input
                     id="a2ba14"
-                    v-model="formFields.definitive_blood_group"
+                    v-model="medicalExamination.data.blood_group"
                     type="radio"
                     value="a2ba14"
                   />
@@ -260,18 +279,18 @@ function onEmergencyNoticing() {
                 <div class="control">
                   <input
                     id="not_recognized"
-                    v-model="formFields.definitive_blood_group"
+                    v-model="medicalExamination.data.blood_group"
                     type="radio"
                     value="not_recognized"
                   />
                   <label for="not_recognized" class="radio p-2">{{
-                    $t('Группа крови не определяется')
+                    $t('Blood_type_is_not_determined')
                   }}</label>
                 </div>
                 <div class="control">
                   <input
                     id="panagglutination"
-                    v-model="formFields.definitive_blood_group"
+                    v-model="medicalExamination.data.blood_group"
                     type="radio"
                     value="panagglutination"
                   />
@@ -291,7 +310,7 @@ function onEmergencyNoticing() {
                 <div class="control">
                   <input
                     id="rh+"
-                    v-model="formFields.rhesus_affiliation"
+                    v-model="medicalExamination.data.rh_factor"
                     type="radio"
                     value="rh+"
                   />
@@ -300,7 +319,7 @@ function onEmergencyNoticing() {
                 <div class="control">
                   <input
                     id="rh-"
-                    v-model="formFields.rhesus_affiliation"
+                    v-model="medicalExamination.data.rh_factor"
                     type="radio"
                     value="rh-"
                   />
@@ -309,7 +328,7 @@ function onEmergencyNoticing() {
                 <div class="control">
                   <input
                     id="du"
-                    v-model="formFields.rhesus_affiliation"
+                    v-model="medicalExamination.data.rh_factor"
                     type="radio"
                     value="du"
                   />
@@ -320,7 +339,7 @@ function onEmergencyNoticing() {
                 <div class="control">
                   <input
                     id="rh1"
-                    v-model="formFields.rhesus_affiliation"
+                    v-model="medicalExamination.data.rh_factor"
                     type="radio"
                     value="rh1"
                   />
@@ -329,7 +348,7 @@ function onEmergencyNoticing() {
                 <div class="control">
                   <input
                     id="rh2"
-                    v-model="formFields.rhesus_affiliation"
+                    v-model="medicalExamination.data.rh_factor"
                     type="radio"
                     value="rh2"
                   />
@@ -339,11 +358,11 @@ function onEmergencyNoticing() {
             </div>
             <div>
               <div class="field">
-                <label for="comment">{{ $t('Comment') }}</label>
+                <label for="note">{{ $t('Comment') }}</label>
                 <div class="control">
                   <textarea
-                    id="comment"
-                    v-model="formFields.comment"
+                    id="note"
+                    v-model="medicalExamination.data.note"
                     class="textarea"
                     :rows="3"
                   ></textarea>
@@ -356,7 +375,7 @@ function onEmergencyNoticing() {
               <h5 class="has-text-danger mr-5">{{ $t('Natural_antibodies_titer') }}</h5>
               <VControl>
                 <Multiselect
-                  v-model="formFields.natural_antibodies_titer.value"
+                  v-model="medicalExamination.data.titer_body"
                   :options="optionsNaturalAntibodiesTiter"
                   label="label"
                   value-prop="value"
@@ -374,7 +393,7 @@ function onEmergencyNoticing() {
                   <div class="field">
                     <p class="control">
                       <input
-                        v-model="formFields.natural_antibodies_titer.a1"
+                        v-model="medicalExamination.data.titer_body_alpha"
                         class="input"
                         type="text"
                       />
@@ -390,7 +409,7 @@ function onEmergencyNoticing() {
                   <div class="field">
                     <p class="control">
                       <input
-                        v-model="formFields.natural_antibodies_titer.b1"
+                        v-model="medicalExamination.data.titer_body_beta"
                         class="input"
                         type="text"
                       />
@@ -407,7 +426,7 @@ function onEmergencyNoticing() {
               </h5>
               <VControl class="is-flex">
                 <Multiselect
-                  v-model="formFields.incomplete_immune_antibodies"
+                  v-model="medicalExamination.data.immune"
                   :options="optionsIncompleteImmuneAntibodies"
                   label="label"
                   value-prop="value"
@@ -417,7 +436,7 @@ function onEmergencyNoticing() {
               <h5 class="ml-3 has-text-danger" for="">1:</h5>
               <p class="control">
                 <input
-                  v-model="formFields.natural_antibodies_titer.a1"
+                  v-model="medicalExamination.data.immune_result"
                   class="input"
                   type="text"
                   :style="{ width: '3rem' }"
@@ -426,12 +445,20 @@ function onEmergencyNoticing() {
             </VField>
             <VField horizontal class="">
               <VControl>
-                <VCheckbox v-model="formFields.hilez" color="primary" label="Хилез" />
+                <VCheckbox
+                  v-model="medicalExamination.data.chilez"
+                  color="primary"
+                  :label="$t('Hemolysis')"
+                />
               </VControl>
             </VField>
             <VField horizontal class="">
               <VControl>
-                <VCheckbox v-model="formFields.gemoliz" color="primary" label="Гемолиз" />
+                <VCheckbox
+                  v-model="medicalExamination.data.hemolysis"
+                  color="primary"
+                  :label="$t('Hiles')"
+                />
               </VControl>
             </VField>
           </div>
@@ -439,7 +466,7 @@ function onEmergencyNoticing() {
       </div>
     </template>
     <template #action>
-      <SubmitButton :loading="isLoading" form="blood-sampling-form" />
+      <SubmitButton :loading="isLoading" @click="onSubmit" />
     </template>
   </VModal>
 </template>

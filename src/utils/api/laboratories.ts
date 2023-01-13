@@ -77,3 +77,69 @@ export async function storeBiochemicalResearchResults(visitcardID: number, paylo
     throw error
   }
 }
+
+export async function fetchRequestsForBacteriologicalLaboratory(
+  visitcardID: number,
+  payload?: any
+) {
+  try {
+    const { data } = await api({
+      url: `/visit-cards/${visitcardID}/bacteriological-laboratory`,
+      params: payload,
+    })
+
+    return data
+  } catch (error) {
+    throw error
+  }
+}
+
+export async function storeBacteriologicalResearchResults(
+  visitcardID: number,
+  payload: any
+) {
+  try {
+    const { data } = await api({
+      url: `/visit-cards/${visitcardID}/bacteriological-laboratory`,
+      method: 'PUT',
+      data: payload,
+    })
+
+    return data
+  } catch (error) {
+    throw error
+  }
+}
+
+export async function fetchRequestsForImmunologicalLaboratory(
+  visitcardID: number,
+  payload?: any
+) {
+  try {
+    const { data } = await api({
+      url: `/visit-cards/${visitcardID}/immunological-laboratory`,
+      params: payload,
+    })
+
+    return data
+  } catch (error) {
+    throw error
+  }
+}
+
+export async function storeImmunologicalResearchResults(
+  visitcardID: number,
+  payload: any
+) {
+  try {
+    const { data } = await api({
+      url: `/visit-cards/${visitcardID}/immunological-laboratory`,
+      method: 'PUT',
+      data: payload,
+    })
+
+    return data
+  } catch (error) {
+    throw error
+  }
+}

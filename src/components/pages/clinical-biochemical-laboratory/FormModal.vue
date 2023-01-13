@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import moment from 'moment'
 import { reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
@@ -25,7 +24,7 @@ const emits = defineEmits<{
 
 const notif = useNotyf()
 const { t } = useI18n()
-const title = ref(t('Hemotransmission_research_results'))
+const title = ref(t('clinical_biochemical_research_results'))
 const isLoading = ref(false)
 const errors = reactive({
   blood_samples_taken_date: [],
@@ -34,7 +33,7 @@ const errors = reactive({
 })
 const medicalExamination = reactive({
   data: {
-    date_analysis: moment().format('YYYY-MM-DD'),
+    date_analysis: '',
     alt: '',
     reagent: '',
     norm: false,
@@ -74,8 +73,6 @@ watch(
 watch(
   [() => medicalExamination.data.hemolysis, () => medicalExamination.data.chilez],
   async (newVal) => {
-    console.log({ newVal })
-
     if (newVal.includes(true)) {
       // medicalExamination.data.hbsag = false
       // medicalExamination.data.hiv = false
@@ -113,7 +110,7 @@ function onClose() {
 }
 
 function clearFields() {
-  medicalExamination.data.date_analysis = moment().format('YYYY-MM-DD')
+  medicalExamination.data.date_analysis = ''
 }
 
 function clearErrors() {

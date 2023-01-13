@@ -1,15 +1,13 @@
 <script setup lang="ts">
 import { formatDate } from '@vueuse/core'
 import { useHead } from '@vueuse/head'
-import { isEmpty } from 'lodash'
 import { useI18n } from 'vue-i18n'
-import FilterForm from '/@src/components/pages/research-aimed-donations/FilterForm.vue'
 import FormModal from '/@src/components/pages/serological-researches/FormModal.vue'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { useMainStore } from '/@src/stores/main'
 
 import { useViewWrapper } from '/@src/stores/viewWrapper'
-import { fetchDonorsList } from '/@src/utils/api/patient'
+import { fetchPatientsListForLaboratories } from '/@src/utils/api/laboratories'
 import { ApiDataInterface, PatientInterface } from '/@src/utils/interfaces'
 
 const router = useRouter()
@@ -19,7 +17,7 @@ const mainStore = useMainStore()
 const isLoading = ref(false)
 const viewWrapper = useViewWrapper()
 
-viewWrapper.setPageTitle(t('Buck-laboratory'))
+viewWrapper.setPageTitle(t('Clinical-biochemical-laboratory'))
 useHead({
   title: `${t('Donor_list_for_blood_sampling')} - ${mainStore.app.name}`,
 })
@@ -40,7 +38,6 @@ const currentPage = computed({
     return apiData.pagination.current_page
   },
   set: async (page) => {
-    currentFilterData.page = page
     await handleSearch(currentFilterData)
   },
 })
@@ -52,9 +49,11 @@ const columns = {
   },
   donation_code: {
     label: t('Donation_code'),
+    format: (value: string, row: any) => row.last_visit?.donation_code,
   },
   blood_sampling_date: {
     label: t('Blood_sampling_date'),
+    format: (value: string, row: any) => row.last_visit?.blood_sample?.date,
   },
   name: {
     label: t('Donor_fullname'),
@@ -75,7 +74,7 @@ const columns = {
   },
   donation_type: {
     label: t('Donation_type'),
-    format: (value: string, row: any) => row.last_visit?.personalized_donation,
+    format: (value: string, row: any) => row.last_visit?.donation_type?.name,
   },
   visit_stage: {
     label: t('Visit_stage'),
@@ -83,31 +82,34 @@ const columns = {
   },
 } as const
 
-const incomingCallerId = ref<number>()
 const errors = reactive({
   visit_type_id: [],
   donation_type_id: [],
   donation_code: [],
 })
 const currentFilterData = reactive({
-  page: 1,
+  visit_type_id: '',
+  donation_type_id: null,
+  donation_code: '',
 })
-const clickedRowData: PatientInterface = reactive({})
+const clickedRowData = ref<PatientInterface | null>(null)
 const isFormModalOpen = ref(false)
 const isEmergencyNoticeFormModalOpen = ref(false)
 
 await handleSearch(currentFilterData)
+
 // functions
 async function handleSearch(filterForm: any) {
   try {
-    Object.assign(currentFilterData, filterForm)
     isLoading.value = true
-    const res = await fetchDonorsList(filterForm)
-    Object.assign(apiData, res.result)
+    Object.assign(currentFilterData, filterForm)
+    const params = {
+      ...filterForm,
+      page: currentPage.value,
+    }
 
-    if (isEmpty(res.result.data)) {
-      notif.warning(t('Data_not_found'))
-    } else notif.success(`${t('Found')}: ${res.result.pagination.total} ${t('records')}`)
+    const res = await fetchPatientsListForLaboratories(params)
+    Object.assign(apiData, res.result)
   } catch (error: any) {
     Object.assign(errors, error.response?.data?.errors)
   } finally {
@@ -125,8 +127,12 @@ async function clearFilterForm() {
 }
 
 function openBloodSamplingFormModal(patient: PatientInterface) {
-  Object.assign(clickedRowData, patient)
+  clickedRowData.value = patient
   isFormModalOpen.value = true
+}
+
+function clearClickedRowData() {
+  clickedRowData.value = null
 }
 </script>
 
@@ -146,11 +152,9 @@ function openBloodSamplingFormModal(patient: PatientInterface) {
             },
             {
               label: $t('Buck-laboratory'),
-              // to: { name: '/app/users/' },
             },
             {
               label: $t('Research-aimed-donations-list'),
-              // to: { name: '/app/physician-therapist/donors-for-examination/' },
             },
           ]"
         />
@@ -260,6 +264,7 @@ function openBloodSamplingFormModal(patient: PatientInterface) {
     <FormModal
       v-model:is-open="isFormModalOpen"
       :patient="clickedRowData"
+      @close="clearClickedRowData"
       @emergency-noticing="
         isEmergencyNoticeFormModalOpen = !isEmergencyNoticeFormModalOpen
       "

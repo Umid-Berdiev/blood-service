@@ -151,7 +151,7 @@ function clearClickedRowData() {
               to: { name: '/app/dashboard' },
             },
             {
-              label: $t('Screening'),
+              label: $t('Bloodborne-infections-laboratory'),
             },
             {
               label: $t('Research-aimed-donations-list'),
