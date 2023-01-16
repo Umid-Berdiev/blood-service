@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import { formatDate } from '@vueuse/core'
 import { useHead } from '@vueuse/head'
-import { isEmpty } from 'lodash'
 import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { useMainStore } from '/@src/stores/main'
 
 import { useViewWrapper } from '/@src/stores/viewWrapper'
-// import { patientsListForScreening } from '/@src/utils/api/patient'
+import { patientsListForDonation } from '/@src/utils/api/patient'
 import { ApiDataInterface, PatientInterface } from '/@src/utils/interfaces'
 
 const router = useRouter()
@@ -19,28 +18,11 @@ const viewWrapper = useViewWrapper()
 
 viewWrapper.setPageTitle(t('Donations'))
 useHead({
-  title: `${t('Donors-list-for-primary-screening')} - ${mainStore.app.name}`,
+  title: `${t('Donors_for_donation')} - ${mainStore.app.name}`,
 })
 
 const apiData: ApiDataInterface = reactive({
-  data: [
-    {
-      id: 11,
-      donation_code: 130100111800,
-      blood_sampling_date: '22.05.2022',
-      first_name: 'Ренат',
-      last_name: 'Ахмеджанов',
-      father_name: 'Шамильевич',
-      birth_date: '24.01.1990',
-      last_visit: {
-        visit_type: 'Безвозмезные донации',
-        created_at: '06.05.2022',
-        donation_type: 'Тромбоцитаферез',
-        stage: 'Мед. освидетельствование',
-      },
-      donor_category: 'Донор резерва',
-    },
-  ],
+  data: [],
   pagination: {
     total: 10,
     count: 10,
@@ -55,18 +37,18 @@ const currentPage = computed({
     return apiData.pagination.current_page
   },
   set: async (page) => {
-    currentFilterData.page = page
     await handleSearch(currentFilterData)
   },
 })
 
 const columns = {
   orderNumber: {
-    format: (value: any, row: any, index: number) => `${index + 1}`,
+    format: (value: any, row: any, index: number) => index + 1,
     // cellClass: 'is-flex-grow-0',
   },
   name: {
     label: t('Donor_fullname'),
+    grow: true,
   },
   birth_date: {
     label: t('Date-of-birth'),
@@ -74,28 +56,26 @@ const columns = {
   },
   visit_type: {
     label: t('Visit_type'),
-    format: (value: string, row: any) => row.last_visit?.visit_type,
-    // grow: true,
-    // sortable: true,
+    format: (value: string, row: any) =>
+      row.last_visit?.visit_type && t(row.last_visit?.visit_type),
   },
   visit_date: {
     label: t('Visit_date'),
-    format: (value: string, row: any) => row.last_visit?.created_at,
-    // sortable: true,
+    format: (value: string, row: any) =>
+      row.last_visit?.created_at &&
+      formatDate(new Date(row.last_visit?.created_at), 'YYYY-MM-DD'),
   },
   donation_type: {
     label: t('Donation_type'),
-    format: (value: string, row: any) => row.last_visit?.personalized_donation,
+    format: (value: string, row: any) => row.last_visit?.donation_type?.name,
   },
   donation_code: {
-    label: t('Donation_number'),
-    // format: (value: string, row: any) => row.last_visit?.personalized_donation,
+    label: t('Donation_code'),
+    format: (value: string, row: any) => row.last_visit?.donation_code,
   },
   donor_category: {
     label: t('Donor_category'),
-    // format: (value: string, row: any) => row.status?.name,
-    // grow: true,
-    // sortable: true,
+    format: (value: string, row: any) => row.category?.name,
   },
 } as const
 
@@ -106,24 +86,29 @@ const errors = reactive({
   donation_code: [],
 })
 const currentFilterData = reactive({
-  page: 1,
+  visit_type_id: '',
+  donation_type_id: null,
+  donation_code: '',
+  category_id: '',
 })
-const selectedRow: PatientInterface = reactive({})
+const clickedRowData = ref<PatientInterface | null>(null)
 const isFormModalOpen = ref(false)
 const isContainerFormModalOpen = ref(false)
 
-// await handleSearch(currentFilterData)
+await handleSearch(currentFilterData)
 
+// functions
 async function handleSearch(filterForm: any) {
   try {
-    Object.assign(currentFilterData, filterForm)
     isLoading.value = true
-    const res = await patientsListForScreening(filterForm)
-    Object.assign(apiData, res.result)
+    Object.assign(currentFilterData, filterForm)
+    const params = {
+      ...filterForm,
+      page: currentPage.value,
+    }
 
-    if (isEmpty(res.result.data)) {
-      notif.warning(t('Data_not_found'))
-    } else notif.success(`${t('Found')}: ${res.result.pagination.total} ${t('records')}`)
+    const res = await patientsListForDonation(params)
+    Object.assign(apiData, res.result)
   } catch (error: any) {
     Object.assign(errors, error.response?.data?.errors)
   } finally {
@@ -141,8 +126,12 @@ async function clearFilterForm() {
 }
 
 function openFormModal(row: any) {
+  clickedRowData.value = row
   isFormModalOpen.value = true
-  Object.assign(selectedRow, row)
+}
+
+function clearClickedRowData() {
+  clickedRowData.value = null
 }
 </script>
 
@@ -268,7 +257,8 @@ function openFormModal(row: any) {
     </div>
     <DonationDataEntryFormModal
       v-model:is-open="isFormModalOpen"
-      :patient="selectedRow"
+      :patient="clickedRowData"
+      @close="clearClickedRowData"
     />
   </div>
 </template>

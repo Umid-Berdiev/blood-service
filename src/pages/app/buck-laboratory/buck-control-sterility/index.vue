@@ -6,7 +6,6 @@ import { useNotyf } from '/@src/composable/useNotyf'
 import { useMainStore } from '/@src/stores/main'
 
 import { useViewWrapper } from '/@src/stores/viewWrapper'
-import { fetchDonorsList } from '/@src/utils/api/patient'
 import { ApiDataInterface } from '/@src/utils/interfaces'
 
 export interface BuckControlSterilityItemInterface {
@@ -98,7 +97,6 @@ async function handleSearch(filterForm: any) {
   try {
     Object.assign(currentFilterData, filterForm)
     isLoading.value = true
-    const res = await fetchDonorsList(filterForm)
     Object.assign(apiData, res.result)
 
     if (isEmpty(res.result.data)) {

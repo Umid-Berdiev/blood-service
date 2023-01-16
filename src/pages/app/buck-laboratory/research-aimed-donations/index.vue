@@ -242,7 +242,6 @@ function clearClickedRowData() {
                     @click="openBloodSamplingFormModal(row)"
                   >
                     {{ row.first_name }} {{ row.last_name }} {{ row.father_name }}
-                    <!-- <span class="dark-text"></span> -->
                   </a>
                 </template>
               </template>

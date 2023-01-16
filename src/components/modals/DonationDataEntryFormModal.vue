@@ -8,14 +8,15 @@ import { WholeBloodDonationFormProps } from '../pages/donation/WholeBloodDonatio
 import { ContainerFormInterface } from './DonationContainerFormModal.vue'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { donationTypes } from '/@src/data/additionals'
+import { fetchDonationResults, storeDonationResults } from '/@src/utils/api/donation'
 import { PatientInterface } from '/@src/utils/interfaces'
 
-interface DonationDataEntryFormProps {
+interface FormProps {
   isOpen: boolean
-  patient: PatientInterface
+  patient: PatientInterface | null
 }
 
-const props = withDefaults(defineProps<DonationDataEntryFormProps>(), {
+const props = withDefaults(defineProps<FormProps>(), {
   isOpen: false,
 })
 
@@ -29,15 +30,20 @@ const notif = useNotyf()
 const { t } = useI18n()
 const title = ref(t('Donation_data_entry_form'))
 const isLoading = ref(false)
-const formState = reactive({
+const wholeBloodDonationFormState = ref<WholeBloodDonationFormProps>({})
+const plasmapheresisFormState = ref<PlasmapheresisFormProps>({})
+const plateletpheresisFormState = ref<PlateletpheresisFormProps>({})
+const formState = ref({
   donation_type_id: null,
-  donation_date: moment().format('YYYY-MM-DD'),
-  completed_donation_status_id: null,
-  post_infusion_reaction_id: null,
+  date: '',
+  status: '',
+  status_type: '',
+  postinfusion_reaction_id: null,
+  container_id: null,
+  hemoconservative: null,
+  laboratory: null,
+  sent_to: '',
 })
-const wholeBloodDonationFormState: WholeBloodDonationFormProps = reactive({})
-const plasmapheresisFormState: PlasmapheresisFormProps = reactive({})
-const plateletpheresisFormState: PlateletpheresisFormProps = reactive({})
 const formErrors = reactive({
   donation_type_id: [],
   donation_date: [],
@@ -48,17 +54,30 @@ const containerList = ref<ContainerFormInterface[]>([
   { id: 1, name: 'Гемасин 500/400 4700812' },
 ])
 const isContainerFormModalOpen = ref(false)
-const container: ContainerFormInterface = reactive({})
+const container = ref<ContainerFormInterface>({})
 
 // hooks
 onMounted(async function () {
   await fetchContainerList()
 })
 
+watch(
+  () => props.patient?.last_visit?.id,
+  async (newVal) => {
+    if (newVal) {
+      const res = await fetchDonationResults(newVal)
+      formState.value = res.result
+    }
+  }
+)
+
 // functions
 async function onSubmit() {
   try {
     isLoading.value = true
+
+    await storeDonationResults(props.patient?.last_visit?.id as number, formState.value)
+    notif.success(t('Data_saved_successfully'))
     emits('update:list')
     onClose()
   } catch (error: any) {
@@ -76,12 +95,16 @@ function onClose() {
 }
 
 function clearFields() {
-  Object.assign(formState, {
-    donation_type_id: null,
-    donation_date: moment().format('YYYY-MM-DD'),
-    completed_donation_status_id: null,
-    post_infusion_reaction_id: null,
-  })
+  formState.value = {
+    date: '',
+    status: '',
+    status_type: '',
+    postinfusion_reaction_id: null,
+    container_id: null,
+    hemoconservative: null,
+    laboratory: null,
+    sent_to: '',
+  }
 }
 
 function clearErrors() {
@@ -121,12 +144,13 @@ async function fetchContainerList() {
             <div class="field">
               <div class="control is-expended">
                 <Multiselect
-                  v-model="formState.donation_type_id"
+                  v-model="patient.last_visit.donation_type_id"
                   :options="donationTypes"
                   :placeholder="$t('Select')"
                   label="name"
                   value-prop="id"
                   :style="{ minWidth: '15rem', margin: 0 }"
+                  disabled
                 />
               </div>
             </div>
@@ -139,7 +163,7 @@ async function fetchContainerList() {
           <div class="field-body">
             <div class="field">
               <div class="control">
-                <IMaskDateInput v-model="formState.donation_date" />
+                <IMaskDateInput v-model="formState.date" />
               </div>
             </div>
           </div>
@@ -152,7 +176,7 @@ async function fetchContainerList() {
             <div class="field">
               <div class="control">
                 <Multiselect
-                  v-model="formState.completed_donation_status_id"
+                  v-model="formState.status"
                   :options="[
                     { id: 1, name: 'Успешная донация' },
                     { id: 2, name: 'Безуспешная донация' },
@@ -167,7 +191,7 @@ async function fetchContainerList() {
             <div class="field">
               <div class="control">
                 <Multiselect
-                  v-model="formState.completed_donation_status_id"
+                  v-model="formState.status_type"
                   :options="[
                     { id: 1, name: 'Нормальное завершение' },
                     { id: 1, name: 'Некондиционный забор' },
@@ -189,7 +213,7 @@ async function fetchContainerList() {
             <div class="field">
               <div class="control">
                 <Multiselect
-                  v-model="formState.post_infusion_reaction_id"
+                  v-model="formState.postinfusion_reaction_id"
                   :options="[{ id: 1, name: 'Отсутствует' }]"
                   :placeholder="$t('Select')"
                   label="name"
@@ -201,25 +225,25 @@ async function fetchContainerList() {
           </div>
         </div>
       </div>
-      <template v-if="formState.donation_type_id === 1">
+      <template v-if="patient?.last_visit?.donation_type_id === 1">
         <hr class="is-divider" />
         <WholeBloodDonationFormBlock
+          v-model:form-state="wholeBloodDonationFormState"
           :container-list="containerList"
-          :form-state="wholeBloodDonationFormState"
         />
       </template>
-      <template v-else-if="formState.donation_type_id === 2">
+      <template v-else-if="patient?.last_visit?.donation_type_id === 2">
         <hr class="is-divider" />
         <PlasmapheresisFormBlock
+          v-model:form-state="plasmapheresisFormState"
           :container-list="containerList"
-          :form-state="plasmapheresisFormState"
         />
       </template>
-      <template v-else-if="formState.donation_type_id === 3">
+      <template v-else-if="patient?.last_visit?.donation_type_id === 3">
         <hr class="is-divider" />
         <PlateletpheresisFormBlock
+          v-model:form-state="plateletpheresisFormState"
           :container-list="containerList"
-          :form-state="plateletpheresisFormState"
         />
       </template>
       <hr class="is-divider" />
@@ -235,7 +259,7 @@ async function fetchContainerList() {
             <div class="field">
               <div class="control is-expended">
                 <Multiselect
-                  v-model="formState.transferred_id"
+                  v-model="formState.sent_to"
                   :options="[
                     { id: 1, name: 'на переработку' },
                     { id: 2, name: 'на контроль стерильности' },
@@ -251,11 +275,11 @@ async function fetchContainerList() {
         </div>
       </div>
     </template>
-    <template #action="{ close }">
+    <template #action>
       <button class="button is-info is-outlined" @click="isContainerFormModalOpen = true">
         {{ $t('Add_container') }}
       </button>
-      <SubmitButton :loading="isLoading" form="donation-data-entry-form" />
+      <SubmitButton :loading="isLoading" @click="onSubmit" />
     </template>
   </VModal>
   <DonationContainerFormModal

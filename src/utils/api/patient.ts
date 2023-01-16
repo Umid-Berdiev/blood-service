@@ -19,6 +19,19 @@ export async function patientCategoriesList() {
 export async function patientsList(payload: any) {
   try {
     const { data } = await api({
+      url: '/patients/donation',
+      params: payload,
+    })
+
+    return data
+  } catch (error) {
+    throw error
+  }
+}
+
+export async function patientsListForDonation(payload: any) {
+  try {
+    const { data } = await api({
       url: '/patients',
       params: payload,
     })
@@ -35,19 +48,6 @@ export async function storeDonation(visitcardID: number, payload: any) {
       url: `/visit-cards/${visitcardID}/donation`,
       method: 'PUT',
       data: payload,
-    })
-
-    return data
-  } catch (error) {
-    throw error
-  }
-}
-
-export async function fetchDonorsList(payload: any) {
-  try {
-    const { data } = await api({
-      url: '/patients',
-      params: payload,
     })
 
     return data
