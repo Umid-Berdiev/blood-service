@@ -6,6 +6,7 @@ import { useNotyf } from '/@src/composable/useNotyf'
 import { useMainStore } from '/@src/stores/main'
 
 import { useViewWrapper } from '/@src/stores/viewWrapper'
+import { fetchDonationTypes } from '/@src/utils/api/additional'
 import { patientsListForDonation } from '/@src/utils/api/patient'
 import { ApiDataInterface, PatientInterface } from '/@src/utils/interfaces'
 
@@ -29,15 +30,6 @@ const apiData: ApiDataInterface = reactive({
     per_page: 10,
     current_page: 1,
     total_pages: 1,
-  },
-})
-
-const currentPage = computed({
-  get: () => {
-    return apiData.pagination.current_page
-  },
-  set: async (page) => {
-    await handleSearch(currentFilterData)
   },
 })
 
@@ -93,9 +85,30 @@ const currentFilterData = reactive({
 })
 const clickedRowData = ref<PatientInterface | null>(null)
 const isFormModalOpen = ref(false)
-const isContainerFormModalOpen = ref(false)
+const donationTypes = ref<any[]>([])
 
 await handleSearch(currentFilterData)
+
+// hooks
+onMounted(async function () {
+  const res = await fetchDonationTypes()
+  donationTypes.value = res.result
+})
+
+watch(isFormModalOpen, (newVal) => {
+  if (!newVal) {
+    clearClickedRowData()
+  }
+})
+
+watch(
+  () => apiData.pagination.current_page,
+  async (newVal) => {
+    if (newVal) {
+      await handleSearch(currentFilterData)
+    }
+  }
+)
 
 // functions
 async function handleSearch(filterForm: any) {
@@ -104,7 +117,7 @@ async function handleSearch(filterForm: any) {
     Object.assign(currentFilterData, filterForm)
     const params = {
       ...filterForm,
-      page: currentPage.value,
+      page: apiData.pagination.current_page,
     }
 
     const res = await patientsListForDonation(params)
@@ -163,6 +176,7 @@ function clearClickedRowData() {
       <div class="column">
         <DonorsListFilterForm
           :is-loading="isLoading"
+          :donation-types="donationTypes"
           :errors="errors"
           @search="handleSearch"
           @clear-form="clearFilterForm"
@@ -245,7 +259,7 @@ function clearClickedRowData() {
             <!--Table Pagination-->
             <VFlexPagination
               v-if="apiData.data.length"
-              v-model:current-page="currentPage"
+              v-model:current-page="apiData.pagination.current_page"
               class="mt-5"
               :item-per-page="apiData.pagination.per_page"
               :total-items="apiData.pagination.total"
@@ -258,7 +272,7 @@ function clearClickedRowData() {
     <DonationDataEntryFormModal
       v-model:is-open="isFormModalOpen"
       :patient="clickedRowData"
-      @close="clearClickedRowData"
+      :donation-types="donationTypes"
     />
   </div>
 </template>

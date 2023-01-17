@@ -2,7 +2,7 @@
 import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { patientCategoriesList } from '/@src/utils/api/patient'
-import { donationTypes, visitTypes } from '/@src/data/additionals'
+import { visitTypes } from '/@src/data/additionals'
 
 defineProps<{
   isLoading: boolean
@@ -12,6 +12,7 @@ defineProps<{
     donation_type_id: string[]
     donation_code: string[]
   }
+  donationTypes: any[]
 }>()
 
 const emits = defineEmits(['search', 'clearError', 'clearForm'])

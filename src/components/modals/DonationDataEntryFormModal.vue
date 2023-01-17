@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { formatDate } from '@vueuse/core'
 import moment from 'moment'
 import { reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -7,13 +8,20 @@ import { PlateletpheresisFormProps } from '../pages/donation/PlateletpheresisFor
 import { WholeBloodDonationFormProps } from '../pages/donation/WholeBloodDonationFormBlock.vue'
 import { ContainerFormInterface } from './DonationContainerFormModal.vue'
 import { useNotyf } from '/@src/composable/useNotyf'
-import { donationTypes } from '/@src/data/additionals'
-import { fetchDonationResults, storeDonationResults } from '/@src/utils/api/donation'
+import {
+  fetchDonationResults,
+  storeDonationResults,
+  fetchContainersForDonation,
+  fetchPostinfusionReactions,
+  completedDonationStatus,
+  completedDonationStatusTypes,
+} from '/@src/utils/api/donation'
 import { PatientInterface } from '/@src/utils/interfaces'
 
 interface FormProps {
   isOpen: boolean
   patient: PatientInterface | null
+  donationTypes: any[]
 }
 
 const props = withDefaults(defineProps<FormProps>(), {
@@ -30,35 +38,45 @@ const notif = useNotyf()
 const { t } = useI18n()
 const title = ref(t('Donation_data_entry_form'))
 const isLoading = ref(false)
-const wholeBloodDonationFormState = ref<WholeBloodDonationFormProps>({})
+const wholeBloodDonationFormState = ref<WholeBloodDonationFormProps>({
+  container_id: null,
+  hemoconservative: null,
+  laboratory: null,
+})
 const plasmapheresisFormState = ref<PlasmapheresisFormProps>({})
 const plateletpheresisFormState = ref<PlateletpheresisFormProps>({})
 const formState = ref({
   donation_type_id: null,
-  date: '',
+  date: formatDate(new Date(), 'YYYY-MM-DD'),
   status: '',
   status_type: '',
   postinfusion_reaction_id: null,
-  container_id: null,
-  hemoconservative: null,
-  laboratory: null,
+  // container_id: null,
+  // hemoconservative: null,
+  // laboratory: null,
   sent_to: '',
 })
 const formErrors = reactive({
   donation_type_id: [],
-  donation_date: [],
-  completed_donation_status: [],
-  post_infusion_reaction_id: [],
+  date: [],
+  status: [],
+  status_type: [],
+  postinfusion_reaction_id: [],
+  container_id: [],
+  hemoconservative: [],
+  laboratory: [],
+  sent_to: [],
 })
-const containerList = ref<ContainerFormInterface[]>([
-  { id: 1, name: 'Гемасин 500/400 4700812' },
-])
+const containerList = ref<ContainerFormInterface[]>([])
+const postinfusionReactions = ref<any[]>([])
 const isContainerFormModalOpen = ref(false)
 const container = ref<ContainerFormInterface>({})
 
 // hooks
 onMounted(async function () {
   await fetchContainerList()
+  const res = await fetchPostinfusionReactions()
+  postinfusionReactions.value = res.result
 })
 
 watch(
@@ -75,8 +93,17 @@ watch(
 async function onSubmit() {
   try {
     isLoading.value = true
-
-    await storeDonationResults(props.patient?.last_visit?.id as number, formState.value)
+    const additionalsFormState =
+      props.patient?.last_visit?.donation_type_id === 1
+        ? plateletpheresisFormState.value
+        : props.patient?.last_visit?.donation_type_id === 2
+        ? plasmapheresisFormState.value
+        : wholeBloodDonationFormState.value
+    const payload = {
+      ...formState.value,
+      ...additionalsFormState,
+    }
+    await storeDonationResults(props.patient?.last_visit?.id as number, payload)
     notif.success(t('Data_saved_successfully'))
     emits('update:list')
     onClose()
@@ -96,13 +123,13 @@ function onClose() {
 
 function clearFields() {
   formState.value = {
-    date: '',
+    date: formatDate(new Date(), 'YYYY-MM-DD'),
     status: '',
     status_type: '',
     postinfusion_reaction_id: null,
-    container_id: null,
-    hemoconservative: null,
-    laboratory: null,
+    // container_id: null,
+    // hemoconservative: null,
+    // laboratory: null,
     sent_to: '',
   }
 }
@@ -110,9 +137,14 @@ function clearFields() {
 function clearErrors() {
   Object.assign(formErrors, {
     donation_type_id: [],
-    donation_date: [],
-    completed_donation_status: [],
-    post_infusion_reaction_id: [],
+    date: [],
+    status: [],
+    status_type: [],
+    postinfusion_reaction_id: [],
+    container_id: [],
+    hemoconservative: [],
+    laboratory: [],
+    sent_to: [],
   })
 }
 
@@ -121,9 +153,9 @@ function clearError(error: string) {
 }
 
 async function fetchContainerList() {
-  // const res = await fetchContainers()
-  // containerList.value = res.data
-  console.log('ok')
+  const res = await fetchContainersForDonation()
+  containerList.value = res.result.data
+  // console.log('ok')
 }
 </script>
 
@@ -144,7 +176,7 @@ async function fetchContainerList() {
             <div class="field">
               <div class="control is-expended">
                 <Multiselect
-                  v-model="patient.last_visit.donation_type_id"
+                  :value="patient?.last_visit?.donation_type_id"
                   :options="donationTypes"
                   :placeholder="$t('Select')"
                   label="name"
@@ -164,6 +196,7 @@ async function fetchContainerList() {
             <div class="field">
               <div class="control">
                 <IMaskDateInput v-model="formState.date" />
+                <p class="help has-text-danger">{{ formErrors.date[0] }}</p>
               </div>
             </div>
           </div>
@@ -177,13 +210,8 @@ async function fetchContainerList() {
               <div class="control">
                 <Multiselect
                   v-model="formState.status"
-                  :options="[
-                    { id: 1, name: 'Успешная донация' },
-                    { id: 2, name: 'Безуспешная донация' },
-                  ]"
+                  :options="completedDonationStatus"
                   :placeholder="$t('Select')"
-                  label="name"
-                  value-prop="id"
                   :style="{ minWidth: '15rem', margin: 0 }"
                 />
               </div>
@@ -192,13 +220,8 @@ async function fetchContainerList() {
               <div class="control">
                 <Multiselect
                   v-model="formState.status_type"
-                  :options="[
-                    { id: 1, name: 'Нормальное завершение' },
-                    { id: 1, name: 'Некондиционный забор' },
-                  ]"
+                  :options="completedDonationStatusTypes"
                   :placeholder="$t('Select')"
-                  label="name"
-                  value-prop="id"
                   :style="{ minWidth: '15rem', margin: 0 }"
                 />
               </div>
@@ -214,7 +237,7 @@ async function fetchContainerList() {
               <div class="control">
                 <Multiselect
                   v-model="formState.postinfusion_reaction_id"
-                  :options="[{ id: 1, name: 'Отсутствует' }]"
+                  :options="postinfusionReactions"
                   :placeholder="$t('Select')"
                   label="name"
                   value-prop="id"
@@ -227,8 +250,8 @@ async function fetchContainerList() {
       </div>
       <template v-if="patient?.last_visit?.donation_type_id === 1">
         <hr class="is-divider" />
-        <WholeBloodDonationFormBlock
-          v-model:form-state="wholeBloodDonationFormState"
+        <PlateletpheresisFormBlock
+          v-model:form-state="plateletpheresisFormState"
           :container-list="containerList"
         />
       </template>
@@ -241,12 +264,12 @@ async function fetchContainerList() {
       </template>
       <template v-else-if="patient?.last_visit?.donation_type_id === 3">
         <hr class="is-divider" />
-        <PlateletpheresisFormBlock
-          v-model:form-state="plateletpheresisFormState"
+        <WholeBloodDonationFormBlock
+          v-model:form-state="wholeBloodDonationFormState"
           :container-list="containerList"
         />
       </template>
-      <hr class="is-divider" />
+      <!-- <hr class="is-divider" /> -->
       <div class="box">
         <h5 class="is-size-5 mb-3">
           {{ $t('Component_Product_Transfer_Information') }}
@@ -261,12 +284,10 @@ async function fetchContainerList() {
                 <Multiselect
                   v-model="formState.sent_to"
                   :options="[
-                    { id: 1, name: 'на переработку' },
-                    { id: 2, name: 'на контроль стерильности' },
+                    { value: 'recycling', label: 'на переработку' },
+                    { value: 'sterility', label: 'на контроль стерильности' },
                   ]"
                   :placeholder="$t('Select')"
-                  label="name"
-                  value-prop="id"
                   :style="{ minWidth: '15rem', margin: 0 }"
                 />
               </div>

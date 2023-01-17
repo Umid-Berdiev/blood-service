@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
-import { donationTypes } from '/@src/data/additionals'
+import { fetchDonationTypes } from '/@src/utils/api/additional'
 
 interface FilterFormProps {
   isLoading: boolean
@@ -22,10 +22,11 @@ const filterForm = reactive({
   donation_type_id: null,
 })
 
-const componentsList = ref([])
+const donationTypes = ref([])
 
 onMounted(async () => {
-  // componentsList.value = await fetchComponentsList().then((res) => res.result)
+  const res = await fetchDonationTypes()
+  donationTypes.value = res.result
 })
 
 const handleSearch = async () => {

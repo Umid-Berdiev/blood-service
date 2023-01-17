@@ -2,9 +2,9 @@
 import { ContainerFormInterface } from '../../modals/DonationContainerFormModal.vue'
 
 export interface WholeBloodDonationFormProps {
-  whole_blood_donation_container_id?: number
-  hemoconservative_taken_blood_amount?: number
-  laboratory_taken_blood_amount?: number
+  container_id: number | null
+  hemoconservative: number | null
+  laboratory: number | null
 }
 
 const props = defineProps<{
@@ -36,7 +36,7 @@ const computedFormState = computed({
         <div class="field">
           <div class="control is-expended">
             <Multiselect
-              v-model="computedFormState.whole_blood_donation_container_id"
+              v-model="computedFormState.container_id"
               :options="containerList"
               :placeholder="$t('Select')"
               label="name"
@@ -51,15 +51,12 @@ const computedFormState = computed({
       <div class="field-label is-normal">
         <label class="label">
           {{ $t('Hemoconservative_taken_blood_amount_ml') }}
-          <span class="is-text-danger">*</span>
+          <span class="has-text-danger">*</span>
         </label>
       </div>
       <div class="field-body">
         <VField>
-          <VInput
-            v-model="computedFormState.hemoconservative_taken_blood_amount"
-            type="text"
-          />
+          <VInput v-model="computedFormState.hemoconservative" type="text" />
         </VField>
       </div>
     </div>
@@ -67,12 +64,12 @@ const computedFormState = computed({
       <div class="field-label">
         <label class="label">
           {{ $t('Laboratory_taken_blood_amount_ml') }}
-          <span class="is-text-danger">*</span>
+          <span class="has-text-danger">*</span>
         </label>
       </div>
       <div class="field-body">
         <VField>
-          <VInput v-model="computedFormState.laboratory_taken_blood_amount" type="text" />
+          <VInput v-model="computedFormState.laboratory" type="text" />
         </VField>
       </div>
     </div>
