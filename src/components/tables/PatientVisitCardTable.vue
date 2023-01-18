@@ -6,7 +6,7 @@ import { useMainStore } from '/@src/stores/main'
 
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { visitcardsList, removeVisitcardById } from '/@src/utils/api/visitcard'
-import { ApiDataInterface } from '/@src/utils/interfaces'
+import { ApiDataInterface, PatientInterface } from '/@src/utils/interfaces'
 
 const route = useRoute()
 const router = useRouter()
@@ -19,11 +19,15 @@ useHead({
   title: `${t('Patient_cards')} - ${mainStore.app.name}`,
 })
 
-const apiData: ApiDataInterface = reactive({
-  current_page: 1,
-  per_page: 10,
-  total: 10,
+const apiData: ApiDataInterface<PatientInterface> = reactive({
   data: [],
+  pagination: {
+    total: 10,
+    count: 10,
+    per_page: 10,
+    current_page: 1,
+    total_pages: 1,
+  },
 })
 
 const selectedId = ref<number | null>(null)
@@ -31,7 +35,7 @@ const patientID = route.params?.id || null
 const isFormModalOpen = ref(false)
 const currentPage = computed({
   get: () => {
-    return apiData.current_page
+    return apiData.pagination.current_page
   },
   set: async (page) => {
     await fetchData(page)

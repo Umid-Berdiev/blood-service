@@ -18,7 +18,7 @@ useHead({
   title: `${t('Research-aimed-donations-list')} - ${mainStore.app.name}`,
 })
 
-const apiData: ApiDataInterface = reactive({
+const apiData: ApiDataInterface<PatientInterface> = reactive({
   data: [],
   pagination: {
     total: 10,

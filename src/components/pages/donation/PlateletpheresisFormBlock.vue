@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ContainerFormInterface } from '../../modals/DonationContainerFormModal.vue'
+import { DonationContainerInterface } from '/@src/utils/interfaces'
 import { apheresisMethods } from '/@src/utils/api/donation'
 
 export interface PlateletpheresisFormProps {
@@ -17,7 +17,7 @@ export interface PlateletpheresisFormProps {
 
 const props = defineProps<{
   formState: PlateletpheresisFormProps
-  containerList: ContainerFormInterface[]
+  containerList: DonationContainerInterface[]
 }>()
 const emits = defineEmits<{
   (e: 'update:formState', value: PlateletpheresisFormProps): void

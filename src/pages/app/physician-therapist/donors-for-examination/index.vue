@@ -8,7 +8,7 @@ import { useMainStore } from '/@src/stores/main'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { patientsListForCandidate } from '/@src/utils/api/patient'
 import { fetchVisitcardStatuses } from '/@src/utils/api/visitcard'
-import { ApiDataInterface } from '/@src/utils/interfaces'
+import { ApiDataInterface, PatientInterface } from '/@src/utils/interfaces'
 
 const router = useRouter()
 const notif = useNotyf()
@@ -22,7 +22,7 @@ useHead({
   title: `${t('Donors-list-for-examination')} - ${mainStore.app.name}`,
 })
 
-const apiData: ApiDataInterface = reactive({
+const apiData: ApiDataInterface<PatientInterface> = reactive({
   data: [],
   pagination: {
     total: 10,

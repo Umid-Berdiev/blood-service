@@ -686,7 +686,7 @@
   "Fourth_fence": "Четвертый забор",
   "Containers_list": "Список контейнеров",
   "Preservative": "Консервант",
-  "Preservative_volume": "Объем консерванта",
+  "Preservative_volume": "Количество консерванта, мл",
   "Container_expiration_date": "Срок годности контейнера",
   "Preservative_shelf_life_days": "Срок хранения консерванта, сутки",
   "Donor_register_number": "Регистрационный номер донора",

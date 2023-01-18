@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { isEmpty, values } from 'lodash'
 import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { patientCategoriesList } from '/@src/utils/api/patient'

@@ -19,63 +19,62 @@ useHead({
   title: `${t('Donations_list_for_processing')} - ${mainStore.app.name}`,
 })
 
-const apiData: { data: ProductInterface[]; pagination: ApiDataInterface['pagination'] } =
-  reactive({
-    data: [
-      {
-        id: 11,
-        donation_code: '130100123400',
-        donation_date: '10.12.2022',
-        blood_type: 'O(I)',
-        visit_type: 'Безвозмезные донации',
-        rh_factor: 'Rh+',
-        component_name: 'Эритроцитная масса',
-        donation_type: 'Донация цельной крови',
-        dose: '0',
-        quantity: '340',
-        come_from: 'Республиканский центр крови',
-        personalized_donation: 'Николай Резанов',
-        expiry_date: '01.03.2023',
-      },
-      // {
-      //   id: 17,
-      //   donation_code: '130100456500',
-      //   donation_date: '18.12.2022',
-      //   blood_type: 'O(I)',
-      //   visit_type: 'Платные донации',
-      //   rh_factor: 'Rh+',
-      //   component_name: 'Эритроцитная масса',
-      //   donation_type: 'Тромбоцитаферез',
-      //   dose: '0',
-      //   quantity: '340',
-      //   come_from: 'Республиканский центр крови',
-      //   personalized_donation: 'Николай Резанов',
-      //   expiry_date: '01.03.2023',
-      // },
-      {
-        id: 21,
-        donation_code: '130100987300',
-        donation_date: '18.12.2022',
-        blood_type: 'O(I)',
-        visit_type: 'Платные донации',
-        rh_factor: 'Rh+',
-        component_name: 'Эритроцитная масса',
-        donation_type: 'Плазмаферез',
-        dose: '0',
-        quantity: '340',
-        come_from: 'Республиканский центр крови',
-        personalized_donation: 'Николай Резанов',
-        expiry_date: '01.03.2023',
-      },
-    ],
-    pagination: {
-      total: 10,
-      count: 10,
-      per_page: 10,
-      current_page: 1,
-      total_pages: 1,
+const apiData: ApiDataInterface<ProductInterface> = reactive({
+  data: [
+    {
+      id: 11,
+      donation_code: '130100123400',
+      donation_date: '10.12.2022',
+      blood_type: 'O(I)',
+      visit_type: 'Безвозмезные донации',
+      rh_factor: 'Rh+',
+      component_name: 'Эритроцитная масса',
+      donation_type: 'Донация цельной крови',
+      dose: '0',
+      quantity: '340',
+      come_from: 'Республиканский центр крови',
+      personalized_donation: 'Николай Резанов',
+      expiry_date: '01.03.2023',
     },
-  })
+    // {
+    //   id: 17,
+    //   donation_code: '130100456500',
+    //   donation_date: '18.12.2022',
+    //   blood_type: 'O(I)',
+    //   visit_type: 'Платные донации',
+    //   rh_factor: 'Rh+',
+    //   component_name: 'Эритроцитная масса',
+    //   donation_type: 'Тромбоцитаферез',
+    //   dose: '0',
+    //   quantity: '340',
+    //   come_from: 'Республиканский центр крови',
+    //   personalized_donation: 'Николай Резанов',
+    //   expiry_date: '01.03.2023',
+    // },
+    {
+      id: 21,
+      donation_code: '130100987300',
+      donation_date: '18.12.2022',
+      blood_type: 'O(I)',
+      visit_type: 'Платные донации',
+      rh_factor: 'Rh+',
+      component_name: 'Эритроцитная масса',
+      donation_type: 'Плазмаферез',
+      dose: '0',
+      quantity: '340',
+      come_from: 'Республиканский центр крови',
+      personalized_donation: 'Николай Резанов',
+      expiry_date: '01.03.2023',
+    },
+  ],
+  pagination: {
+    total: 10,
+    count: 10,
+    per_page: 10,
+    current_page: 1,
+    total_pages: 1,
+  },
+})
 const selectedRow = reactive({})
 const isFormModalOpen = ref(false)
 const filterErrors = reactive({
@@ -104,10 +103,6 @@ async function handleSearch(filterForm: any) {
     const params = { ...filterForm, page: apiData.pagination.current_page }
     // const res = await patientsListForScreening(params)
     // Object.assign(apiData, res.result)
-
-    // if (isEmpty(res.result.data)) {
-    //   notif.warning(t('Data_not_found'))
-    // } else notif.success(`${t('Found')}: ${res.result.pagination.total} ${t('records')}`)
   } catch (error: any) {
     Object.assign(filterErrors, error.response?.data?.errors)
   } finally {

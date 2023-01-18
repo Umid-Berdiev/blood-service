@@ -1,1 +1,0 @@
-import{a as s,l as a,m as o,P as n,U as t}from"./chunk-BGPNDDXN-dcda8805.js";const d=s({__name:"VButtons",props:{align:{default:void 0},addons:{type:Boolean}},setup(s){const d=s;return(s,l)=>(a(),o("div",{class:t(["buttons",[d.addons&&"has-addons",d.align&&`is-${d.align}`]])},[n(s.$slots,"default")],2))}});export{d as _};

@@ -6,17 +6,16 @@ import { useI18n } from 'vue-i18n'
 import { PlasmapheresisFormProps } from '../pages/donation/PlasmapheresisFormBlock.vue'
 import { PlateletpheresisFormProps } from '../pages/donation/PlateletpheresisFormBlock.vue'
 import { WholeBloodDonationFormProps } from '../pages/donation/WholeBloodDonationFormBlock.vue'
-import { ContainerFormInterface } from './DonationContainerFormModal.vue'
 import { useNotyf } from '/@src/composable/useNotyf'
 import {
   fetchDonationResults,
   storeDonationResults,
-  fetchContainersForDonation,
+  fetchDonationContainers,
   fetchPostinfusionReactions,
   completedDonationStatus,
   completedDonationStatusTypes,
 } from '/@src/utils/api/donation'
-import { PatientInterface } from '/@src/utils/interfaces'
+import { PatientInterface, DonationContainerInterface } from '/@src/utils/interfaces'
 
 interface FormProps {
   isOpen: boolean
@@ -67,10 +66,10 @@ const formErrors = reactive({
   laboratory: [],
   sent_to: [],
 })
-const containerList = ref<ContainerFormInterface[]>([])
+const containerList = ref<DonationContainerInterface[]>([])
 const postinfusionReactions = ref<any[]>([])
 const isContainerFormModalOpen = ref(false)
-const container = ref<ContainerFormInterface>({})
+const container = ref<DonationContainerInterface>({})
 
 // hooks
 onMounted(async function () {
@@ -153,7 +152,7 @@ function clearError(error: string) {
 }
 
 async function fetchContainerList() {
-  const res = await fetchContainersForDonation()
+  const res = await fetchDonationContainers()
   containerList.value = res.result.data
   // console.log('ok')
 }

@@ -2,6 +2,19 @@
 const route = useRoute()
 const openSideblockLinks = ref('')
 
+// hooks
+// watch(openSideblockLinks, function(newVal) {
+//   if()
+// })
+
+watchEffect(function () {
+  if (openSideblockLinks.value == 'donations') {
+    const el = document.getElementById('donations')
+    console.log({ el })
+    el?.scrollIntoView()
+  }
+})
+
 watch(
   () => route.path,
   (newVal) => {
@@ -38,12 +51,17 @@ watch(
       }
       if (newVal.startsWith('/app/blood-bank')) {
         openSideblockLinks.value = 'blood-bank'
+        const el = document.getElementById('blood-bank')
+        el?.scrollIntoView()
       }
       if (newVal.startsWith('/app/blood-sampling')) {
         openSideblockLinks.value = 'blood-sampling'
       }
       if (newVal.startsWith('/app/scrapping')) {
         openSideblockLinks.value = 'scrapping'
+        const el = document.getElementById('scrapping')
+        console.log({ el })
+        el?.scrollIntoView()
       }
       if (newVal.startsWith('/app/forwarding')) {
         openSideblockLinks.value = 'forwarding'
@@ -284,7 +302,11 @@ watch(
     </VCollapseLinks>
 
     <!-- Donations -->
-    <VCollapseLinks v-model:open="openSideblockLinks" collapse-id="donations">
+    <VCollapseLinks
+      id="donations"
+      v-model:open="openSideblockLinks"
+      collapse-id="donations"
+    >
       <template #header>
         <div class="icon">
           <i class="iconify" data-icon="feather:folder-plus" aria-hidden="true"></i>
@@ -394,7 +416,11 @@ watch(
     </VCollapseLinks>
 
     <!-- Scrapping components -->
-    <VCollapseLinks v-model:open="openSideblockLinks" collapse-id="scrapping">
+    <VCollapseLinks
+      id="scrapping"
+      v-model:open="openSideblockLinks"
+      collapse-id="scrapping"
+    >
       <template #header>
         <div class="icon">
           <i class="iconify" data-icon="feather:folder-plus" aria-hidden="true"></i>

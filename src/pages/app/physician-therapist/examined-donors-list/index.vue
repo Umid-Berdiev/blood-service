@@ -7,7 +7,7 @@ import { useNotyf } from '/@src/composable/useNotyf'
 import { useMainStore } from '/@src/stores/main'
 
 import { useViewWrapper } from '/@src/stores/viewWrapper'
-import { ApiDataInterface } from '/@src/utils/interfaces'
+import { ApiDataInterface, PatientInterface } from '/@src/utils/interfaces'
 
 const router = useRouter()
 const notif = useNotyf()
@@ -21,7 +21,7 @@ useHead({
   title: `${t('Donors-list-for-examination')} - ${mainStore.app.name}`,
 })
 
-const apiData: ApiDataInterface = reactive({
+const apiData: ApiDataInterface<PatientInterface> = reactive({
   data: [],
   pagination: {
     total: 10,
@@ -120,11 +120,7 @@ async function handleSearch(filterForm: any) {
   try {
     Object.assign(currentFilterData, filterForm)
     isLoading.value = true
-    Object.assign(apiData, res.result)
-
-    if (isEmpty(res.result.data)) {
-      notif.warning(t('Data_not_found'))
-    } else notif.success(`${t('Found')}: ${res.result.pagination.total} ${t('records')}`)
+    // Object.assign(apiData, res.result)
   } catch (error: any) {
     Object.assign(errors, error.response?.data?.errors)
   } finally {

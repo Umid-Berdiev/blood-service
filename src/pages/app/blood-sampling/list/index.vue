@@ -22,7 +22,7 @@ useHead({
   title: `${t('Donor_list_for_blood_sampling')} - ${mainStore.app.name}`,
 })
 
-const apiData: ApiDataInterface = reactive({
+const apiData: ApiDataInterface<PatientInterface> = reactive({
   data: [],
   pagination: {
     total: 10,

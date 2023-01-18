@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ContainerFormInterface } from '../../modals/DonationContainerFormModal.vue'
+import { DonationContainerInterface } from '/@src/utils/interfaces'
 
 export interface WholeBloodDonationFormProps {
   container_id: number | null
@@ -9,7 +9,7 @@ export interface WholeBloodDonationFormProps {
 
 const props = defineProps<{
   formState: WholeBloodDonationFormProps
-  containerList: ContainerFormInterface[]
+  containerList: DonationContainerInterface[]
 }>()
 const emits = defineEmits<{
   (e: 'update:formState', value: WholeBloodDonationFormProps): void

@@ -28,11 +28,52 @@ export async function storeDonationResults(visitcardID: number, payload: any) {
   }
 }
 
-export async function fetchContainersForDonation() {
+export async function fetchDonationContainers(payload = { page: 1, per_page: 100 }) {
   try {
     const { data } = await api({
       url: `/containers`,
-      params: { per_page: 100 },
+      params: payload,
+    })
+
+    return data
+  } catch (error) {
+    throw error
+  }
+}
+
+export async function storeDonationContainer(payload: any) {
+  try {
+    const { data } = await api({
+      url: `/containers`,
+      method: 'POST',
+      data: payload,
+    })
+
+    return data
+  } catch (error) {
+    throw error
+  }
+}
+
+export async function updateDonationContainer(containerID: number, payload: any) {
+  try {
+    const { data } = await api({
+      url: `/containers/${containerID}`,
+      method: 'PUT',
+      data: payload,
+    })
+
+    return data
+  } catch (error) {
+    throw error
+  }
+}
+
+export async function removeDonationContainer(containerID: number) {
+  try {
+    const { data } = await api({
+      url: `/containers/${containerID}`,
+      method: 'DELETE',
     })
 
     return data

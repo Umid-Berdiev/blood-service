@@ -4,9 +4,12 @@ import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { useMainStore } from '/@src/stores/main'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
-import { ApiDataInterface } from '/@src/utils/interfaces'
+import {
+  fetchDonationContainers,
+  removeDonationContainer,
+} from '/@src/utils/api/donation'
+import { ApiDataInterface, DonationContainerInterface } from '/@src/utils/interfaces'
 
-const router = useRouter()
 const notif = useNotyf()
 const { t } = useI18n()
 const mainStore = useMainStore()
@@ -19,35 +22,8 @@ useHead({
   title: `${t('Containers_list')} - ${mainStore.app.name}`,
 })
 
-const apiData: ApiDataInterface = reactive({
-  data: [
-    {
-      id: 11,
-      title: {
-        ru: 'Гемасин 500/400',
-        uz: '',
-        en: '',
-      },
-      series: '4700812',
-      preservative: 'Глюгицир',
-      preservative_volume: '100,00',
-      container_expiration_date: '09.2023',
-      preservative_shelf_life_days: '50',
-    },
-    {
-      id: 12,
-      title: {
-        ru: 'Гемасин 400/400',
-        uz: '',
-        en: '',
-      },
-      series: '4700916',
-      preservative: 'Глюгицир',
-      preservative_volume: '63,00',
-      container_expiration_date: '12.2023',
-      preservative_shelf_life_days: '50',
-    },
-  ],
+const apiData: ApiDataInterface<DonationContainerInterface> = reactive({
+  data: [],
   pagination: {
     total: 10,
     count: 10,
@@ -56,24 +32,37 @@ const apiData: ApiDataInterface = reactive({
     total_pages: 1,
   },
 })
-const selectedRow = reactive({})
+const selectedRow = ref<DonationContainerInterface | null>(null)
 const isFormModalOpen = ref(false)
 
-// await handleSearch(currentFilterData)
+await fetchData()
 
 // hooks
 watch(isFormModalOpen, function (newVal) {
   if (newVal === false) {
-    Object.assign(selectedRow, {})
+    selectedRow.value = null
   }
 })
+
+watch(
+  () => apiData.pagination.current_page,
+  async function (newVal) {
+    if (newVal) {
+      await fetchData()
+    }
+  }
+)
 
 // functions
 async function fetchData() {
   try {
     isLoading.value = true
-    // const res = await patientsListForScreening()
-    // Object.assign(apiData, res.result)
+    const params = {
+      page: apiData.pagination.current_page,
+      per_page: apiData.pagination.per_page,
+    }
+    const res = await fetchDonationContainers(params)
+    Object.assign(apiData, res.result)
   } catch (error: any) {
     notif.error(t('Something_went_wrong'))
   } finally {
@@ -82,7 +71,7 @@ async function fetchData() {
 }
 
 function openFormModal(item: any) {
-  Object.assign(selectedRow, item)
+  selectedRow.value = item
   isFormModalOpen.value = true
 }
 
@@ -92,7 +81,8 @@ function onRemove(id: number) {
 }
 
 async function handleRemoveAction() {
-  // await removeVisitcardById(selectedRowId.value)
+  isLoading.value = true
+  await removeDonationContainer(selectedRowId.value as number)
   await fetchData()
 }
 </script>
@@ -125,7 +115,7 @@ async function handleRemoveAction() {
           type="button"
           icon="feather:plus"
           color="primary"
-          @click="openFormModal"
+          @click="openFormModal(null)"
         />
       </div>
     </div>
@@ -181,19 +171,19 @@ async function handleRemoveAction() {
                         class="has-text-primary"
                         @click="openFormModal(item)"
                       >
-                        {{ item.title.ru }}
+                        {{ item.name }}
                       </a>
                     </td>
                     <td>{{ item.series }}</td>
-                    <td>{{ item.preservative }}</td>
-                    <td>{{ item.preservative_volume }}</td>
-                    <td>{{ item.container_expiration_date }}</td>
-                    <td>{{ item.preservative_shelf_life_days }}</td>
+                    <td>{{ item.hemopreservative }}</td>
+                    <td>{{ item.count_hemopreservative }}</td>
+                    <td>{{ item.expire_date }}</td>
+                    <td>{{ item.expire_days }}</td>
                     <td class="has-text-centered">
                       <a
                         href="javascript:;"
                         class="has-text-danger"
-                        @click="onRemove(item.id)"
+                        @click="onRemove(item.id as number)"
                       >
                         <span class="iconify" data-icon="feather:trash"></span>
                       </a>

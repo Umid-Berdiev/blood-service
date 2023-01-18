@@ -192,8 +192,8 @@ export interface ApiPaginationInterface {
   total_pages: number
 }
 
-export interface ApiDataInterface {
-  data: []
+export interface ApiDataInterface<DataType> {
+  data: DataType[]
   pagination: ApiPaginationInterface
 }
 
@@ -288,5 +288,17 @@ export interface SerologicalResearchFormInterface {
   anti_staphylococcal_antibody_titer: string
   gemoliz?: boolean
   hilez?: boolean
+}
+
+export interface DonationContainerInterface {
+  id?: number | null
+  name: string
+  name_lat: string
+  name_cyr: string
+  series: string | number
+  count_hemopreservative: number | null
+  hemopreservative: string
+  expire_date: string
+  expire_days: number | null
 }
 

@@ -1,26 +1,13 @@
 <script setup lang="ts">
-import { formatDate } from '@vueuse/core'
-import { isEmpty } from 'lodash'
-import { reactive, ref } from 'vue'
+import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
-
-export interface ContainerFormInterface {
-  title: {
-    ru: string
-    uz: string
-    en: string
-  }
-  series: string
-  preservative: string
-  preservative_volume: string
-  container_expiration_date: string
-  preservative_shelf_life_days: string
-}
+import { storeDonationContainer, updateDonationContainer } from '/@src/utils/api/donation'
+import { DonationContainerInterface } from '/@src/utils/interfaces'
 
 interface FormModalProps {
   isOpen: boolean
-  container: ContainerFormInterface
+  container: DonationContainerInterface | null
 }
 
 const props = withDefaults(defineProps<FormModalProps>(), {
@@ -36,34 +23,43 @@ const notif = useNotyf()
 const { t } = useI18n()
 const title = ref(t('Container'))
 const isLoading = ref(false)
-const formState: ContainerFormInterface = reactive({
-  title: {
-    ru: '',
-    uz: '',
-    en: '',
-  },
+const formState = ref<DonationContainerInterface>({
+  name: '',
+  name_cyr: '',
+  name_lat: '',
   series: '',
-  preservative_volume: '63',
-  preservative: '',
-  container_expiration_date: formatDate(new Date(), 'YYYY-MM-DD'),
-  preservative_shelf_life_days: '50',
+  count_hemopreservative: null,
+  hemopreservative: '',
+  expire_date: '',
+  expire_days: null,
 })
-const formErrors = reactive({
-  'title.ru': [],
-  'title.uz': [],
-  'title.en': [],
+const formErrors = ref({
+  name: [],
+  name_cyr: [],
+  name_lat: [],
   series: [],
-  preservative_volume: [],
-  preservative: [],
-  container_expiration_date: [],
-  preservative_shelf_life_days: [],
+  count_hemopreservative: [],
+  hemopreservative: [],
+  expire_date: [],
+  expire_days: [],
 })
 
 // hooks
 watch(
-  props.container,
+  () => props.container,
   function (newVal) {
-    if (newVal && !isEmpty(newVal)) Object.assign(formState, newVal)
+    if (newVal) formState.value = newVal
+  },
+  { deep: true }
+)
+
+watch(
+  () => props.isOpen,
+  function (newVal) {
+    if (newVal == false) {
+      clearFormState()
+      clearErrors()
+    }
   },
   { deep: true }
 )
@@ -72,46 +68,45 @@ watch(
 async function onSubmit() {
   try {
     isLoading.value = true
+    formState.value.id
+      ? await updateDonationContainer(formState.value.id, formState.value)
+      : await storeDonationContainer(formState.value)
     emits('update:list')
     onClose()
   } catch (error: any) {
     if (error.response?.data.error) notif.error(error.response?.data.error)
-    else Object.assign(formErrors, error.response?.data?.errors)
+    else formErrors.value = error.response?.data?.errors
   } finally {
     isLoading.value = false
   }
 }
 
 function onClose() {
-  clearFormState()
-  clearErrors()
   emits('update:isOpen', false)
 }
 
 function clearFormState() {
-  Object.assign(formState, {
-    title: {
-      ru: '',
-      uz: '',
-      en: '',
-    },
+  formState.value = {
+    name: '',
+    name_cyr: '',
+    name_lat: '',
     series: '',
-    preservative_volume: '63',
-    preservative: '',
-    container_expiration_date: formatDate(new Date(), 'YYYY-MM-DD'),
-    preservative_shelf_life_days: '50',
-  })
+    count_hemopreservative: null,
+    hemopreservative: '',
+    expire_date: '',
+    expire_days: null,
+  }
 }
 
 function clearErrors() {
-  Object.getOwnPropertyNames(formErrors).forEach((prop) => {
-    if (formErrors[prop]) formErrors[prop] = []
+  Object.getOwnPropertyNames(formErrors.value).forEach((prop) => {
+    formErrors.value[prop] = []
   })
 }
 
-function clearError(error: string) {
-  formErrors[error] = ''
-}
+// function clearError(error: string) {
+//   formErrors.value[error] = ''
+// }
 </script>
 
 <template>
@@ -121,45 +116,39 @@ function clearError(error: string) {
         <table class="table is-fullwidth">
           <tbody>
             <tr>
-              <td>
-                {{ $t('Name_ru') }}
-              </td>
+              <td>{{ $t('Title') }} (RU)</td>
               <td>
                 <VField required>
                   <VControl>
-                    <VInput v-model="formState.title.ru" />
+                    <VInput v-model="formState.name" />
                     <p class="help has-text-danger">
-                      {{ formErrors['title.ru'][0] }}
+                      {{ formErrors?.name[0] }}
                     </p>
                   </VControl>
                 </VField>
               </td>
             </tr>
             <tr>
-              <td>
-                {{ $t('Name_uz') }}
-              </td>
+              <td>{{ $t('Title') }} (UZ_CYR)</td>
               <td>
                 <VField required>
                   <VControl>
-                    <VInput v-model="formState.title.uz" />
+                    <VInput v-model="formState.name_cyr" />
                     <p class="help has-text-danger">
-                      {{ formErrors['title.uz'][0] }}
+                      {{ formErrors.name_cyr[0] }}
                     </p>
                   </VControl>
                 </VField>
               </td>
             </tr>
             <tr>
-              <td>
-                {{ $t('Name_en') }}
-              </td>
+              <td>{{ $t('Title') }} (UZ_LAT)</td>
               <td>
                 <VField required>
                   <VControl>
-                    <VInput v-model="formState.title.en" />
+                    <VInput v-model="formState.name_lat" />
                     <p class="help has-text-danger">
-                      {{ formErrors['title.en'][0] }}
+                      {{ formErrors.name_lat[0] }}
                     </p>
                   </VControl>
                 </VField>
@@ -187,9 +176,9 @@ function clearError(error: string) {
               <td>
                 <VField required>
                   <VControl>
-                    <VInput v-model="formState.preservative_volume" />
+                    <VInput v-model="formState.count_hemopreservative" />
                     <p class="help has-text-danger">
-                      {{ formErrors.preservative_volume[0] }}
+                      {{ formErrors.count_hemopreservative[0] }}
                     </p>
                   </VControl>
                 </VField>
@@ -202,9 +191,9 @@ function clearError(error: string) {
               <td>
                 <VField required>
                   <VControl>
-                    <VInput v-model="formState.preservative" />
+                    <VInput v-model="formState.hemopreservative" />
                     <p class="help has-text-danger">
-                      {{ formErrors.preservative[0] }}
+                      {{ formErrors?.hemopreservative[0] }}
                     </p>
                   </VControl>
                 </VField>
@@ -217,9 +206,9 @@ function clearError(error: string) {
               <td>
                 <VField required>
                   <VControl>
-                    <IMaskDateInput v-model="formState.container_expiration_date" />
+                    <IMaskDateInput v-model="formState.expire_date" />
                     <p class="help has-text-danger">
-                      {{ formErrors.container_expiration_date[0] }}
+                      {{ formErrors?.expire_date[0] }}
                     </p>
                   </VControl>
                 </VField>
@@ -232,9 +221,9 @@ function clearError(error: string) {
               <td>
                 <VField required>
                   <VControl>
-                    <VInput v-model="formState.preservative_shelf_life_days" />
+                    <VInput v-model="formState.expire_days" />
                     <p class="help has-text-danger">
-                      {{ formErrors.preservative_shelf_life_days[0] }}
+                      {{ formErrors?.expire_days[0] }}
                     </p>
                   </VControl>
                 </VField>
@@ -244,7 +233,7 @@ function clearError(error: string) {
         </table>
       </form>
     </template>
-    <template #action="{ close }">
+    <template #action>
       <SubmitButton :loading="isLoading" form="donation-container-form" />
     </template>
   </VModal>

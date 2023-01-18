@@ -26,7 +26,7 @@ useHead({
   title: `${t('Supernatant-plasma-list')} - ${mainStore.app.name}`,
 })
 
-const apiData: ApiDataInterface = reactive({
+const apiData: ApiDataInterface<SupernatantPlasmasItemInterface> = reactive({
   data: [
     {
       serial_number: '1.07.13',
@@ -83,11 +83,7 @@ async function handleSearch(filterForm: any) {
   try {
     Object.assign(currentFilterData, filterForm)
     isLoading.value = true
-    Object.assign(apiData, res.result)
-
-    if (isEmpty(res.result.data)) {
-      notif.warning(t('Data_not_found'))
-    } else notif.success(`${t('Found')}: ${res.result.pagination.total} ${t('records')}`)
+    // Object.assign(apiData, res.result)
   } catch (error: any) {
     Object.assign(errors, error.response?.data?.errors)
   } finally {

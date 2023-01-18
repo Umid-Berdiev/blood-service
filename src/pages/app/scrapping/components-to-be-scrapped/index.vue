@@ -28,36 +28,35 @@ useHead({
   title: `${t('Components_to_be_scrapped')} - ${mainStore.app.name}`,
 })
 
-const apiData: { data: ProductInterface[]; pagination: ApiDataInterface['pagination'] } =
-  reactive({
-    data: [
-      {
-        id: 11,
-        donation_date: '10.12.2022',
-        donation_code: '130100123400',
-        component_name: 'Эритроцитная масса',
-        dose: '0',
-        quantity: '300',
-        unsuitability_reasons: 'Расхождение группы крови',
-      },
-      {
-        id: 11,
-        donation_date: '10.12.2022',
-        donation_code: '130100213000',
-        component_name: 'Свежезамороженная плазма',
-        dose: '0',
-        quantity: '270',
-        unsuitability_reasons: 'Бруцеллез',
-      },
-    ],
-    pagination: {
-      total: 10,
-      count: 10,
-      per_page: 10,
-      current_page: 1,
-      total_pages: 1,
+const apiData: ApiDataInterface<ProductInterface> = reactive({
+  data: [
+    {
+      id: 11,
+      donation_date: '10.12.2022',
+      donation_code: '130100123400',
+      component_name: 'Эритроцитная масса',
+      dose: '0',
+      quantity: '300',
+      unsuitability_reasons: 'Расхождение группы крови',
     },
-  })
+    {
+      id: 11,
+      donation_date: '10.12.2022',
+      donation_code: '130100213000',
+      component_name: 'Свежезамороженная плазма',
+      dose: '0',
+      quantity: '270',
+      unsuitability_reasons: 'Бруцеллез',
+    },
+  ],
+  pagination: {
+    total: 10,
+    count: 10,
+    per_page: 10,
+    current_page: 1,
+    total_pages: 1,
+  },
+})
 const selectedRow = reactive({})
 const isFormModalOpen = ref(false)
 

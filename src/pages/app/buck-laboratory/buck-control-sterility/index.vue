@@ -28,7 +28,7 @@ useHead({
   title: `${t('Buck-control-sterility')} - ${mainStore.app.name}`,
 })
 
-const apiData: ApiDataInterface = reactive({
+const apiData: ApiDataInterface<BuckControlSterilityItemInterface> = reactive({
   data: [
     {
       donation_date: '05.06.2022',
@@ -97,11 +97,9 @@ async function handleSearch(filterForm: any) {
   try {
     Object.assign(currentFilterData, filterForm)
     isLoading.value = true
-    Object.assign(apiData, res.result)
+    // const res = await fetch
+    // Object.assign(apiData, res.result)
 
-    if (isEmpty(res.result.data)) {
-      notif.warning(t('Data_not_found'))
-    } else notif.success(`${t('Found')}: ${res.result.pagination.total} ${t('records')}`)
   } catch (error: any) {
     Object.assign(errors, error.response?.data?.errors)
   } finally {

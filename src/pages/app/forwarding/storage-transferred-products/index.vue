@@ -19,31 +19,30 @@ useHead({
   title: `${t('Storage_transferred_products')} - ${mainStore.app.name}`,
 })
 
-const apiData: { data: ProductInterface[]; pagination: ApiDataInterface['pagination'] } =
-  reactive({
-    data: [
-      {
-        id: 11,
-        donation_date: '10.12.2022',
-        donation_code: '130100123400',
-        blood_type: 'O(I)',
-        rh_factor: 'Rh+',
-        component_name: 'Эритроцитная масса',
-        dose: '0',
-        quantity: '340',
-        come_from: 'Республиканский центр крови',
-        personalized_donation: 'Николай Резанов',
-        expiry_date: '01.03.2023',
-      },
-    ],
-    pagination: {
-      total: 10,
-      count: 10,
-      per_page: 10,
-      current_page: 1,
-      total_pages: 1,
+const apiData: ApiDataInterface<ProductInterface> = reactive({
+  data: [
+    {
+      id: 11,
+      donation_date: '10.12.2022',
+      donation_code: '130100123400',
+      blood_type: 'O(I)',
+      rh_factor: 'Rh+',
+      component_name: 'Эритроцитная масса',
+      dose: '0',
+      quantity: '340',
+      come_from: 'Республиканский центр крови',
+      personalized_donation: 'Николай Резанов',
+      expiry_date: '01.03.2023',
     },
-  })
+  ],
+  pagination: {
+    total: 10,
+    count: 10,
+    per_page: 10,
+    current_page: 1,
+    total_pages: 1,
+  },
+})
 const selectedRow = reactive({})
 const isFormModalOpen = ref(false)
 const filterErrors = reactive({
@@ -72,10 +71,6 @@ async function handleSearch(filterForm: any) {
     const params = { ...filterForm, page: apiData.pagination.current_page }
     // const res = await patientsListForScreening(params)
     // Object.assign(apiData, res.result)
-
-    // if (isEmpty(res.result.data)) {
-    //   notif.warning(t('Data_not_found'))
-    // } else notif.success(`${t('Found')}: ${res.result.pagination.total} ${t('records')}`)
   } catch (error: any) {
     Object.assign(filterErrors, error.response?.data?.errors)
   } finally {

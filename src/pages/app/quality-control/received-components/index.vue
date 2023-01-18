@@ -28,26 +28,25 @@ useHead({
   title: `${t('Received_components_list')} - ${mainStore.app.name}`,
 })
 
-const apiData: { data: ProductInterface[]; pagination: ApiDataInterface['pagination'] } =
-  reactive({
-    data: [
-      {
-        id: 11,
-        donation_date: '10.12.2022',
-        donation_code: '130100123400',
-        dose: '0',
-        quantity: '300',
-        component_name: 'Эритроцитная масса',
-      },
-    ],
-    pagination: {
-      total: 10,
-      count: 10,
-      per_page: 10,
-      current_page: 1,
-      total_pages: 1,
+const apiData: ApiDataInterface<ProductInterface> = reactive({
+  data: [
+    {
+      id: 11,
+      donation_date: '10.12.2022',
+      donation_code: '130100123400',
+      dose: '0',
+      quantity: '300',
+      component_name: 'Эритроцитная масса',
     },
-  })
+  ],
+  pagination: {
+    total: 10,
+    count: 10,
+    per_page: 10,
+    current_page: 1,
+    total_pages: 1,
+  },
+})
 const selectedRow = reactive({})
 const isFormModalOpen = ref(false)
 

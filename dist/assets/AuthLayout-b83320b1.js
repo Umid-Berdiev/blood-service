@@ -1,1 +1,0 @@
-import{l as r,m as s,P as t}from"./chunk-BGPNDDXN-dcda8805.js";import{_ as e}from"./_plugin-vue_export-helper-1b428a4d.js";const o={class:"auth-wrapper"};const a=e({},[["render",function(e,a){return r(),s("div",o,[t(e.$slots,"default")])}]]);export{a as _};
