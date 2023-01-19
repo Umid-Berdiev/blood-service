@@ -68,29 +68,31 @@ const form = computed({
         <p class="help has-text-danger">{{ errors.father_name[0] }}</p>
       </VControl>
     </VField>
-    <VDatePicker
-      v-model="form.birth_date"
-      :locale="locale"
-      mode="date"
-      :masks="masks"
-      :model-config="datePickerModelConfig"
-      color="green"
-      trim-weeks
-      :popover="{ visibility: 'click' }"
-    >
-      <template #default="{ inputValue, inputEvents }">
-        <VField :label="$t('Date-of-birth')" required>
-          <VControl icon="feather:calendar">
-            <VInput
-              :value="inputValue"
-              v-on="inputEvents"
-              @input="$emit('editing', 'birth_date')"
-            />
-            <p class="help has-text-danger">{{ errors.birth_date[0] }}</p>
-          </VControl>
-        </VField>
-      </template>
-    </VDatePicker>
+    <ClientOnly>
+      <VDatePicker
+        v-model="form.birth_date"
+        :locale="locale"
+        mode="date"
+        :masks="masks"
+        :model-config="datePickerModelConfig"
+        color="green"
+        trim-weeks
+        :popover="{ visibility: 'click' }"
+      >
+        <template #default="{ inputValue, inputEvents }">
+          <VField :label="$t('Date-of-birth')" required>
+            <VControl icon="feather:calendar">
+              <VInput
+                :value="inputValue"
+                v-on="inputEvents"
+                @input="$emit('editing', 'birth_date')"
+              />
+              <p class="help has-text-danger">{{ errors.birth_date[0] }}</p>
+            </VControl>
+          </VField>
+        </template>
+      </VDatePicker>
+    </ClientOnly>
     <VField :label="$t('Gender')">
       <VControl>
         <VRadio

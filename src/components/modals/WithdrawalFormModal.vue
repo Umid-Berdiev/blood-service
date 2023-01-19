@@ -134,55 +134,57 @@ function clearError(error: string) {
               <span class="help has-text-danger">{{ errors.reason_text[0] }}</span>
             </VControl>
           </VField>
-          <VDatePicker
-            v-model="formData.start_date"
-            :locale="locale"
-            mode="date"
-            :masks="masks"
-            :model-config="datePickerModelConfig"
-            color="green"
-            trim-weeks
-            :popover="{ visibility: 'click' }"
-          >
-            <template #default="{ inputValue, inputEvents }">
-              <VField :label="$t('Start_date')">
-                <VControl icon="feather:calendar">
-                  <VInput
-                    :value="inputValue"
-                    v-on="inputEvents"
-                    @change="clearError('start_date')"
-                  />
-                  <p class="help has-text-danger">{{ errors.start_date[0] }}</p>
-                </VControl>
-              </VField>
-            </template>
-          </VDatePicker>
-          <VDatePicker
-            v-if="formData.type === 'temporary'"
-            v-model="formData.end_date"
-            :locale="locale"
-            mode="date"
-            :masks="masks"
-            :model-config="datePickerModelConfig"
-            color="green"
-            trim-weeks
-            :popover="{ visibility: 'click' }"
-          >
-            <template #default="{ inputValue, inputEvents }">
-              <VField :label="$t('End_date')">
-                <VControl icon="feather:calendar">
-                  <VInput
-                    class="is-primary-focus"
-                    :value="inputValue"
-                    :disabled="formData.type === 'permanent'"
-                    v-on="inputEvents"
-                    @change="clearError('end_date')"
-                  />
-                  <p class="help has-text-danger">{{ errors.end_date[0] }}</p>
-                </VControl>
-              </VField>
-            </template>
-          </VDatePicker>
+          <ClientOnly>
+            <VDatePicker
+              v-model="formData.start_date"
+              :locale="locale"
+              mode="date"
+              :masks="masks"
+              :model-config="datePickerModelConfig"
+              color="green"
+              trim-weeks
+              :popover="{ visibility: 'click' }"
+            >
+              <template #default="{ inputValue, inputEvents }">
+                <VField :label="$t('Start_date')">
+                  <VControl icon="feather:calendar">
+                    <VInput
+                      :value="inputValue"
+                      v-on="inputEvents"
+                      @change="clearError('start_date')"
+                    />
+                    <p class="help has-text-danger">{{ errors.start_date[0] }}</p>
+                  </VControl>
+                </VField>
+              </template>
+            </VDatePicker>
+            <VDatePicker
+              v-if="formData.type === 'temporary'"
+              v-model="formData.end_date"
+              :locale="locale"
+              mode="date"
+              :masks="masks"
+              :model-config="datePickerModelConfig"
+              color="green"
+              trim-weeks
+              :popover="{ visibility: 'click' }"
+            >
+              <template #default="{ inputValue, inputEvents }">
+                <VField :label="$t('End_date')">
+                  <VControl icon="feather:calendar">
+                    <VInput
+                      class="is-primary-focus"
+                      :value="inputValue"
+                      :disabled="formData.type === 'permanent'"
+                      v-on="inputEvents"
+                      @change="clearError('end_date')"
+                    />
+                    <p class="help has-text-danger">{{ errors.end_date[0] }}</p>
+                  </VControl>
+                </VField>
+              </template>
+            </VDatePicker>
+          </ClientOnly>
           <VField :label="$t('Source')" required>
             <VControl>
               <VTextarea

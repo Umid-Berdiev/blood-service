@@ -11,6 +11,5 @@ meta:
         <component :is="Component" :key="route.fullPath" />
       </Transition>
     </RouterView>
-    <!-- <RouterView /> -->
   </AppLayout>
 </template>

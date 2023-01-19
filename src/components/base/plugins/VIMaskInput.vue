@@ -2,11 +2,12 @@
 import type { InputMask, AnyMaskedOptions } from 'imask'
 
 import IMask from 'imask'
+import { PropType } from 'vue'
 
 export default defineComponent({
   props: {
     modelValue: {
-      type: String || null,
+      type: String,
       required: true,
     },
     options: {

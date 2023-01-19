@@ -94,28 +94,30 @@ const formData = computed({
         <p class="help has-text-danger">{{ errors.issued_by[0] }}</p>
       </VControl>
     </VField>
-    <VDatePicker
-      v-model="formData.when_issued"
-      :locale="locale"
-      mode="date"
-      :masks="masks"
-      :model-config="datePickerModelConfig"
-      color="green"
-      trim-weeks
-      :popover="{ visibility: 'click' }"
-    >
-      <template #default="{ inputValue, inputEvents }">
-        <VField :label="$t('When_issued')">
-          <VControl icon="feather:calendar">
-            <VInput
-              :value="inputValue"
-              v-on="inputEvents"
-              @change="$emit('editing', 'when_issued')"
-            />
-            <p class="help has-text-danger">{{ errors.when_issued[0] }}</p>
-          </VControl>
-        </VField>
-      </template>
-    </VDatePicker>
+    <ClientOnly>
+      <VDatePicker
+        v-model="formData.when_issued"
+        :locale="locale"
+        mode="date"
+        :masks="masks"
+        :model-config="datePickerModelConfig"
+        color="green"
+        trim-weeks
+        :popover="{ visibility: 'click' }"
+      >
+        <template #default="{ inputValue, inputEvents }">
+          <VField :label="$t('When_issued')">
+            <VControl icon="feather:calendar">
+              <VInput
+                :value="inputValue"
+                v-on="inputEvents"
+                @change="$emit('editing', 'when_issued')"
+              />
+              <p class="help has-text-danger">{{ errors.when_issued[0] }}</p>
+            </VControl>
+          </VField>
+        </template>
+      </VDatePicker>
+    </ClientOnly>
   </div>
 </template>

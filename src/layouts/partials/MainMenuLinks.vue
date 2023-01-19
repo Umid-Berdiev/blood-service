@@ -3,16 +3,13 @@ const route = useRoute()
 const openSideblockLinks = ref('')
 
 // hooks
-// watch(openSideblockLinks, function(newVal) {
-//   if()
-// })
+onMounted(function () {
+  const el = document.querySelector('ul#sidebar-menu a.router-link-exact-active')
+  const elParent = el?.closest('li.collapse-links')
+  // console.log({ el })
+  // console.log({ elParent })
 
-watchEffect(function () {
-  if (openSideblockLinks.value == 'donations') {
-    const el = document.getElementById('donations')
-    console.log({ el })
-    el?.scrollIntoView()
-  }
+  elParent?.scrollIntoView()
 })
 
 watch(
@@ -51,17 +48,12 @@ watch(
       }
       if (newVal.startsWith('/app/blood-bank')) {
         openSideblockLinks.value = 'blood-bank'
-        const el = document.getElementById('blood-bank')
-        el?.scrollIntoView()
       }
       if (newVal.startsWith('/app/blood-sampling')) {
         openSideblockLinks.value = 'blood-sampling'
       }
       if (newVal.startsWith('/app/scrapping')) {
         openSideblockLinks.value = 'scrapping'
-        const el = document.getElementById('scrapping')
-        console.log({ el })
-        el?.scrollIntoView()
       }
       if (newVal.startsWith('/app/forwarding')) {
         openSideblockLinks.value = 'forwarding'
@@ -73,7 +65,7 @@ watch(
 </script>
 
 <template>
-  <ul>
+  <ul id="sidebar-menu">
     <!-- dashboard -->
     <li>
       <RouterLink to="/app/dashboard" class="single-link">
@@ -302,11 +294,7 @@ watch(
     </VCollapseLinks>
 
     <!-- Donations -->
-    <VCollapseLinks
-      id="donations"
-      v-model:open="openSideblockLinks"
-      collapse-id="donations"
-    >
+    <VCollapseLinks v-model:open="openSideblockLinks" collapse-id="donations">
       <template #header>
         <div class="icon">
           <i class="iconify" data-icon="feather:folder-plus" aria-hidden="true"></i>
@@ -416,11 +404,7 @@ watch(
     </VCollapseLinks>
 
     <!-- Scrapping components -->
-    <VCollapseLinks
-      id="scrapping"
-      v-model:open="openSideblockLinks"
-      collapse-id="scrapping"
-    >
+    <VCollapseLinks v-model:open="openSideblockLinks" collapse-id="scrapping">
       <template #header>
         <div class="icon">
           <i class="iconify" data-icon="feather:folder-plus" aria-hidden="true"></i>
@@ -432,17 +416,17 @@ watch(
         <i class="iconify" data-icon="feather:minus" aria-hidden="true"></i>
         <span>{{ $t('Components_to_be_scrapped') }}</span>
       </RouterLink>
-      <RouterLink
+      <!-- <RouterLink
         to="/app//app/scrapping/scrapped-components-log"
         class="is-submenu mb-3"
       >
         <i class="iconify" data-icon="feather:minus" aria-hidden="true"></i>
         <span>{{ $t('Scrapped_components_log') }}</span>
-      </RouterLink>
+      </RouterLink> -->
     </VCollapseLinks>
 
     <!-- blood-bank -->
-    <VCollapseLinks v-model:open="openSideblockLinks" collapse-id="blood-bank">
+    <!-- <VCollapseLinks v-model:open="openSideblockLinks" collapse-id="blood-bank">
       <template #header>
         <div class="icon">
           <i class="iconify" data-icon="feather:folder-plus" aria-hidden="true"></i>
@@ -458,6 +442,6 @@ watch(
         <i class="iconify" data-icon="feather:minus" aria-hidden="true"></i>
         <span>{{ $t('Donor-system-directories') }}</span>
       </RouterLink>
-    </VCollapseLinks>
+    </VCollapseLinks> -->
   </ul>
 </template>

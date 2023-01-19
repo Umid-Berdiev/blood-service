@@ -94,7 +94,7 @@ function clearErrors() {
         </div>
       </div>
       <div class="columns">
-        <column>
+        <div class="column">
           <table class="table">
             <tbody>
               <tr>
@@ -147,7 +147,7 @@ function clearErrors() {
               </tr>
             </tbody>
           </table>
-        </column>
+        </div>
       </div>
       <form id="blood-sampling-form" class="modal-form" @submit.prevent="onSubmit">
         <h5 class="is-size-5 has-text-weight-medium">
