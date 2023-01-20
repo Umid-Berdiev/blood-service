@@ -63,7 +63,6 @@ export async function fetchVisitcardById(
   try {
     const { data } = await api({
       url: `/patients/${patient_id}/visit-cards/${id}`,
-      // url: `/visit-cards/${id}`,
     })
 
     return data

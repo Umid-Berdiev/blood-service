@@ -86,7 +86,32 @@ export async function fetchPostinfusionReactions() {
   try {
     const { data } = await api({
       url: `/postinfusion-reactions`,
-      // params: { per_page: 100 },
+    })
+
+    return data
+  } catch (error) {
+    throw error
+  }
+}
+
+export async function createDonationLabel(payload: any) {
+  try {
+    const { data } = await api({
+      url: `/donation-labels`,
+      method: 'POST',
+      data: payload,
+    })
+
+    return data
+  } catch (error) {
+    throw error
+  }
+}
+
+export async function fetchFreeDonationLabels() {
+  try {
+    const { data } = await api({
+      url: `/donation-labels`,
     })
 
     return data

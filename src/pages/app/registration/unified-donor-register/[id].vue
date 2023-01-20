@@ -97,6 +97,10 @@ async function fetchPatientInfo() {
   try {
     const res = await fetchPatientById(patientID)
     Object.assign(patientForm, res.result)
+    patientForm.pinfl = patientForm.pinfl ?? ''
+    patientForm.phone_home = patientForm.phone_home ?? ''
+    patientForm.phone_number = patientForm.phone_number ?? ''
+    patientForm.phone_work = patientForm.phone_work ?? ''
   } catch (error: any) {
     notif.error(error.message)
   }

@@ -14,7 +14,7 @@ export async function fetchBranches() {
   }
 }
 
-export async function fetchBranchById(id: number | null) {
+export async function fetchBranchById(id: number) {
   try {
     const { data } = await api({
       url: `/branches/${id}`,

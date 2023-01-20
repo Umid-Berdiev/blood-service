@@ -14,13 +14,7 @@ const props = defineProps<{
 const emits = defineEmits(['update:patient', 'editing'])
 const form = computed({
   get() {
-    const obj = {
-      ...props.patient,
-      phone_number: props.patient.phone_number ?? '',
-      phone_work: props.patient.phone_work ?? '',
-      phone_home: props.patient.phone_home ?? '',
-    }
-    return obj
+    return props.patient
   },
   set(val) {
     emits('update:patient', val)

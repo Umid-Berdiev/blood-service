@@ -1,0 +1,1 @@
+var l,a,o,e;import{af as u}from"./index-d9061d2c.js";const t=[{value:"gratuitous",label:null==(a=null==(l=u)?void 0:l.global)?void 0:a.t("Gratuitous")},{value:"chargeable",label:null==(e=null==(o=u)?void 0:o.global)?void 0:e.t("Chargeable")}];export{t as v};

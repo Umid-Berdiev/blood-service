@@ -51,10 +51,34 @@ export async function fetchHealthcareFacilities() {
   }
 }
 
+export async function fetchSesOrganizations() {
+  try {
+    const { data } = await api({
+      url: `/csses-organizations`,
+    })
+
+    return data
+  } catch (error) {
+    throw error
+  }
+}
+
 export async function fetchBloodTypes() {
   try {
     const { data } = await api({
       url: `/blood-types`,
+    })
+
+    return data
+  } catch (error) {
+    throw error
+  }
+}
+
+export async function fetchBloodTypeByID(id: number) {
+  try {
+    const { data } = await api({
+      url: `/blood-types/${id}`,
     })
 
     return data
@@ -75,10 +99,34 @@ export async function fetchDonationTypes() {
   }
 }
 
+export async function fetchDonationTypeByID(id: number) {
+  try {
+    const { data } = await api({
+      url: `/donation-types/${id}`,
+    })
+
+    return data
+  } catch (error) {
+    throw error
+  }
+}
+
 export async function fetchImmunizations() {
   try {
     const { data } = await api({
       url: `/immunizations`,
+    })
+
+    return data
+  } catch (error) {
+    throw error
+  }
+}
+
+export async function fetchImmunizationByID(id: number) {
+  try {
+    const { data } = await api({
+      url: `/immunizations/${id}`,
     })
 
     return data
