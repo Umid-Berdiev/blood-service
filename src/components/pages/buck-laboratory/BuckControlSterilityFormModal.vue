@@ -87,7 +87,7 @@ function clearError(error: string) {
         <table class="table is-fullwidth">
           <tbody>
             <tr>
-              <th>{{ $t('Donor_code') }}</th>
+              <th>{{ $t('Donation_code') }}</th>
               <td>{{ item.donation_code }}</td>
             </tr>
             <tr>

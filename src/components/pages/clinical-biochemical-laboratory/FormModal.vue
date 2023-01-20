@@ -130,7 +130,7 @@ function clearErrors() {
       <div class="columns">
         <div class="column">
           <h5 class="is-size-5 has-text-weight-medium">
-            {{ $t('Donor_code') }}: {{ patient?.last_visit?.donation_code }}
+            {{ $t('Donation_code') }}: {{ patient?.last_visit?.donation_code }}
           </h5>
         </div>
       </div>

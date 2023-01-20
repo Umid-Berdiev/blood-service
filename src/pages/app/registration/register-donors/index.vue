@@ -13,7 +13,7 @@ const notif = useNotyf()
 const { scrollTo } = VueScrollTo
 const { t } = useI18n()
 
-const currentStep = ref(0)
+const currentStep = ref<number>(0)
 const isLoading = ref(false)
 const currentHelp = ref(-1)
 const viewWrapper = useViewWrapper()
@@ -97,14 +97,14 @@ const validateStep = async () => {
         errors.birth_date.length ||
         errors.gender.length
       ) {
-        return scrollTo(`#form-step-${0}`, 1000)
+        return scrollTo(`#form-step-${0}`, 500)
       } else if (
         errors.passport_series.length ||
         errors.passport_number.length ||
         errors.issued_by.length ||
         errors.when_issued.length
       ) {
-        return scrollTo(`#form-step-${1}`, 1000)
+        return scrollTo(`#form-step-${1}`, 500)
       }
     } finally {
       isLoading.value = false
@@ -112,11 +112,11 @@ const validateStep = async () => {
   }
 
   isLoading.value = true
-  await sleep(1000)
-  currentStep.value += 1
+  await sleep(500)
+  if (currentStep.value < 2) currentStep.value += 1
 
   nextTick(() => {
-    scrollTo(`#form-step-${currentStep.value}`, 1000)
+    scrollTo(`#form-step-${currentStep.value}`, 500)
     isLoading.value = false
   })
 }

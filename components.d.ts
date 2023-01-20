@@ -100,6 +100,7 @@ declare module '@vue/runtime-core' {
     LanguagesPanel: typeof import('./src/components/partials/panels/LanguagesPanel.vue')['default']
     LifestyleBrandsTab: typeof import('./src/components/partials/lifestyle/LifestyleBrandsTab.vue')['default']
     LifestyleContentTab: typeof import('./src/components/partials/lifestyle/LifestyleContentTab.vue')['default']
+    LifestyleDashboardV3: typeof import('./src/components/dashboards/LifestyleDashboardV3.vue')['default']
     LifestyleOverviewTab: typeof import('./src/components/partials/lifestyle/LifestyleOverviewTab.vue')['default']
     LineStatWidget: typeof import('./src/components/partials/widgets/stat/LineStatWidget.vue')['default']
     ListViewV1Dropdown: typeof import('./src/components/partials/dropdowns/ListViewV1Dropdown.vue')['default']

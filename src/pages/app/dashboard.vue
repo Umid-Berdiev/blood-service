@@ -13,6 +13,7 @@
 
 import { useHead } from '@vueuse/head'
 import { useMainStore } from '../../stores/main'
+import LifestyleDashboardV3 from '/@src/components/dashboards/LifestyleDashboardV3.vue'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 
 const { app } = useMainStore()
@@ -29,9 +30,6 @@ useHead({
   <div class="page-content-inner">
     <!--
       Page content goes here
-
-      You can see pages content samples from
-      files in /src/components/pages directory
     -->
     <LifestyleDashboardV3 />
   </div>
