@@ -2,25 +2,26 @@
 import { DonationContainerInterface } from '/@src/utils/interfaces'
 import { apheresisMethods } from '/@src/utils/api/donation'
 
-export interface PlateletpheresisFormProps {
-  apheresis_method: 'manual' | 'device'
-  first_container_id: number | null
-  second_container_id: number | null
-  third_container_id: number | null
-  fourth_container_id: number | null
-  first_hemoconservative: number | null
-  second_hemoconservative: number | null
-  third_hemoconservative: number | null
-  fourth_hemoconservative: number | null
-  thromboconcentrate: number | null
-}
+// export interface PlateletpheresisFormProps {
+//   apheresis_method: 'manual' | 'device'
+//   first_container_id: number | null
+//   second_container_id: number | null
+//   third_container_id: number | null
+//   fourth_container_id: number | null
+//   first_hemoconservative: number | null
+//   second_hemoconservative: number | null
+//   third_hemoconservative: number | null
+//   fourth_hemoconservative: number | null
+//   thromboconcentrate1: number | null
+//   thromboconcentrate2: number | null
+// }
 
 const props = defineProps<{
-  formState: PlateletpheresisFormProps
+  formState: any
   containerList: DonationContainerInterface[]
 }>()
 const emits = defineEmits<{
-  (e: 'update:formState', value: PlateletpheresisFormProps): void
+  (e: 'update:formState', value: any): void
 }>()
 
 const computedFormState = computed({
@@ -41,19 +42,26 @@ const computedFormState = computed({
         <label class="label">{{ $t('Apheresis_method') }}</label>
       </div>
       <div class="field-body">
-        <div class="field">
-          <div class="control is-expended">
-            <Multiselect
+        <VField>
+          <VControl expanded>
+            <VSelect
               v-model="computedFormState.apheresis_method"
-              :options="apheresisMethods"
+              class="is-primary"
               :placeholder="$t('Select')"
-              :style="{ minWidth: '15rem', margin: 0 }"
-            />
-          </div>
-        </div>
+            >
+              <VOption
+                v-for="(opt, optIndex) in apheresisMethods"
+                :key="optIndex"
+                :value="opt.value"
+              >
+                {{ opt.label }}
+              </VOption>
+            </VSelect>
+          </VControl>
+        </VField>
       </div>
     </div>
-    <template v-if="formState.apheresis_method === 'manual'">
+    <template v-if="computedFormState.apheresis_method === 'manual'">
       <hr class="is-divider" />
       <h5 class="mb-3">{{ $t('First_fence') }}</h5>
       <div class="field is-horizontal">
@@ -113,7 +121,7 @@ const computedFormState = computed({
         <div class="field-label is-normal">
           <label class="label">
             {{ $t('Hemoconservative_taken_blood_amount_ml') }}
-            <span class="has-text-danger">*</span>
+            <!-- <span class="has-text-danger">*</span> -->
           </label>
         </div>
         <div class="field-body">
@@ -147,7 +155,7 @@ const computedFormState = computed({
         <div class="field-label is-normal">
           <label class="label">
             {{ $t('Hemoconservative_taken_blood_amount_ml') }}
-            <span class="has-text-danger">*</span>
+            <!-- <span class="has-text-danger">*</span> -->
           </label>
         </div>
         <div class="field-body">
@@ -181,7 +189,7 @@ const computedFormState = computed({
         <div class="field-label is-normal">
           <label class="label">
             {{ $t('Hemoconservative_taken_blood_amount_ml') }}
-            <span class="has-text-danger">*</span>
+            <!-- <span class="has-text-danger">*</span> -->
           </label>
         </div>
         <div class="field-body">
@@ -191,15 +199,35 @@ const computedFormState = computed({
         </div>
       </div>
     </template>
-    <template v-else-if="formState.apheresis_method === 'device'">
+    <template v-if="computedFormState.apheresis_method === 'device'">
       <hr class="is-divider" />
+      <h5>{{ $t('Received_platelet_concentrate_amount_ml') }}</h5>
+      <br />
       <div class="field is-horizontal">
         <div class="field-label is-normal">
-          <label class="label">{{ $t('Received_platelet_concentrate_amount_ml') }}</label>
+          <label class="label">{{ $t('First_fence') }}</label>
         </div>
         <div class="field-body">
           <VField>
-            <VInput v-model="computedFormState.thromboconcentrate" type="text" />
+            <VInput
+              v-model="computedFormState.thromboconcentrate1"
+              type="text"
+              style="width: 50%"
+            />
+          </VField>
+        </div>
+      </div>
+      <div class="field is-horizontal">
+        <div class="field-label is-normal">
+          <label class="label">{{ $t('Second_fence') }}</label>
+        </div>
+        <div class="field-body">
+          <VField>
+            <VInput
+              v-model="computedFormState.thromboconcentrate2"
+              type="text"
+              style="width: 50%"
+            />
           </VField>
         </div>
       </div>

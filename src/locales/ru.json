@@ -783,5 +783,6 @@
   "Final_blood_type": "Окончательная группа крови",
   "Blood_type_is_not_determined": "Группа крови не определяется",
   "Hemolysis": "Гемолиз",
-  "Hiles": "Хилез"
+  "Hiles": "Хилез",
+  "Components_for_production_sterility_control": "Список компонентов крови, поступивших на контроль стерильности производства"
 }

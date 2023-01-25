@@ -19,7 +19,7 @@ export async function patientCategoriesList() {
 export async function patientsList(payload: any) {
   try {
     const { data } = await api({
-      url: '/patients/donation',
+      url: '/patients',
       params: payload,
     })
 
@@ -32,7 +32,7 @@ export async function patientsList(payload: any) {
 export async function patientsListForDonation(payload: any) {
   try {
     const { data } = await api({
-      url: '/patients',
+      url: '/patients/donation',
       params: payload,
     })
 

@@ -83,7 +83,10 @@ function clearError(fieldName: string) {
                       alt=""
                     /> -->
                     <!-- <p class="is-size-1">{{ $t('Republic_Blood_Center') }}</p> -->
-                    <p class="is-size-1 has-text-dark has-text-weight-medium">
+                    <p
+                      class="is-size-1 has-text-dark is-underlined has-text-weight-medium"
+                      style="text-shadow: #0fa 1px 0 5px"
+                    >
                       Автоматизированная информационная система по формированию и ведению
                       базы данных по донорам и лицам, отведенным от донорства, и данных по
                       учету и распределению донорской крови
@@ -112,9 +115,12 @@ function clearError(fieldName: string) {
             />
             <span></span>
           </label>
-          <div class="is-form">
+          <div class="is-form mt-3">
             <div class="hero-body">
-              <div class="form-text" :class="[step !== 'login' && 'is-hidden']">
+              <div
+                class="form-text has-text-centered"
+                :class="[step !== 'login' && 'is-hidden']"
+              >
                 <h2>{{ $t('Sign_In') }}</h2>
                 <p>{{ $t('Please_sign_in_to_your_account') }}</p>
               </div>

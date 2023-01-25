@@ -2,22 +2,22 @@
 import { DonationContainerInterface } from '/@src/utils/interfaces'
 import { apheresisMethods } from '/@src/utils/api/donation'
 
-export interface PlasmapheresisFormProps {
-  apheresis_method: 'manual' | 'device'
-  first_container_id: number | null
-  second_container_id: number | null
-  first_hemoconservative: number | null
-  second_hemoconservative: number | null
-  plasma: number | null
-  laboratory: number | null
-}
+// export interface PlasmapheresisFormProps {
+//   apheresis_method: 'manual' | 'device'
+//   first_container_id: number | null
+//   second_container_id: number | null
+//   first_hemoconservative: number | null
+//   second_hemoconservative: number | null
+//   plasma: number | null
+//   laboratory: number | null
+// }
 
 const props = defineProps<{
-  formState: PlasmapheresisFormProps
+  formState: any
   containerList: DonationContainerInterface[]
 }>()
 const emits = defineEmits<{
-  (e: 'update:formState', value: PlasmapheresisFormProps): void
+  (e: 'update:formState', value: any): void
 }>()
 
 const computedFormState = computed({
@@ -38,16 +38,23 @@ const computedFormState = computed({
         <label class="label">{{ $t('Apheresis_method') }}</label>
       </div>
       <div class="field-body">
-        <div class="field">
-          <div class="control is-expended">
-            <Multiselect
+        <VField>
+          <VControl expended>
+            <VSelect
               v-model="computedFormState.apheresis_method"
-              :options="apheresisMethods"
+              class="is-primary"
               :placeholder="$t('Select')"
-              :style="{ minWidth: '15rem', margin: 0 }"
-            />
-          </div>
-        </div>
+            >
+              <VOption
+                v-for="(opt, optIndex) in apheresisMethods"
+                :key="optIndex"
+                :value="opt.value"
+              >
+                {{ opt.label }}
+              </VOption>
+            </VSelect>
+          </VControl>
+        </VField>
       </div>
     </div>
     <template v-if="computedFormState.apheresis_method === 'manual'">

@@ -76,7 +76,7 @@ onMounted(async () => {
 watch(
   () => formData.donation_type_id,
   async (newVal) => {
-    if (newVal === 1) await getLaboratoryResearchFields()
+    if (newVal === 1 || newVal === 2) await getLaboratoryResearchFields()
   }
 )
 
@@ -171,7 +171,10 @@ function clearErrors() {
       </VFlex>
       <br />
       <div
-        v-if="formData.donation_type_id !== 3 && laboratoryResearchFormFields.length"
+        v-if="
+          (formData.donation_type_id === 1 || formData.donation_type_id === 2) &&
+          laboratoryResearchFormFields.length
+        "
         class="table-container"
       >
         <table class="table is-bordered is-fullwidth">

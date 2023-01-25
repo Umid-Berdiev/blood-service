@@ -6,6 +6,7 @@ import { useNotyf } from '/@src/composable/useNotyf'
 import { useMainStore } from '/@src/stores/main'
 
 import { useViewWrapper } from '/@src/stores/viewWrapper'
+import { fetchComponentsForSterility } from '/@src/utils/api/buck-laboratory'
 import { ApiDataInterface } from '/@src/utils/interfaces'
 
 export interface BuckControlSterilityItemInterface {
@@ -30,14 +31,14 @@ useHead({
 
 const apiData: ApiDataInterface<BuckControlSterilityItemInterface> = reactive({
   data: [
-    {
-      donation_date: '05.06.2022',
-      donation_code: '138800115200',
-      dose: '0',
-      quantity: '250',
-      component_name: 'Эритроцитная масса',
-      come_from: 'Из отдела переработки',
-    },
+    // {
+    //   donation_date: '05.06.2022',
+    //   donation_code: '138800115200',
+    //   dose: '0',
+    //   quantity: '250',
+    //   component_name: 'Эритроцитная масса',
+    //   come_from: 'Из отдела переработки',
+    // },
   ],
   pagination: {
     total: 10,
@@ -90,16 +91,15 @@ const currentFilterData = reactive({
 const clickedRowData: BuckControlSterilityItemInterface = reactive({})
 const isFormModalOpen = ref(false)
 
-// await handleSearch(currentFilterData)
+await handleSearch(currentFilterData)
 
 // functions
 async function handleSearch(filterForm: any) {
   try {
     Object.assign(currentFilterData, filterForm)
     isLoading.value = true
-    // const res = await fetch
-    // Object.assign(apiData, res.result)
-
+    const res = await fetchComponentsForSterility(currentFilterData)
+    Object.assign(apiData, res.result)
   } catch (error: any) {
     Object.assign(errors, error.response?.data?.errors)
   } finally {

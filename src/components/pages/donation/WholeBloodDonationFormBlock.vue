@@ -1,18 +1,18 @@
 <script setup lang="ts">
 import { DonationContainerInterface } from '/@src/utils/interfaces'
 
-export interface WholeBloodDonationFormProps {
-  container_id: number | null
-  hemoconservative: number | null
-  laboratory: number | null
-}
+// export interface WholeBloodDonationFormProps {
+//   container_id: number | null
+//   hemoconservative: number | null
+//   laboratory: number | null
+// }
 
 const props = defineProps<{
-  formState: WholeBloodDonationFormProps
+  formState: any
   containerList: DonationContainerInterface[]
 }>()
 const emits = defineEmits<{
-  (e: 'update:formState', value: WholeBloodDonationFormProps): void
+  (e: 'update:formState', value: any): void
 }>()
 
 const computedFormState = computed({
@@ -33,18 +33,31 @@ const computedFormState = computed({
         <label class="label">{{ $t('Container') }}</label>
       </div>
       <div class="field-body">
-        <div class="field">
-          <div class="control is-expended">
-            <Multiselect
+        <VField>
+          <VControl expanded>
+            <!-- <Multiselect
               v-model="computedFormState.container_id"
               :options="containerList"
               :placeholder="$t('Select')"
               label="name"
               value-prop="id"
               :style="{ minWidth: '15rem', margin: 0 }"
-            />
-          </div>
-        </div>
+            /> -->
+            <VSelect
+              v-model="computedFormState.container_id"
+              class="is-primary"
+              :placeholder="$t('Select')"
+            >
+              <VOption
+                v-for="(opt, optIndex) in containerList"
+                :key="optIndex"
+                :value="opt.id"
+              >
+                {{ opt.name }}
+              </VOption>
+            </VSelect>
+          </VControl>
+        </VField>
       </div>
     </div>
     <div class="field is-horizontal">

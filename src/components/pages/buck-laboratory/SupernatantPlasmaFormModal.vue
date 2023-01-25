@@ -42,6 +42,7 @@ async function onSubmit() {
   try {
     isLoading.value = true
     // await storeHemotransmissionResearchResults(props.patient?.id, formFields)
+    notif.success(t('Data_saved_successfully'))
     emits('update:list')
     onClose()
   } catch (error: any) {

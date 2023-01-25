@@ -37,13 +37,9 @@ const notif = useNotyf()
 const { t } = useI18n()
 const title = ref(t('Donation_data_entry_form'))
 const isLoading = ref(false)
-const wholeBloodDonationFormState = ref<WholeBloodDonationFormProps>({
-  container_id: null,
-  hemoconservative: null,
-  laboratory: null,
-})
-const plasmapheresisFormState = ref<PlasmapheresisFormProps>({})
-const plateletpheresisFormState = ref<PlateletpheresisFormProps>({})
+// const wholeBloodDonationFormState = ref<WholeBloodDonationFormProps>({})
+// const plasmapheresisFormState = ref<PlasmapheresisFormProps>({})
+// const plateletpheresisFormState = ref<PlateletpheresisFormProps>({})
 const formState = ref({
   donation_type_id: null,
   date: formatDate(new Date(), 'YYYY-MM-DD'),
@@ -92,17 +88,17 @@ watch(
 async function onSubmit() {
   try {
     isLoading.value = true
-    const additionalsFormState =
-      props.patient?.last_visit?.donation_type_id === 1
-        ? plateletpheresisFormState.value
-        : props.patient?.last_visit?.donation_type_id === 2
-        ? plasmapheresisFormState.value
-        : wholeBloodDonationFormState.value
-    const payload = {
-      ...formState.value,
-      ...additionalsFormState,
-    }
-    await storeDonationResults(props.patient?.last_visit?.id as number, payload)
+    // const additionalsFormState =
+    //   props.patient?.last_visit?.donation_type_id === 1
+    //     ? plateletpheresisFormState.value
+    //     : props.patient?.last_visit?.donation_type_id === 2
+    //     ? plasmapheresisFormState.value
+    //     : wholeBloodDonationFormState.value
+    // const payload = {
+    //   ...formState.value,
+    //   ...additionalsFormState,
+    // }
+    await storeDonationResults(props.patient?.last_visit?.id as number, formState.value)
     notif.success(t('Data_saved_successfully'))
     emits('update:list')
     onClose()
@@ -250,21 +246,21 @@ async function fetchContainerList() {
       <template v-if="patient?.last_visit?.donation_type_id === 1">
         <hr class="is-divider" />
         <PlateletpheresisFormBlock
-          v-model:form-state="plateletpheresisFormState"
+          v-model:form-state="formState"
           :container-list="containerList"
         />
       </template>
       <template v-else-if="patient?.last_visit?.donation_type_id === 2">
         <hr class="is-divider" />
         <PlasmapheresisFormBlock
-          v-model:form-state="plasmapheresisFormState"
+          v-model:form-state="formState"
           :container-list="containerList"
         />
       </template>
       <template v-else-if="patient?.last_visit?.donation_type_id === 3">
         <hr class="is-divider" />
         <WholeBloodDonationFormBlock
-          v-model:form-state="wholeBloodDonationFormState"
+          v-model:form-state="formState"
           :container-list="containerList"
         />
       </template>

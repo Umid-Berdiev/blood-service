@@ -5,16 +5,17 @@ import moment from 'moment'
 import { reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
-import { BuckControlSterilityItemInterface } from '/@src/pages/app/buck-laboratory/buck-control-sterility/index.vue'
+import { SterilityControlItemInterface } from '/@src/pages/app/buck-laboratory/components-for-production-sterility-control/index.vue'
+import { storeSterilityResults } from '/@src/utils/api/buck-laboratory'
 
 interface BuckControlSterilityFormInterface {
-  control_result: 'sterile' | 'not_sterile'
-  result_date: string
+  sterility_status: 'sterile' | 'not_sterile'
+  sterility_checked_date: string
 }
 
 interface FormProps {
   isOpen: boolean
-  item: BuckControlSterilityItemInterface
+  item: SterilityControlItemInterface | null
 }
 
 const props = withDefaults(defineProps<FormProps>(), {
@@ -31,18 +32,19 @@ const { t } = useI18n()
 const title = ref(t('Sterility_test_result'))
 const isLoading = ref(false)
 const formFields: BuckControlSterilityFormInterface = reactive({
-  control_result: 'sterile',
-  result_date: formatDate(new Date(), 'YYYY-MM-DD'),
+  sterility_status: 'sterile',
+  sterility_checked_date: formatDate(new Date(), 'YYYY-MM-DD'),
 })
 const errors = reactive({
-  control_result: [],
-  result_date: [],
+  sterility_status: [],
+  sterility_checked_date: [],
 })
 
 async function onSubmit() {
   try {
     isLoading.value = true
-    // await storeHemotransmissionResearchResults(props.patient?.id, formFields)
+    await storeSterilityResults(props.item?.id, formFields)
+    notif.success(t('Data_saved_successfully'))
     emits('update:list')
     onClose()
   } catch (error: any) {
@@ -85,36 +87,36 @@ function clearError(error: string) {
     <template #content>
       <div class="table-container">
         <table class="table is-fullwidth">
-          <tbody>
+          <tbody class="align-middle">
             <tr>
               <th>{{ $t('Donation_code') }}</th>
-              <td>{{ item.donation_code }}</td>
+              <td>{{ item?.donation_code }}</td>
             </tr>
             <tr>
               <th>{{ $t('Donation_date') }}</th>
-              <td>{{ item.donation_date }}</td>
+              <td>{{ item?.date }}</td>
             </tr>
             <tr>
               <th>{{ $t('Component_name') }}</th>
-              <td>{{ item.component_name }}</td>
+              <td>{{ item?.product_name }}</td>
             </tr>
             <tr>
               <th>{{ $t('Come_from') }}</th>
-              <td>{{ item.come_from }}</td>
+              <td>{{ item?.sent_from }}</td>
             </tr>
             <tr>
-              <th>{{ $t('Control_result') }}</th>
+              <th class="align-items-center">{{ $t('Control_result') }}</th>
               <td>
                 <VField>
                   <VControl>
                     <VRadio
-                      v-model="formFields.control_result"
+                      v-model="formFields.sterility_status"
                       value="sterile"
                       color="primary"
                       :label="$t('Sterile')"
                     />
                     <VRadio
-                      v-model="formFields.control_result"
+                      v-model="formFields.sterility_status"
                       value="not_sterile"
                       color="primary"
                       :label="$t('Not_sterile')"
@@ -129,7 +131,7 @@ function clearError(error: string) {
                 <VField>
                   <VControl>
                     <IMaskDateInput
-                      v-model="formFields.result_date"
+                      v-model="formFields.sterility_checked_date"
                       :style="{ width: '50%' }"
                     />
                   </VControl>
@@ -141,7 +143,7 @@ function clearError(error: string) {
       </div>
     </template>
     <template #action>
-      <SubmitButton :loading="isLoading" type="button" />
+      <SubmitButton :loading="isLoading" type="button" @click="onSubmit" />
     </template>
   </VModal>
 </template>

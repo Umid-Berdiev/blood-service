@@ -249,6 +249,13 @@ watch(
         <i class="iconify" data-icon="feather:minus" aria-hidden="true"></i>
         <span>{{ $t('Supernatant-plasma-list') }}</span>
       </RouterLink>
+      <RouterLink
+        to="/app/buck-laboratory/components-for-production-sterility-control"
+        class="is-submenu mb-3"
+      >
+        <i class="iconify" data-icon="feather:minus" aria-hidden="true"></i>
+        <span>{{ $t('Components_for_production_sterility_control') }}</span>
+      </RouterLink>
       <!-- <RouterLink
         to="/app/buck-laboratory/serological-research-journal"
         class="is-submenu mb-3"
@@ -394,13 +401,13 @@ watch(
         <i class="iconify" data-icon="feather:minus" aria-hidden="true"></i>
         <span>{{ $t('Received_components_list') }}</span>
       </RouterLink>
-      <RouterLink
+      <!-- <RouterLink
         to="/app/quality-control/inspected-components-log"
         class="is-submenu mb-3"
       >
         <i class="iconify" data-icon="feather:minus" aria-hidden="true"></i>
         <span>{{ $t('Inspected_components_log') }}</span>
-      </RouterLink>
+      </RouterLink> -->
     </VCollapseLinks>
 
     <!-- Scrapping components -->

@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { useMainStore } from '/@src/stores/main'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
+import { fetchDonationsForProcessing } from '/@src/utils/api/processing'
 import { ApiDataInterface, ProductInterface } from '/@src/utils/interfaces'
 
 const router = useRouter()
@@ -20,53 +21,7 @@ useHead({
 })
 
 const apiData: ApiDataInterface<ProductInterface> = reactive({
-  data: [
-    {
-      id: 11,
-      donation_code: '130100123400',
-      donation_date: '10.12.2022',
-      blood_type: 'O(I)',
-      visit_type: 'Безвозмезные донации',
-      rh_factor: 'Rh+',
-      component_name: 'Эритроцитная масса',
-      donation_type: 'Донация цельной крови',
-      dose: '0',
-      quantity: '340',
-      come_from: 'Республиканский центр крови',
-      personalized_donation: 'Николай Резанов',
-      expiry_date: '01.03.2023',
-    },
-    // {
-    //   id: 17,
-    //   donation_code: '130100456500',
-    //   donation_date: '18.12.2022',
-    //   blood_type: 'O(I)',
-    //   visit_type: 'Платные донации',
-    //   rh_factor: 'Rh+',
-    //   component_name: 'Эритроцитная масса',
-    //   donation_type: 'Тромбоцитаферез',
-    //   dose: '0',
-    //   quantity: '340',
-    //   come_from: 'Республиканский центр крови',
-    //   personalized_donation: 'Николай Резанов',
-    //   expiry_date: '01.03.2023',
-    // },
-    {
-      id: 21,
-      donation_code: '130100987300',
-      donation_date: '18.12.2022',
-      blood_type: 'O(I)',
-      visit_type: 'Платные донации',
-      rh_factor: 'Rh+',
-      component_name: 'Эритроцитная масса',
-      donation_type: 'Плазмаферез',
-      dose: '0',
-      quantity: '340',
-      come_from: 'Республиканский центр крови',
-      personalized_donation: 'Николай Резанов',
-      expiry_date: '01.03.2023',
-    },
-  ],
+  data: [],
   pagination: {
     total: 10,
     count: 10,
@@ -75,25 +30,31 @@ const apiData: ApiDataInterface<ProductInterface> = reactive({
     total_pages: 1,
   },
 })
-const selectedRow = reactive({})
+const selectedRow = ref<ProductInterface | null>(null)
 const isFormModalOpen = ref(false)
 const filterErrors = reactive({
   donation_code: [],
   donation_type_id: [],
 })
+const currentFilterData = reactive({
+  visit_type_id: '',
+  donation_type_id: null,
+  donation_code: '',
+  category_id: '',
+})
 
-// await handleSearch(currentFilterData)
+await handleSearch(currentFilterData)
 
 // hooks
 watch(isFormModalOpen, function (newVal: boolean) {
   if (newVal === false) {
-    Object.assign(selectedRow, {})
+    selectedRow.value = null
   }
 })
 
 // functions
 function openFormModal(item: any) {
-  Object.assign(selectedRow, item)
+  selectedRow.value = item
   isFormModalOpen.value = true
 }
 
@@ -101,8 +62,8 @@ async function handleSearch(filterForm: any) {
   try {
     isLoading.value = true
     const params = { ...filterForm, page: apiData.pagination.current_page }
-    // const res = await patientsListForScreening(params)
-    // Object.assign(apiData, res.result)
+    const res = await fetchDonationsForProcessing(params)
+    Object.assign(apiData, res.result)
   } catch (error: any) {
     Object.assign(filterErrors, error.response?.data?.errors)
   } finally {
@@ -206,8 +167,8 @@ async function clearFilterForm() {
                         {{ item.donation_code }}
                       </a>
                     </td>
-                    <td>{{ item.donation_date }}</td>
-                    <td>{{ item.donation_type }}</td>
+                    <td>{{ item.date }}</td>
+                    <td>{{ item.donation_type?.name }}</td>
                   </tr>
                 </template>
               </tbody>
