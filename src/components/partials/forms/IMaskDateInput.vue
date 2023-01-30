@@ -17,14 +17,14 @@ const emits = defineEmits<{
 
 const computedModelValue = computed({
   get() {
-    return props.modelValue ?? ''
+    return props.modelValue || ''
   },
   set(val: string) {
     emits('update:modelValue', val)
   },
 })
 
-const momentFormat = 'YYYY-MM-DD'
+const momentFormat = 'DD.MM.YYYY'
 
 const imaskOptions = reactive({
   mask: Date,
@@ -65,6 +65,6 @@ const imaskOptions = reactive({
     v-model="computedModelValue"
     class="input"
     :options="imaskOptions"
-    :placeholder="$t('Format') + ': ' + $t('yyyy-mm-dd')"
+    :placeholder="$t('Format') + ': ' + 'dd.mm.yyyy'"
   />
 </template>

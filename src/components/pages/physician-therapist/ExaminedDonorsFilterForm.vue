@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { isEmpty, values } from 'lodash'
 import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { patientCategoriesList } from '/@src/utils/api/patient'
@@ -42,9 +41,9 @@ const donationTypes = ref([
 ])
 
 const handleSearch = async () => {
-  if (!values(filterForm).every(isEmpty)) {
-    emits('search', filterForm)
-  } else notif.error(t('Form_fields_are_empty'))
+  // if (!values(filterForm).every(isEmpty)) {
+  emits('search', filterForm)
+  // } else notif.error(t('Form_fields_are_empty'))
 }
 
 const clearFilterForm = async () => {
@@ -61,26 +60,15 @@ const clearFilterForm = async () => {
 
 <template>
   <VCard>
-    <form @submit.prevent="handleSearch">
+    <div>
       <div class="columns">
         <div class="column">
-          <VField :label="$t('Start_date')">
-            <VControl>
-              <IMaskDateInput v-model="filterForm.start_date" />
-              <p class="help has-text-danger">
-                {{ errors.start_date[0] }}
-              </p>
-            </VControl>
-          </VField>
-        </div>
-        <div class="column">
-          <VField :label="$t('End_date')">
-            <VControl>
-              <IMaskDateInput v-model="filterForm.end_date" />
-              <p class="help has-text-danger">
-                {{ errors.end_date[0] }}
-              </p>
-            </VControl>
+          <VField>
+            <VLabel>{{ $t('Period') }}</VLabel>
+            <DateRangePicker
+              v-model:start="filterForm.start_date"
+              v-model:end="filterForm.end_date"
+            />
           </VField>
         </div>
         <div class="column">
@@ -143,11 +131,18 @@ const clearFilterForm = async () => {
           >
             {{ $t('Clear') }}
           </VButton>
-          <VButton type="submit" color="primary" bold :loading="isLoading" tabindex="0">
+          <VButton
+            type="button"
+            color="primary"
+            bold
+            :loading="isLoading"
+            tabindex="0"
+            @click="handleSearch"
+          >
             {{ $t('Search') }}
           </VButton>
         </div>
       </div>
-    </form>
+    </div>
   </VCard>
 </template>

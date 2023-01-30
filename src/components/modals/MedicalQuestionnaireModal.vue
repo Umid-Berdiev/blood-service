@@ -170,7 +170,9 @@ function onClose() {
         >
           {{ $t('Withdrawal') }}
         </VButton>
-        <SubmitButton form="questionnaire-form" :loading="isLoading" />
+        <SubmitButton form="questionnaire-form" :loading="isLoading">
+          {{ isQuestionnaireSaved ? $t('Update') : $t('Save') }}
+        </SubmitButton>
       </VButtons>
     </template>
   </VModal>

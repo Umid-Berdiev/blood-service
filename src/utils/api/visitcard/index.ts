@@ -43,11 +43,24 @@ export async function updateVisitcardById(id: number, payload: any) {
   }
 }
 
-export async function removeVisitcardById(patient_id: number, id: number) {
+export async function removeVisitcardById(patient_id: number, visitcard_id: number) {
   try {
     const { data } = await api({
-      url: `/patients/${patient_id}/visit-cards/${id}`,
+      url: `/patients/${patient_id}/visit-cards/${visitcard_id}`,
       method: 'DELETE',
+    })
+
+    return data
+  } catch (error) {
+    throw error
+  }
+}
+
+export async function finishVisitcardById(patient_id: number, visitcard_id: number) {
+  try {
+    const { data } = await api({
+      url: `/patients/${patient_id}/visit-cards/${visitcard_id}/finishing`,
+      method: 'PUT',
     })
 
     return data

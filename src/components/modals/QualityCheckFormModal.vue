@@ -28,9 +28,11 @@ const notif = useNotyf()
 const { t } = useI18n()
 const title = ref(t('Quality_check_result'))
 const isLoading = ref(false)
+const today = formatDate(new Date(), 'DD.MM.YYYY')
+
 const formState: QuantityCheckFormInterface = reactive({
   component_quality: 'satisfactory',
-  result_date: formatDate(new Date(), 'YYYY-MM-DD'),
+  result_date: today,
 })
 const errors = reactive({
   component_quality: [],
@@ -60,7 +62,7 @@ function onClose() {
 function clearFields() {
   Object.assign(formState, {
     component_quality: 'satisfactory',
-    result_date: formatDate(new Date(), 'YYYY-MM-DD'),
+    result_date: today,
   })
 }
 

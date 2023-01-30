@@ -1,11 +1,7 @@
 <script setup lang="ts">
 import { formatDate } from '@vueuse/core'
-import moment from 'moment'
 import { reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { PlasmapheresisFormProps } from '../pages/donation/PlasmapheresisFormBlock.vue'
-import { PlateletpheresisFormProps } from '../pages/donation/PlateletpheresisFormBlock.vue'
-import { WholeBloodDonationFormProps } from '../pages/donation/WholeBloodDonationFormBlock.vue'
 import { useNotyf } from '/@src/composable/useNotyf'
 import {
   fetchDonationResults,
@@ -41,37 +37,65 @@ const isLoading = ref(false)
 // const plasmapheresisFormState = ref<PlasmapheresisFormProps>({})
 // const plateletpheresisFormState = ref<PlateletpheresisFormProps>({})
 const formState = ref({
-  donation_type_id: null,
-  date: formatDate(new Date(), 'YYYY-MM-DD'),
+  // donation_type_id: null,
+  date: '',
   status: '',
   status_type: '',
+  doses: [0],
   postinfusion_reaction_id: null,
-  // container_id: null,
-  // hemoconservative: null,
-  // laboratory: null,
+  container_id: null,
+  hemoconservative: null,
+  laboratory: null,
   sent_to: '',
+  apheresis_method: '',
+  first_container_id: null,
+  first_hemoconservative: null,
+  second_container_id: null,
+  second_hemoconservative: null,
+  third_container_id: null,
+  third_hemoconservative: null,
+  fourth_container_id: null,
+  fourth_hemoconservative: null,
+  plasma: 0,
+  thromboconcentrate: 0,
 })
 const formErrors = reactive({
-  donation_type_id: [],
   date: [],
   status: [],
   status_type: [],
+  doses: [],
   postinfusion_reaction_id: [],
   container_id: [],
   hemoconservative: [],
   laboratory: [],
   sent_to: [],
+  apheresis_method: [],
+  first_container_id: [],
+  first_hemoconservative: [],
+  second_container_id: [],
+  second_hemoconservative: [],
+  third_container_id: [],
+  third_hemoconservative: [],
+  fourth_container_id: [],
+  fourth_hemoconservative: [],
+  plasma: [],
+  thromboconcentrate: [],
 })
 const containerList = ref<DonationContainerInterface[]>([])
 const postinfusionReactions = ref<any[]>([])
 const isContainerFormModalOpen = ref(false)
 const container = ref<DonationContainerInterface>({})
+const selectedDonationType = computed(() => {
+  return props.donationTypes.find(
+    (type) => type.id == props.patient?.last_visit?.donation_type_id
+  )?.name
+})
+
+await fetchData()
 
 // hooks
 onMounted(async function () {
   await fetchContainerList()
-  const res = await fetchPostinfusionReactions()
-  postinfusionReactions.value = res.result
 })
 
 watch(
@@ -80,24 +104,25 @@ watch(
     if (newVal) {
       const res = await fetchDonationResults(newVal)
       formState.value = res.result
+      formState.value.doses ??= [0]
+      formState.value.date ? formState.value.date : formatDate(new Date(), 'DD.MM.YYYY')
     }
   }
 )
 
 // functions
+async function fetchData() {
+  try {
+    const res = await fetchPostinfusionReactions()
+    postinfusionReactions.value = res.result
+  } catch (error: any) {
+    notif.error(error.message)
+  }
+}
+
 async function onSubmit() {
   try {
     isLoading.value = true
-    // const additionalsFormState =
-    //   props.patient?.last_visit?.donation_type_id === 1
-    //     ? plateletpheresisFormState.value
-    //     : props.patient?.last_visit?.donation_type_id === 2
-    //     ? plasmapheresisFormState.value
-    //     : wholeBloodDonationFormState.value
-    // const payload = {
-    //   ...formState.value,
-    //   ...additionalsFormState,
-    // }
     await storeDonationResults(props.patient?.last_visit?.id as number, formState.value)
     notif.success(t('Data_saved_successfully'))
     emits('update:list')
@@ -118,39 +143,61 @@ function onClose() {
 
 function clearFields() {
   formState.value = {
-    date: formatDate(new Date(), 'YYYY-MM-DD'),
+    date: '',
     status: '',
     status_type: '',
+    doses: [0],
     postinfusion_reaction_id: null,
-    // container_id: null,
-    // hemoconservative: null,
-    // laboratory: null,
+    container_id: null,
+    hemoconservative: null,
+    laboratory: null,
     sent_to: '',
+    apheresis_method: '',
+    first_container_id: null,
+    first_hemoconservative: null,
+    second_container_id: null,
+    second_hemoconservative: null,
+    third_container_id: null,
+    third_hemoconservative: null,
+    fourth_container_id: null,
+    fourth_hemoconservative: null,
+    plasma: 0,
+    thromboconcentrate: 0,
   }
 }
 
 function clearErrors() {
   Object.assign(formErrors, {
-    donation_type_id: [],
     date: [],
     status: [],
     status_type: [],
+    doses: [],
     postinfusion_reaction_id: [],
     container_id: [],
     hemoconservative: [],
     laboratory: [],
     sent_to: [],
+    apheresis_method: [],
+    first_container_id: [],
+    first_hemoconservative: [],
+    second_container_id: [],
+    second_hemoconservative: [],
+    third_container_id: [],
+    third_hemoconservative: [],
+    fourth_container_id: [],
+    fourth_hemoconservative: [],
+    plasma: [],
+    thromboconcentrate: [],
   })
 }
 
 function clearError(error: string) {
-  formErrors[error] = ''
+  formErrors[error] = []
 }
 
 async function fetchContainerList() {
   const res = await fetchDonationContainers()
   containerList.value = res.result.data
-  // console.log('ok')
 }
 </script>
 
@@ -167,21 +214,13 @@ async function fetchContainerList() {
           <div class="field-label is-normal">
             <label class="label">{{ $t('Donation_type') }}</label>
           </div>
-          <div class="field-body">
+          <!-- <div class="field-body">
             <div class="field">
-              <div class="control is-expended">
-                <Multiselect
-                  :value="patient?.last_visit?.donation_type_id"
-                  :options="donationTypes"
-                  :placeholder="$t('Select')"
-                  label="name"
-                  value-prop="id"
-                  :style="{ minWidth: '15rem', margin: 0 }"
-                  disabled
-                />
-              </div>
+              <div class="control is-expended"> -->
+          <input class="input" :value="selectedDonationType" disabled />
+          <!-- </div>
             </div>
-          </div>
+          </div> -->
         </div>
         <div class="field is-horizontal">
           <div class="field-label is-normal">
@@ -190,7 +229,7 @@ async function fetchContainerList() {
           <div class="field-body">
             <div class="field">
               <div class="control">
-                <IMaskDateInput v-model="formState.date" />
+                <DatePicker v-model="formState.date" />
                 <p class="help has-text-danger">{{ formErrors.date[0] }}</p>
               </div>
             </div>
@@ -250,14 +289,14 @@ async function fetchContainerList() {
           :container-list="containerList"
         />
       </template>
-      <template v-else-if="patient?.last_visit?.donation_type_id === 2">
+      <template v-if="patient?.last_visit?.donation_type_id === 2">
         <hr class="is-divider" />
         <PlasmapheresisFormBlock
           v-model:form-state="formState"
           :container-list="containerList"
         />
       </template>
-      <template v-else-if="patient?.last_visit?.donation_type_id === 3">
+      <template v-if="patient?.last_visit?.donation_type_id === 3">
         <hr class="is-divider" />
         <WholeBloodDonationFormBlock
           v-model:form-state="formState"

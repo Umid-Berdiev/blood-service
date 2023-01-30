@@ -62,7 +62,7 @@ const columns = {
     label: t('Visit_date'),
     format: (value: string, row: any) =>
       row.last_visit?.created_at &&
-      formatDate(new Date(row.last_visit?.created_at), 'YYYY-MM-DD'),
+      formatDate(new Date(row.last_visit?.created_at), 'DD.MM.YYYY'),
     // sortable: true,
   },
   visit_type: {

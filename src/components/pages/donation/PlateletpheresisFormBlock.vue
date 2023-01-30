@@ -2,20 +2,6 @@
 import { DonationContainerInterface } from '/@src/utils/interfaces'
 import { apheresisMethods } from '/@src/utils/api/donation'
 
-// export interface PlateletpheresisFormProps {
-//   apheresis_method: 'manual' | 'device'
-//   first_container_id: number | null
-//   second_container_id: number | null
-//   third_container_id: number | null
-//   fourth_container_id: number | null
-//   first_hemoconservative: number | null
-//   second_hemoconservative: number | null
-//   third_hemoconservative: number | null
-//   fourth_hemoconservative: number | null
-//   thromboconcentrate1: number | null
-//   thromboconcentrate2: number | null
-// }
-
 const props = defineProps<{
   formState: any
   containerList: DonationContainerInterface[]
@@ -31,6 +17,15 @@ const computedFormState = computed({
   set(val) {
     emits('update:formState', val)
   },
+})
+const dividedIntoDoses = ref(1)
+
+// hooks
+watch(dividedIntoDoses, function (newVal) {
+  if (computedFormState.value.doses.length > newVal) {
+    computedFormState.value.doses.pop()
+  }
+  if (computedFormState.value.doses.length < newVal) computedFormState.value.doses.push(0)
 })
 </script>
 
@@ -201,11 +196,10 @@ const computedFormState = computed({
     </template>
     <template v-if="computedFormState.apheresis_method === 'device'">
       <hr class="is-divider" />
-      <h5>{{ $t('Received_platelet_concentrate_amount_ml') }}</h5>
       <br />
       <div class="field is-horizontal">
         <div class="field-label is-normal">
-          <label class="label">{{ $t('First_fence') }}</label>
+          <label class="label">{{ $t('Received_platelet_concentrate_amount_ml') }}</label>
         </div>
         <div class="field-body">
           <VField>
@@ -217,20 +211,26 @@ const computedFormState = computed({
           </VField>
         </div>
       </div>
-      <div class="field is-horizontal">
-        <div class="field-label is-normal">
-          <label class="label">{{ $t('Second_fence') }}</label>
-        </div>
-        <div class="field-body">
-          <VField>
-            <VInput
-              v-model="computedFormState.thromboconcentrate2"
-              type="text"
-              style="width: 50%"
-            />
-          </VField>
-        </div>
-      </div>
+      <VField horizontal class="is-align-items-center">
+        <VLabel class="mr-3">{{ $t('Divided_into_doses') }}</VLabel>
+        <VControl>
+          <VInput
+            v-model="dividedIntoDoses"
+            type="number"
+            :min="1"
+            :max="10"
+            :style="{ width: '5rem' }"
+          />
+        </VControl>
+      </VField>
+      <template v-for="(number, numIndex) in dividedIntoDoses" :key="numIndex">
+        <VField horizontal class="is-align-items-center">
+          <VLabel class="mr-3">{{ number }}-{{ $t('Dose') }}</VLabel>
+          <VControl raw subcontrol>
+            <VInput v-model="computedFormState.doses[numIndex]" type="number" />
+          </VControl>
+        </VField>
+      </template>
     </template>
   </div>
 </template>

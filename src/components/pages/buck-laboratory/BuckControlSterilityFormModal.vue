@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { formatDate } from '@vueuse/core'
-import { result } from 'lodash'
 import moment from 'moment'
 import { reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -31,9 +30,10 @@ const notif = useNotyf()
 const { t } = useI18n()
 const title = ref(t('Sterility_test_result'))
 const isLoading = ref(false)
+const today = formatDate(new Date(), 'DD.MM.YYYY')
 const formFields: BuckControlSterilityFormInterface = reactive({
   sterility_status: 'sterile',
-  sterility_checked_date: formatDate(new Date(), 'YYYY-MM-DD'),
+  sterility_checked_date: today,
 })
 const errors = reactive({
   sterility_status: [],
@@ -63,17 +63,15 @@ function onClose() {
 
 function clearFields() {
   Object.assign(formFields, {
-    blood_samples_taken_date: moment().format('YYYY-MM-DD'),
-    analysis_date: moment().format('YYYY-MM-DD'),
-    clinical_biochemical_laboratory_date: moment().format('YYYY-MM-DD'),
+    sterility_status: 'sterile',
+    sterility_checked_date: today,
   })
 }
 
 function clearErrors() {
   Object.assign(errors, {
-    blood_samples_taken_date: [],
-    analysis_date: [],
-    clinical_biochemical_laboratory_date: [],
+    sterility_status: [],
+    sterility_checked_date: [],
   })
 }
 
@@ -94,7 +92,7 @@ function clearError(error: string) {
             </tr>
             <tr>
               <th>{{ $t('Donation_date') }}</th>
-              <td>{{ item?.date }}</td>
+              <td>{{ item?.date && formatDate(new Date(item?.date), 'DD.MM.YYYY') }}</td>
             </tr>
             <tr>
               <th>{{ $t('Component_name') }}</th>

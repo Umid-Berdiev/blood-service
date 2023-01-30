@@ -552,7 +552,7 @@
   "Select_reason": "Select reason",
   "Enter_source": "Enter source",
   "Format": "Format",
-  "yyyy-mm-dd": "yyyy-mm-dd",
+  "dd.mm.yyyy": "dd.mm.yyyy",
   "Withdrawal_end_date": "Withdrawal end date",
   "Reason": "Reason",
   "Withdrawal_reason": "Reason of withdrawal",
@@ -786,5 +786,13 @@
   "Blood_type_is_not_determined": "Blood group is not determined",
   "Hemolysis": "Hemolysis",
   "Hiles": "Hiles",
-  "Components_for_production_sterility_control": "Blood components submitted for production sterility control"
+  "Components_for_production_sterility_control": "Blood components submitted for production sterility control",
+  "Control_result": "Control result",
+  "Sterile": "Sterile",
+  "Not_sterile": "Not sterile",
+  "donation": "Donation",
+  "Medical_inspection_date": "Medical inspection date",
+  "Medical_inspection_conclusion": "Medical inspection conclusion",
+  "Blood_component_amount": "Blood component amount",
+  "Period": "Period"
 }

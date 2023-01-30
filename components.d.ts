@@ -53,6 +53,8 @@ declare module '@vue/runtime-core' {
     DatatableV2: typeof import('./src/components/pages/layouts/datatable/DatatableV2.vue')['default']
     DatatableV3: typeof import('./src/components/pages/layouts/datatable/DatatableV3.vue')['default']
     DatatableV4: typeof import('./src/components/pages/layouts/datatable/DatatableV4.vue')['default']
+    DatePicker: typeof import('./src/components/partials/forms/DatePicker.vue')['default']
+    DateRangePicker: typeof import('./src/components/partials/forms/DateRangePicker.vue')['default']
     DirectionForDonationModal: typeof import('./src/components/modals/DirectionForDonationModal.vue')['default']
     DonationCodeInput: typeof import('./src/components/partials/forms/DonationCodeInput.vue')['default']
     DonationContainerFormModal: typeof import('./src/components/modals/DonationContainerFormModal.vue')['default']

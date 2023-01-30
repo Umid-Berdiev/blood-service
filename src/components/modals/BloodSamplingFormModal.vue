@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { formatDate } from '@vueuse/core'
-import moment from 'moment'
 import { reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
@@ -21,19 +20,24 @@ const emits = defineEmits<{
   (e: 'update:list'): void
 }>()
 
+const today = new Date()
 const notif = useNotyf()
 const { t } = useI18n()
 const title = ref(t('Sampling_data_entry_form'))
 const isLoading = ref(false)
 const formFields = reactive({
-  date: moment().format('YYYY-MM-DD'),
-  hemotransmissible_date: moment().format('YYYY-MM-DD'),
-  chemical_date: moment().format('YYYY-MM-DD'),
+  date: formatDate(today, 'DD.MM.YYYY'),
+  hemotransmissible_date: formatDate(today, 'DD.MM.YYYY'),
+  chemical_date: formatDate(today, 'DD.MM.YYYY'),
+  buck_laboratory_date: formatDate(today, 'DD.MM.YYYY'),
+  immunological_laboratory_date: formatDate(today, 'DD.MM.YYYY'),
 })
 const errors = reactive({
   date: [],
   hemotransmissible_date: [],
   chemical_date: [],
+  buck_laboratory_date: [],
+  immunological_laboratory_date: [],
 })
 
 async function onSubmit() {
@@ -58,9 +62,11 @@ function onClose() {
 
 function clearFields() {
   Object.assign(formFields, {
-    date: moment().format('YYYY-MM-DD'),
-    hemotransmissible_date: moment().format('YYYY-MM-DD'),
-    chemical_date: moment().format('YYYY-MM-DD'),
+    date: formatDate(today, 'DD.MM.YYYY'),
+    hemotransmissible_date: formatDate(today, 'DD.MM.YYYY'),
+    chemical_date: formatDate(today, 'DD.MM.YYYY'),
+    buck_laboratory_date: formatDate(today, 'DD.MM.YYYY'),
+    immunological_laboratory_date: formatDate(today, 'DD.MM.YYYY'),
   })
 }
 
@@ -69,6 +75,8 @@ function clearErrors() {
     date: [],
     hemotransmissible_date: [],
     chemical_date: [],
+    buck_laboratory_date: [],
+    immunological_laboratory_date: [],
   })
 }
 
@@ -89,7 +97,7 @@ function clearErrors() {
         <div class="column">
           <h5 class="is-size-5 has-text-weight-medium">
             {{ $t('Visit_date') }}:
-            {{ formatDate(new Date(patient.created_at), 'YYYY-MM-DD') }}
+            {{ formatDate(new Date(patient.created_at), 'DD.MM.YYYY') }}
           </h5>
         </div>
       </div>
@@ -203,6 +211,36 @@ function clearErrors() {
                     <IMaskDateInput v-model="formFields.chemical_date" />
                     <p class="help has-text-danger">
                       {{ errors.chemical_date[0] }}
+                    </p>
+                  </VControl>
+                </VField>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                {{ $t('Buck-laboratory') }}
+              </td>
+              <td>
+                <VField required>
+                  <VControl>
+                    <IMaskDateInput v-model="formFields.buck_laboratory_date" />
+                    <p class="help has-text-danger">
+                      {{ errors.buck_laboratory_date[0] }}
+                    </p>
+                  </VControl>
+                </VField>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                {{ $t('Immunological-Research-Department') }}
+              </td>
+              <td>
+                <VField required>
+                  <VControl>
+                    <IMaskDateInput v-model="formFields.immunological_laboratory_date" />
+                    <p class="help has-text-danger">
+                      {{ errors.immunological_laboratory_date[0] }}
                     </p>
                   </VControl>
                 </VField>

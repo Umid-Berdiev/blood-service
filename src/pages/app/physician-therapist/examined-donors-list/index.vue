@@ -7,6 +7,7 @@ import { useNotyf } from '/@src/composable/useNotyf'
 import { useMainStore } from '/@src/stores/main'
 
 import { useViewWrapper } from '/@src/stores/viewWrapper'
+import { patientsList } from '/@src/utils/api/patient'
 import { ApiDataInterface, PatientInterface } from '/@src/utils/interfaces'
 
 const router = useRouter()
@@ -32,20 +33,10 @@ const apiData: ApiDataInterface<PatientInterface> = reactive({
   },
 })
 
-const currentPage = computed({
-  get: () => {
-    return apiData.pagination.current_page
-  },
-  set: async (page) => {
-    currentFilterData.page = page
-    await handleSearch(currentFilterData)
-  },
-})
-
 const columns = {
   orderNumber: {
     format: (value: any, row: any, index: number) => `${index + 1}`,
-    // cellClass: 'is-flex-grow-0',
+    cellClass: 'is-flex-grow-0',
   },
   name: {
     label: t('Fullname'),
@@ -62,6 +53,7 @@ const columns = {
     format: (value: string, row: any) =>
       row.last_visit?.created_at &&
       formatDate(new Date(row.last_visit?.created_at), 'YYYY-MM-DD'),
+    // grow: true,
     // sortable: true,
   },
   visit_type: {
@@ -84,9 +76,9 @@ const columns = {
     // grow: true,
     // sortable: true,
   },
-  linked_donation_number: {
-    label: t('Linked_donation_number'),
-    format: (value: string, row: any) => row.last_visit?.personalized_donation,
+  donation_code: {
+    label: t('Donation_code'),
+    format: (value: string, row: any) => row.last_visit?.donation_code,
     // grow: true,
     // sortable: true,
   },
@@ -113,15 +105,33 @@ const errors = reactive({
   donation_type_id: [],
 })
 const currentFilterData = reactive({
-  page: 1,
+  status: 6,
 })
 
+// await handleSearch(currentFilterData)
+
+// hooks
+watch(
+  () => apiData.pagination.current_page,
+  async function (newVal) {
+    if (newVal) {
+      await handleSearch(currentFilterData)
+    }
+  }
+)
+// functions
 async function handleSearch(filterForm: any) {
   try {
-    Object.assign(currentFilterData, filterForm)
+    Object.assign(currentFilterData, {
+      ...currentFilterData,
+      ...filterForm,
+      page: apiData.pagination.current_page,
+    })
     isLoading.value = true
-    // Object.assign(apiData, res.result)
+    const res = await patientsList(currentFilterData)
+    Object.assign(apiData, res.result)
   } catch (error: any) {
+    notif.error(error.message)
     Object.assign(errors, error.response?.data?.errors)
   } finally {
     isLoading.value = false
@@ -154,11 +164,9 @@ async function clearFilterForm() {
             },
             {
               label: $t('Physician-therapist'),
-              // to: { name: '/app/users/' },
             },
             {
               label: $t('Examined-donor-register'),
-              // to: { name: '/app/physician-therapist/donors-for-examination/' },
             },
           ]"
         />
@@ -192,7 +200,8 @@ async function clearFilterForm() {
               <template #header-column="{ column }">
                 <span
                   v-if="column.key === 'orderNumber'"
-                  v-text="$t('Donor_register_number')"
+                  class="is-flex-grow-0"
+                  v-text="'#'"
                 />
               </template>
 
@@ -254,7 +263,7 @@ async function clearFilterForm() {
             <!--Table Pagination-->
             <VFlexPagination
               v-if="apiData.data.length"
-              v-model:current-page="currentPage"
+              v-model:current-page="apiData.pagination.current_page"
               class="mt-5"
               :item-per-page="apiData.pagination.per_page"
               :total-items="apiData.pagination.total"

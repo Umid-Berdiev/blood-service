@@ -78,10 +78,10 @@ const errors = reactive({
   donation_code: [],
 })
 const currentFilterData = reactive({
-  visit_type_id: '',
+  visit_type_id: null,
   donation_type_id: null,
-  donation_code: '',
-  category_id: '',
+  donation_code: null,
+  category_id: null,
 })
 const clickedRowData = ref<PatientInterface | null>(null)
 const isFormModalOpen = ref(false)

@@ -28,6 +28,15 @@ const computedFormState = computed({
     emits('update:formState', val)
   },
 })
+const dividedIntoDoses = ref(1)
+
+// hooks
+watch(dividedIntoDoses, function (newVal) {
+  if (computedFormState.value.doses.length > newVal) {
+    computedFormState.value.doses.pop()
+  }
+  if (computedFormState.value.doses.length < newVal) computedFormState.value.doses.push(0)
+})
 </script>
 
 <template>
@@ -139,7 +148,27 @@ const computedFormState = computed({
           </VField>
         </div>
       </div>
-      <div class="field is-horizontal">
+      <VField horizontal class="is-align-items-center">
+        <VLabel class="mr-3">{{ $t('Divided_into_doses') }}</VLabel>
+        <VControl>
+          <VInput
+            v-model="dividedIntoDoses"
+            type="number"
+            :min="1"
+            :max="10"
+            :style="{ width: '5rem' }"
+          />
+        </VControl>
+      </VField>
+      <template v-for="(number, numIndex) in dividedIntoDoses" :key="numIndex">
+        <VField horizontal class="is-align-items-center">
+          <VLabel class="mr-3">{{ number }}-{{ $t('Dose') }}</VLabel>
+          <VControl raw subcontrol>
+            <VInput v-model="computedFormState.doses[numIndex]" type="number" />
+          </VControl>
+        </VField>
+      </template>
+      <!-- <div class="field is-horizontal">
         <div class="field-label">
           <label class="label">
             {{ $t('Laboratory_taken_blood_amount_ml') }}
@@ -150,7 +179,7 @@ const computedFormState = computed({
             <VInput v-model="computedFormState.laboratory" type="text" />
           </VField>
         </div>
-      </div>
+      </div> -->
     </template>
   </div>
 </template>

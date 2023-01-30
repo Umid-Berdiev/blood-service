@@ -69,7 +69,7 @@ function onClose() {
           <VField horizontal>
             <VLabel class="my-auto mr-5">{{ $t('Donation_code') }}</VLabel>
             <VControl class="ml-auto">
-              <VInput v-model="formData.donation_code" />
+              <VInput :value="formData.donation_code" />
             </VControl>
           </VField>
         </VGridItem>

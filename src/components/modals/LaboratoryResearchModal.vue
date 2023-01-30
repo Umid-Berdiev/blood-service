@@ -163,7 +163,7 @@ function clearErrors() {
           <VField horizontal>
             <VLabel class="my-auto mr-5">{{ $t('Donation_code') }}</VLabel>
             <VControl>
-              <VInput v-model="formData.donation_code" />
+              <VInput :value="formData.donation_code" disabled />
               <p class="help has-text-danger">{{ errors.donation_code[0] }}</p>
             </VControl>
           </VField>

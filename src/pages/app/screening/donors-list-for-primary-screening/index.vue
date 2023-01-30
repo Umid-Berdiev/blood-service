@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { formatDate } from '@vueuse/core'
 import { useHead } from '@vueuse/head'
-import { isEmpty } from 'lodash'
 import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { useMainStore } from '/@src/stores/main'
@@ -114,7 +113,7 @@ const errors = reactive({
 const currentFilterData = reactive({
   page: 1,
 })
-const clickedRowData: PatientInterface = reactive({})
+const clickedRowData = ref<PatientInterface>({})
 const isPrimaryScreeningModalOpen = ref(false)
 
 await handleSearch(currentFilterData)
@@ -142,7 +141,7 @@ async function clearFilterForm() {
 }
 
 function openPrimaryScreeningModal(patient: PatientInterface) {
-  Object.assign(clickedRowData, patient)
+  clickedRowData.value = patient
   isPrimaryScreeningModalOpen.value = true
 }
 </script>

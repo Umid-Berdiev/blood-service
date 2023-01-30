@@ -7,8 +7,12 @@ import { useMainStore } from '/@src/stores/main'
 
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { patientsListForCandidate } from '/@src/utils/api/patient'
-import { fetchVisitcardStatuses } from '/@src/utils/api/visitcard'
-import { ApiDataInterface, PatientInterface } from '/@src/utils/interfaces'
+import { fetchVisitcardStatuses, finishVisitcardById } from '/@src/utils/api/visitcard'
+import {
+  ApiDataInterface,
+  PatientInterface,
+  PatientVisitCardInterface,
+} from '/@src/utils/interfaces'
 
 const router = useRouter()
 const notif = useNotyf()
@@ -100,9 +104,9 @@ const columns = {
   },
 } as const
 
-const incomingCallerId = ref<number>()
 const donorStatuses = ref([{ id: 0, name: t('All') }])
 const selectedDonorStatus = ref('')
+const selectedPatient = ref<PatientInterface | null>(null)
 
 onMounted(async () => {
   const res = await fetchVisitcardStatuses()
@@ -112,7 +116,18 @@ onMounted(async () => {
 watch(
   () => selectedDonorStatus.value,
   async (newVal) => {
-    await fetchData()
+    if (newVal) await fetchData()
+    else
+      Object.assign(apiData, {
+        data: [],
+        pagination: {
+          total: 10,
+          count: 10,
+          per_page: 10,
+          current_page: 1,
+          total_pages: 1,
+        },
+      })
   }
 )
 
@@ -128,6 +143,28 @@ async function fetchData(page: number = 1) {
     Object.assign(apiData, res.result)
   } catch (error: any) {
     notif.error(t(error.response?.data?.errors))
+  } finally {
+    isLoading.value = false
+  }
+}
+
+async function handleFinish(patient: PatientInterface) {
+  selectedPatient.value = patient
+  mainStore.$patch({ confirmModalState: true })
+  mainStore.$patch({ confirmModalOkButtonColor: 'warning' })
+}
+
+async function submitFinish() {
+  try {
+    isLoading.value = true
+    await finishVisitcardById(
+      selectedPatient.value?.id as number,
+      selectedPatient.value?.last_visit.id as number
+    )
+    await fetchData()
+    selectedPatient.value = null
+  } catch (error: any) {
+    notif.error(error.message)
   } finally {
     isLoading.value = false
   }
@@ -250,14 +287,13 @@ async function fetchData(page: number = 1) {
                   </RouterLink>
                 </template>
                 <template v-if="column.key === 'actions'">
-                  <RouterLink
+                  <a
+                    href="javascript:;"
                     class="has-text-warning"
-                    :to="`/app/physician-therapist/donors-for-examination`"
+                    @click="handleFinish(row)"
                   >
                     {{ $t('Complete') }}
-                    <!-- <span class="dark-text">
-                    </span> -->
-                  </RouterLink>
+                  </a>
                 </template>
               </template>
             </VFlexTable>
@@ -275,6 +311,7 @@ async function fetchData(page: number = 1) {
         </VFlexTableWrapper>
       </div>
     </div>
+    <ConfirmActionModal @confirm-action="submitFinish" />
   </div>
 </template>
 

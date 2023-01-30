@@ -61,8 +61,6 @@ watch(
 watch(
   [() => medicalExamination.data.hemolysis, () => medicalExamination.data.chilez],
   async (newVal) => {
-    console.log({ newVal })
-
     if (newVal.includes(true)) {
       medicalExamination.data.hbsag = false
       medicalExamination.data.hiv = false
@@ -178,7 +176,7 @@ function clearErrors() {
           <tbody>
             <tr>
               <td>
-                <VField>
+                <!-- <VField>
                   <VControl>
                     <VCheckbox
                       v-model="medicalExamination.data.hbsag"
@@ -193,10 +191,24 @@ function clearErrors() {
                           : 'primary'
                       "
                       :label="$t('HBsAg')"
-                      :disabled="hasHemolisOrHiles"
                     />
                   </VControl>
-                </VField>
+                </VField> -->
+                <label for="hbsag">
+                  <input
+                    id="hbsag"
+                    v-model="medicalExamination.data.hbsag"
+                    class="checkbox"
+                    type="checkbox"
+                    :disabled="hasHemolisOrHiles"
+                  />
+                  <span class="ml-2">{{ $t('HBsAg') }}</span>
+                  <span
+                    v-if="medicalExamination.required_fields.includes('hbsag')"
+                    class="has-text-danger ml-2"
+                    >*</span
+                  >
+                </label>
               </td>
               <td>
                 <VField horizontal class="is-justify-content-end">
@@ -211,7 +223,7 @@ function clearErrors() {
             </tr>
             <tr>
               <td>
-                <VField>
+                <!-- <VField>
                   <VControl>
                     <VCheckbox
                       v-model="medicalExamination.data.hiv"
@@ -226,10 +238,24 @@ function clearErrors() {
                           : 'primary'
                       "
                       :label="$t('OIDS')"
-                      :disabled="hasHemolisOrHiles"
                     />
                   </VControl>
-                </VField>
+                </VField> -->
+                <label for="hiv">
+                  <input
+                    id="hiv"
+                    v-model="medicalExamination.data.hiv"
+                    class="checkbox"
+                    type="checkbox"
+                    :disabled="hasHemolisOrHiles"
+                  />
+                  <span class="ml-2">{{ $t('OIDS') }}</span>
+                  <span
+                    v-if="medicalExamination.required_fields.includes('hiv')"
+                    class="has-text-danger ml-2"
+                    >*</span
+                  >
+                </label>
               </td>
               <td>
                 <VField horizontal class="is-justify-content-end">
@@ -244,7 +270,7 @@ function clearErrors() {
             </tr>
             <tr>
               <td>
-                <VField>
+                <!-- <VField>
                   <VControl>
                     <VCheckbox
                       v-model="medicalExamination.data.antihcv"
@@ -259,10 +285,24 @@ function clearErrors() {
                           : 'primary'
                       "
                       :label="$t('AntiHCV')"
-                      :disabled="hasHemolisOrHiles"
                     />
                   </VControl>
-                </VField>
+                </VField> -->
+                <label for="antihcv">
+                  <input
+                    id="antihcv"
+                    v-model="medicalExamination.data.antihcv"
+                    class="checkbox"
+                    type="checkbox"
+                    :disabled="hasHemolisOrHiles"
+                  />
+                  <span class="ml-2">{{ $t('AntiHCV') }}</span>
+                  <span
+                    v-if="medicalExamination.required_fields.includes('antihcv')"
+                    class="has-text-danger ml-2"
+                    >*</span
+                  >
+                </label>
               </td>
               <td>
                 <VField horizontal class="is-justify-content-end">
@@ -277,7 +317,7 @@ function clearErrors() {
             </tr>
             <tr>
               <td>
-                <VField>
+                <!-- <VField>
                   <VControl>
                     <VCheckbox
                       v-model="medicalExamination.data.rw"
@@ -292,10 +332,24 @@ function clearErrors() {
                           : 'primary'
                       "
                       :label="$t('RW')"
-                      :disabled="hasHemolisOrHiles"
                     />
                   </VControl>
-                </VField>
+                </VField> -->
+                <label for="rw">
+                  <input
+                    id="rw"
+                    v-model="medicalExamination.data.rw"
+                    class="checkbox"
+                    type="checkbox"
+                    :disabled="hasHemolisOrHiles"
+                  />
+                  <span class="ml-2">{{ $t('RW') }}</span>
+                  <span
+                    v-if="medicalExamination.required_fields.includes('rw')"
+                    class="has-text-danger ml-2"
+                    >*</span
+                  >
+                </label>
               </td>
               <td>
                 <VField horizontal class="is-justify-content-end">
@@ -310,7 +364,7 @@ function clearErrors() {
             </tr>
             <tr>
               <td>
-                <VField>
+                <!-- <VField>
                   <VControl>
                     <VCheckbox
                       v-model="medicalExamination.data.hemolysis"
@@ -327,12 +381,21 @@ function clearErrors() {
                       :label="$t('Hemolis')"
                     />
                   </VControl>
-                </VField>
+                </VField> -->
+                <label for="hemolysis">
+                  <input
+                    id="hemolysis"
+                    v-model="medicalExamination.data.hemolysis"
+                    class="checkbox"
+                    type="checkbox"
+                  />
+                  <span class="ml-2">{{ $t('Hemolis') }}</span>
+                </label>
               </td>
             </tr>
             <tr>
               <td>
-                <VField>
+                <!-- <VField>
                   <VControl>
                     <VCheckbox
                       v-model="medicalExamination.data.chilez"
@@ -349,7 +412,16 @@ function clearErrors() {
                       :label="$t('Hiles')"
                     />
                   </VControl>
-                </VField>
+                </VField> -->
+                <label for="chilez">
+                  <input
+                    id="chilez"
+                    v-model="medicalExamination.data.chilez"
+                    class="checkbox"
+                    type="checkbox"
+                  />
+                  <span class="ml-2">{{ $t('Hiles') }}</span>
+                </label>
               </td>
             </tr>
           </tbody>
@@ -370,6 +442,11 @@ function clearErrors() {
 .is-dark {
   .box {
     background-color: var(--dark-sidebar);
+  }
+}
+input.checkbox {
+  &:disabled {
+    cursor: not-allowed;
   }
 }
 </style>
