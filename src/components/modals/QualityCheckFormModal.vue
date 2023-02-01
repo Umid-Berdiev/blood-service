@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { formatDate } from '@vueuse/core'
-import moment from 'moment'
 import { reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
+import { storeQualityControl } from '/@src/utils/api/quality-control'
 
 interface QuantityCheckFormInterface {
-  component_quality: 'satisfactory' | 'not_satisfactory'
-  result_date: string
+  status: 'qualitative' | 'not_qualitative'
+  date: string
 }
 
 interface FormProps {
@@ -31,18 +31,18 @@ const isLoading = ref(false)
 const today = formatDate(new Date(), 'DD.MM.YYYY')
 
 const formState: QuantityCheckFormInterface = reactive({
-  component_quality: 'satisfactory',
-  result_date: today,
+  status: 'qualitative',
+  date: today,
 })
 const errors = reactive({
-  component_quality: [],
-  result_date: [],
+  status: [],
+  date: [],
 })
 
 async function onSubmit() {
   try {
     isLoading.value = true
-    // await storeHemotransmissionResearchResults(props.patient?.id, formState)
+    await storeQualityControl(props.patient?.id, formState)
     emits('update:list')
     onClose()
   } catch (error: any) {
@@ -61,15 +61,15 @@ function onClose() {
 
 function clearFields() {
   Object.assign(formState, {
-    component_quality: 'satisfactory',
-    result_date: today,
+    status: 'qualitative',
+    date: today,
   })
 }
 
 function clearErrors() {
   Object.assign(errors, {
-    component_quality: [],
-    result_date: [],
+    status: [],
+    date: [],
   })
 }
 
@@ -102,14 +102,14 @@ function clearError(error: string) {
                 <VField>
                   <VControl>
                     <VRadio
-                      v-model="formState.component_quality"
-                      value="satisfactory"
+                      v-model="formState.status"
+                      value="qualitative"
                       color="primary"
                       :label="$t('Satisfactory')"
                     />
                     <VRadio
-                      v-model="formState.component_quality"
-                      value="not_satisfactory"
+                      v-model="formState.status"
+                      value="not_qualitative"
                       color="primary"
                       :label="$t('Not_satisfactory')"
                     />
@@ -122,10 +122,7 @@ function clearError(error: string) {
               <td>
                 <VField>
                   <VControl>
-                    <IMaskDateInput
-                      v-model="formState.result_date"
-                      :style="{ width: '50%' }"
-                    />
+                    <DatePicker v-model="formState.date" />
                   </VControl>
                 </VField>
               </td>

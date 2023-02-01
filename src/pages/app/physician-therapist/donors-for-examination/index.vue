@@ -89,9 +89,10 @@ const columns = {
   },
   personalized_donation: {
     label: t('Personalized_donation'),
-    format: (value: string, row: any) => row.last_visit?.personalized_donation,
+    format: (value: string, row: any) => row.last_visit?.personalized_donation || '-',
     // grow: true,
     // sortable: true,
+    align: 'center',
   },
   visit_status: {
     label: t('Visit_status'),

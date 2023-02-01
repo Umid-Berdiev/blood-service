@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { formatDate } from '@vueuse/core'
+import moment from 'moment'
 import { reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
@@ -105,7 +106,8 @@ watch(
       const res = await fetchDonationResults(newVal)
       formState.value = res.result
       formState.value.doses ??= [0]
-      formState.value.date ? formState.value.date : formatDate(new Date(), 'DD.MM.YYYY')
+      formState.value.date ??= formatDate(new Date(), 'YYYY-MM-DD')
+      // formState.value.date
     }
   }
 )
@@ -123,6 +125,10 @@ async function fetchData() {
 async function onSubmit() {
   try {
     isLoading.value = true
+    // const newDate = formatDate(new Date(formState.value.date), 'YYYY-MM-DD')
+    // console.log({ newDate })
+
+    // formState.value.date = newDate
     await storeDonationResults(props.patient?.last_visit?.id as number, formState.value)
     notif.success(t('Data_saved_successfully'))
     emits('update:list')
@@ -206,7 +212,7 @@ async function fetchContainerList() {
     <template #content>
       <VFlex column-gap="1rem">
         <VFlexItem>{{ $t('Recommended_single_donation_volume_ml') }}:</VFlexItem>
-        <VFlexItem>0</VFlexItem>
+        <VFlexItem>{{ patient?.last_visit?.recommended_blood_capacity }}</VFlexItem>
       </VFlex>
       <div class="box mt-3">
         <h5 class="is-size-5 mb-3">{{ $t('Donation_results') }}</h5>
@@ -214,13 +220,7 @@ async function fetchContainerList() {
           <div class="field-label is-normal">
             <label class="label">{{ $t('Donation_type') }}</label>
           </div>
-          <!-- <div class="field-body">
-            <div class="field">
-              <div class="control is-expended"> -->
           <input class="input" :value="selectedDonationType" disabled />
-          <!-- </div>
-            </div>
-          </div> -->
         </div>
         <div class="field is-horizontal">
           <div class="field-label is-normal">

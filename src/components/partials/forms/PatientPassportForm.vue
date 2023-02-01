@@ -22,11 +22,11 @@ const props = withDefaults(
 const emits = defineEmits(['update:patient', 'editing'])
 const { locale } = useI18n()
 const masks = ref({
-  input: 'YYYY-MM-DD',
+  input: 'DD.MM.YYYY',
 })
 const datePickerModelConfig = reactive({
   type: 'string',
-  mask: masks.value.input, // Uses 'iso' if missing
+  mask: 'YYYY-MM-DD', // Uses 'iso' if missing
 })
 const formData = computed({
   get() {
@@ -65,6 +65,7 @@ const formData = computed({
               return str.toUpperCase()
             },
           }"
+          @input="$emit('editing', 'passport_series')"
           :placeholder="$t('Enter_passport_series')"
         />
         <p class="help has-text-danger">{{ errors.passport_series[0] }}</p>
@@ -79,6 +80,7 @@ const formData = computed({
             mask: '0000000',
           }"
           :placeholder="$t('Enter_passport_number')"
+          @input="$emit('editing', 'passport_number')"
         />
         <p class="help has-text-danger">{{ errors.passport_number[0] }}</p>
       </VControl>

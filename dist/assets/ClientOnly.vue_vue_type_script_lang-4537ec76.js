@@ -1,1 +1,0 @@
-import{q as e,x as s,A as t}from"./index-f93ac3f8.js";const a=e({name:"ClientOnly",setup(e,{slots:a}){const l=s(!1);return t((()=>{l.value=!0})),()=>l.value&&a.default?a.default():null}});export{a as _};

@@ -69,6 +69,7 @@ declare module 'vue-router/auto/routes' {
     '/app/quality-control/received-components/': RouteRecordInfo<'/app/quality-control/received-components/', '/app/quality-control/received-components', Record<never, never>, Record<never, never>>,
     '/app/registration/donation-diverted-register/': RouteRecordInfo<'/app/registration/donation-diverted-register/', '/app/registration/donation-diverted-register', Record<never, never>, Record<never, never>>,
     '/app/registration/register-donors/': RouteRecordInfo<'/app/registration/register-donors/', '/app/registration/register-donors', Record<never, never>, Record<never, never>>,
+    '/app/registration/register-donors/index copy': RouteRecordInfo<'/app/registration/register-donors/index copy', '/app/registration/register-donors/index copy', Record<never, never>, Record<never, never>>,
     '/app/registration/unified-donor-register/': RouteRecordInfo<'/app/registration/unified-donor-register/', '/app/registration/unified-donor-register', Record<never, never>, Record<never, never>>,
     '/app/registration/unified-donor-register/[id]': RouteRecordInfo<'/app/registration/unified-donor-register/[id]', '/app/registration/unified-donor-register/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/app/roles/': RouteRecordInfo<'/app/roles/', '/app/roles', Record<never, never>, Record<never, never>>,

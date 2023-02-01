@@ -11,8 +11,10 @@ const emits = defineEmits<{
   (e: 'update:end', value: string): void
 }>()
 
-const { t, locale } = useI18n()
-
+const { locale } = useI18n()
+const masks = ref({
+  input: 'DD.MM.YYYY',
+})
 const datePickerModelConfig = reactive({
   type: 'string',
   mask: 'YYYY-MM-DD', // Uses 'iso' if missing
@@ -33,42 +35,41 @@ const range = computed({
 </script>
 
 <template>
-  <div>
-    <ClientOnly>
-      <VDatePicker
-        v-model="range"
-        :locale="locale"
-        is-range
-        color="green"
-        trim-weeks
-        :model-config="datePickerModelConfig"
-      >
-        <template #default="{ inputValue, inputEvents }">
-          <VField addons>
-            <VControl expanded icon="feather:corner-down-right">
-              <input
-                class="input v-input"
-                type="text"
-                :value="inputValue.start"
-                v-on="inputEvents.start"
-              />
-            </VControl>
-            <VControl>
-              <VButton static>
-                <i class="fas fa-angle-double-right" aria-hidden="true"></i>
-              </VButton>
-            </VControl>
-            <VControl expanded icon="feather:corner-right-up" subcontrol>
-              <input
-                class="input v-input"
-                type="text"
-                :value="inputValue.end"
-                v-on="inputEvents.end"
-              />
-            </VControl>
-          </VField>
-        </template>
-      </VDatePicker>
-    </ClientOnly>
-  </div>
+  <ClientOnly>
+    <VDatePicker
+      v-model="range"
+      :locale="locale"
+      is-range
+      color="green"
+      trim-weeks
+      :masks="masks"
+      :model-config="datePickerModelConfig"
+    >
+      <template #default="{ inputValue, inputEvents }">
+        <VField addons>
+          <VControl expanded icon="feather:corner-down-right">
+            <input
+              class="input v-input"
+              type="text"
+              :value="inputValue.start"
+              v-on="inputEvents.start"
+            />
+          </VControl>
+          <VControl>
+            <VButton static>
+              <i class="fas fa-angle-double-right" aria-hidden="true"></i>
+            </VButton>
+          </VControl>
+          <VControl expanded icon="feather:corner-right-up" subcontrol>
+            <input
+              class="input v-input"
+              type="text"
+              :value="inputValue.end"
+              v-on="inputEvents.end"
+            />
+          </VControl>
+        </VField>
+      </template>
+    </VDatePicker>
+  </ClientOnly>
 </template>

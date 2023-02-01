@@ -690,7 +690,7 @@
   "Container_expiration_date": "Срок годности контейнера",
   "Preservative_shelf_life_days": "Срок хранения консерванта, сутки",
   "Donor_register_number": "Регистрационный номер донора",
-  "Add_container": "Добавить контейнер",
+  "Add_container": "Создать контейнер",
   "Storage_transferred_products": "Список продуктов переданных на хранение",
   "Forwarding": "Экспедиция",
   "Components_transferred_to_drugs_production": "Список компонентов, переданных на производство препаратов",
@@ -794,5 +794,6 @@
   "Medical_inspection_date": "Дата медосвидетельствования",
   "Medical_inspection_conclusion": "Заключение по медосвидетельствованию",
   "Blood_component_amount": "Количество крови или компонента",
-  "Period": "Период"
+  "Period": "Период",
+  "Form_fields_are_empty": "Пустая форма, введите хотя бы один параметр"
 }

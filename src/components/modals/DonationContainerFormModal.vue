@@ -30,7 +30,7 @@ const formState = ref<DonationContainerInterface>({
   series: '',
   count_hemopreservative: null,
   hemopreservative: '',
-  expire_date: '',
+  expire_date: new Date().toDateString(),
   expire_days: null,
 })
 const formErrors = ref({
@@ -93,7 +93,7 @@ function clearFormState() {
     series: '',
     count_hemopreservative: null,
     hemopreservative: '',
-    expire_date: '',
+    expire_date: new Date().toDateString(),
     expire_days: null,
   }
 }
@@ -206,7 +206,7 @@ function clearErrors() {
               <td>
                 <VField required>
                   <VControl>
-                    <IMaskDateInput v-model="formState.expire_date" />
+                    <DatePicker v-model="formState.expire_date" />
                     <p class="help has-text-danger">
                       {{ formErrors?.expire_date[0] }}
                     </p>

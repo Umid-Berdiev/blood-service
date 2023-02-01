@@ -2,6 +2,10 @@
 import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { fetchHealthcareFacilities } from '/@src/utils/api/additional'
+import {
+  fetchProcessingResultsByID,
+  storeProcessingResults,
+} from '/@src/utils/api/processing'
 import { ProductInterface } from '/@src/utils/interfaces'
 
 const props = withDefaults(
@@ -23,43 +27,24 @@ const notif = useNotyf()
 const { t } = useI18n()
 const isLoading = ref(false)
 const title = ref(t('Processing_card'))
-const formState = reactive({
-  divided_into_doses: 1,
-  plasma: [
-    {
-      value: '',
-      sent_for_quality_control: false,
-    },
-    {
-      value: '',
-      sent_for_quality_control: false,
-    },
-    {
-      value: '',
-      sent_for_quality_control: false,
-    },
-    {
-      value: '',
-      sent_for_quality_control: false,
-    },
-  ],
-  erythrocyte_mass: {
-    value: '',
-    sent_for_quality_control: false,
-    sent_for_sterility_control: false,
-  },
-  dose: {
-    first: '',
-    second: '',
-  },
+const dividedIntoDoses = ref(1)
+
+const formState = ref({
+  plasma: 0,
+  sent_to_quality_control: false,
+  erythrocyte: 0,
+  erythrocyte_sent_to_quality_control: false,
+  erythrocyte_sent_to_sterility_control: false,
+  doses: [0],
 })
 
 const formErrors = reactive({
   plasma: [],
-  erythrocyte_mass: [],
-  sent_for_quality_control: [],
-  divided_into_doses: [],
-  sent_for_sterility_control: [],
+  sent_to_quality_control: [],
+  erythrocyte: [],
+  erythrocyte_sent_to_quality_control: [],
+  erythrocyte_sent_to_sterility_control: [],
+  doses: [],
 })
 
 const healthcareFacilitiesList = ref([])
@@ -71,19 +56,54 @@ onMounted(async () => {
   )
 })
 
+watch(
+  () => props.product?.id,
+  async (newVal) => {
+    if (newVal) {
+      // const res = await fetchProcessingResultsByID(newVal)
+      // formState.value = res.result
+      // formState.value.doses ??= [0]
+    }
+  }
+)
+
+watch(
+  () => props.product?.amount,
+  async (newVal) => {
+    if (newVal) {
+      formState.value.plasma = Math.ceil((newVal * 1) / 2)
+      formState.value.erythrocyte = Math.floor((newVal * 1) / 2)
+    }
+    formState.value.doses[0] = formState.value.plasma
+  }
+)
+
+watch(dividedIntoDoses, function (newVal) {
+  const dosesLength = formState.value.doses.length
+  if (dosesLength > newVal) {
+    formState.value.doses.pop()
+    formState.value.doses = formState.value.doses.map((dose, doseIndex) => {
+      if (doseIndex === 0) {
+        return formState.value.plasma
+      } else return 0
+    })
+  }
+  if (dosesLength < newVal) {
+    let diff = newVal - dosesLength
+    while (diff > 0) {
+      // const usedDoses = formState.value.doses.reduce((acc, cur) => acc + cur, 0)
+      formState.value.doses.push(0)
+      diff--
+    }
+  }
+})
+
 // functions
 async function submitForm() {
   try {
     isLoading.value = true
 
-    // formData.laboratory_researches = flatten(
-    //   laboratoryResearchFormFields.value.map((block) =>
-    //     block.laboratory_researches.filter((field) => field.value).map((item) => item.id)
-    //   )
-    // )
-    // // console.log({ formData })
-
-    // await sendingToLaboratoryResearch(props.visitcard.id, formData)
+    await storeProcessingResults(props.product?.id as number, formState.value)
     notif.success(t('Data_saved_successfully'))
     onClose()
   } catch (error: any) {
@@ -96,6 +116,24 @@ async function submitForm() {
 
 function onClose() {
   emits('update:isOpen', false)
+}
+
+function onPlasmaChange(val: number) {
+  formState.value.erythrocyte = props.product.amount - val
+  // dividingIntoDoses()
+}
+
+function onErythrocyteChange(val: number) {
+  formState.value.plasma = props.product.amount - val
+}
+
+function dividingIntoDoses() {
+  const dosesLength = formState.value.doses.length
+  formState.value.doses = formState.value.doses.map((dose, doseIndex) => {
+    if (doseIndex === dosesLength - 1)
+      return Math.ceil(formState.value.plasma / dosesLength)
+    else return Math.floor(formState.value.plasma / dosesLength)
+  })
 }
 </script>
 
@@ -144,12 +182,23 @@ function onClose() {
               <tbody>
                 <tr>
                   <td class="">
-                    <div>
+                    <VField horizontal class="is-align-items-center">
+                      <h5 class="mr-3">{{ $t('Plasma_FFP_ml') }}:</h5>
+                      <VControl>
+                        <VInput
+                          v-model="formState.plasma"
+                          type="number"
+                          :min="1"
+                          @input="onPlasmaChange($event.target.value)"
+                        />
+                      </VControl>
+                    </VField>
+                    <div class="mb-3">
                       <VField horizontal class="is-align-items-center">
-                        <h5 class="mr-3">{{ $t('Divided_into_doses') }}</h5>
+                        <h5 class="mr-3">{{ $t('Divided_into_doses') }}:</h5>
                         <VControl>
                           <VInput
-                            v-model="formState.divided_into_doses"
+                            v-model="dividedIntoDoses"
                             type="number"
                             :min="1"
                             :max="4"
@@ -159,27 +208,28 @@ function onClose() {
                       </VField>
                     </div>
                     <template
-                      v-for="(number, numIndex) in formState.divided_into_doses"
+                      v-for="(number, numIndex) in dividedIntoDoses"
                       :key="numIndex"
                     >
                       <VField horizontal class="is-align-items-center">
-                        <h5 class="mr-3">
-                          {{ $t('Plasma_FFP_ml') }} ({{ number }}-{{ $t('Dose') }})
-                        </h5>
+                        <h5 class="mr-3">{{ number }}-{{ $t('Dose') }}</h5>
                         <VControl raw subcontrol>
-                          <VInput v-model="formState.plasma[numIndex].value" />
-                        </VControl>
-                        <!-- </VField>
-                      <VField horizontal class="is-align-items-center"> -->
-                        <VControl raw subcontrol>
-                          <VCheckbox
-                            v-model="formState.plasma[numIndex].sent_for_quality_control"
-                            :label="$t('Sample_sent_for_quality_control')"
+                          <VInput
+                            v-model="formState.doses[numIndex]"
+                            type="number"
+                            :min="1"
                           />
                         </VControl>
-                        <!-- <VLabel>{{ $t('Sample_sent_for_quality_control') }}</VLabel> -->
                       </VField>
                     </template>
+                    <VField>
+                      <VControl raw subcontrol>
+                        <VCheckbox
+                          v-model="formState.sent_to_quality_control"
+                          :label="$t('Sample_sent_for_quality_control')"
+                        />
+                      </VControl>
+                    </VField>
                   </td>
                 </tr>
                 <tr>
@@ -187,17 +237,22 @@ function onClose() {
                     <VField horizontal class="is-align-items-center">
                       <h5 class="mr-3">{{ $t('Erythrocyte_mass_ml') }}</h5>
                       <VControl>
-                        <VInput v-model="formState.erythrocyte_mass.value" />
+                        <VInput
+                          v-model="formState.erythrocyte"
+                          type="number"
+                          :min="1"
+                          @input="onErythrocyteChange($event.target.value)"
+                        />
                       </VControl>
-                      <VControl>
+                      <VControl raw subcontrol>
                         <VCheckbox
-                          v-model="formState.erythrocyte_mass.sent_for_quality_control"
+                          v-model="formState.erythrocyte_sent_to_quality_control"
                           :label="$t('Sample_sent_for_quality_control')"
                         />
                       </VControl>
-                      <VControl>
+                      <VControl raw subcontrol>
                         <VCheckbox
-                          v-model="formState.erythrocyte_mass.sent_for_sterility_control"
+                          v-model="formState.erythrocyte_sent_to_sterility_control"
                           :label="$t('Sample_sent_for_sterility_control')"
                         />
                       </VControl>
@@ -208,16 +263,15 @@ function onClose() {
             </table>
           </template>
           <template v-if="product.donation_type?.id === 2">
-            <VField horizontal class="is-align-items-center">
-              <h5 class="mr-3">{{ $t('Dose') }} 1, ml</h5>
+            <VField
+              v-for="(dose, doseIndex) in dividedIntoDoses"
+              :key="doseIndex"
+              horizontal
+              class="is-align-items-center"
+            >
+              <h5 class="mr-3">{{ $t('Dose') }} {{ dose }}, ml</h5>
               <VControl>
-                <VInput v-model="formState.dose.first" />
-              </VControl>
-            </VField>
-            <VField horizontal class="is-align-items-center">
-              <h5 class="mr-3">{{ $t('Dose') }} 2, ml</h5>
-              <VControl>
-                <VInput v-model="formState.dose.second" />
+                <VInput v-model="formState.doses[doseIndex]" type="number" :min="1" />
               </VControl>
             </VField>
           </template>

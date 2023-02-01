@@ -33,7 +33,7 @@ const optionsHemoglobin = ref([
   { value: 'above_normal', label: t('Above_normal') },
 ])
 const formState: PrimaryScreeningFormInterface = reactive({
-  date: moment().format('YYYY-MM-DD'),
+  date: new Date().toDateString(),
   blood_type_id: null,
   type: 'normal',
   value: null,
@@ -109,7 +109,7 @@ function onClose() {
 
 function clearFields() {
   Object.assign(formState, {
-    date: moment().format('YYYY-MM-DD'),
+    date: new Date().toDateString(),
     blood_type_id: null,
     type: 'normal',
     value: '',
@@ -142,7 +142,7 @@ function clearError(error: string) {
         <div class="column">
           <h5 class="is-size-5 has-text-weight-medium">
             {{ $t('Visit_date') }}:
-            {{ formatDate(new Date(patient.created_at), 'YYYY-MM-DD') }}
+            {{ patient.created_at }}
           </h5>
         </div>
       </div>
@@ -207,7 +207,7 @@ function clearError(error: string) {
               <td>
                 <VField required>
                   <VControl>
-                    <IMaskDateInput v-model="formState.date" />
+                    <DatePicker v-model="formState.date" />
                     <p class="help has-text-danger">{{ errors.date[0] }}</p>
                   </VControl>
                 </VField>

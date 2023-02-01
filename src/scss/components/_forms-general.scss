@@ -338,7 +338,7 @@ select {
       .label {
         font-family: var(--font);
         font-size: 0.9rem;
-        color: var(--light-text) !important;
+        // color: var(--light-text) !important;
         font-weight: 400;
       }
     }
@@ -394,7 +394,7 @@ select {
   > label {
     font-family: var(--font);
     font-size: 0.9rem;
-    color: var(--light-text) !important;
+    // color: var(--light-text) !important;
     font-weight: 400;
   }
 }
@@ -677,6 +677,14 @@ select {
   }
 
   .field {
+    &.is-horizontal {
+      .field-label {
+        .label {
+          color: var(--light-text) !important;
+        }
+      }
+    }
+
     &.has-textarea-addon {
       .textarea {
         border-color: var(--dark-sidebar-light-4) !important;
@@ -686,6 +694,10 @@ select {
         background-color: var(--dark-sidebar-light-2);
         border-color: var(--dark-sidebar-light-4);
       }
+    }
+
+    > label {
+      color: var(--light-text) !important;
     }
   }
 

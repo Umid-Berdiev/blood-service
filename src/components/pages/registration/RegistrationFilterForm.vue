@@ -13,7 +13,7 @@ const emits = defineEmits(['search', 'clearError', 'clearForm'])
 
 const { t } = useI18n()
 const notif = useNotyf()
-const filterForm = reactive({
+const filterForm = ref({
   last_name: '',
   first_name: '',
   father_name: '',
@@ -21,28 +21,38 @@ const filterForm = reactive({
   passport_number: '',
 })
 const passportId = ref('')
+const computedPassportId = computed({
+  get() {
+    return passportId.value
+  },
+  set(val) {
+    passportId.value = val
+    if (isEmpty(val)) {
+      filterForm.value.passport_series = ''
+      filterForm.value.passport_number = ''
+    } else {
+      const series = passportId.value.substring(0, 2)
+      const number = passportId.value.substring(2)
+      filterForm.value.passport_series = series
+      filterForm.value.passport_number = number
+    }
+  },
+})
 const handleSearch = async () => {
-  if (!isEmpty(passportId.value)) {
-    // if (/^[a-zA-Z]{2}[0-9]{7}$/.test(passportId.value)) {
-    const series = passportId.value.substring(0, 2)
-    const number = passportId.value.substring(2)
-    filterForm.passport_series = series
-    filterForm.passport_number = number
-    // } else return notif.error(t('Passport_series_or_passport_number_filled_incorrect'))
-  }
-
-  if (!values(filterForm).every(isEmpty)) {
-    emits('search', filterForm)
+  if (!values(filterForm.value).every(isEmpty)) {
+    emits('search', filterForm.value)
   } else notif.error(t('Form_fields_are_empty'))
 }
 
 const clearFilterForm = async () => {
-  Object.assign(filterForm, {
-    last_name: '',
-    first_name: '',
-    father_name: '',
-    passpordId: '',
-  })
+  console.log('ok')
+
+  filterForm.value.last_name = ''
+  filterForm.value.first_name = ''
+  filterForm.value.father_name = ''
+  filterForm.value.passport_series = ''
+  filterForm.value.passport_number = ''
+  passportId.value = ''
   emits('clearForm')
 }
 </script>
@@ -55,7 +65,7 @@ const clearFilterForm = async () => {
           <VField :label="$t('Passport_series_number')">
             <VControl>
               <VIMaskInput
-                v-model.trim="passportId"
+                v-model.trim="computedPassportId"
                 class="input"
                 :options="{
                   mask: 'aa0000000',
@@ -109,16 +119,14 @@ const clearFilterForm = async () => {
       </div>
       <div class="navigation-buttons">
         <div class="buttons is-right">
-          <VButton
+          <button
+            class="button is-warning"
             type="button"
-            color="warning"
-            bold
             :disabled="isLoading"
-            tabindex="0"
             @click="clearFilterForm"
           >
             {{ $t('Clear') }}
-          </VButton>
+          </button>
           <VButton type="submit" color="primary" bold :loading="isLoading" tabindex="0">
             {{ $t('Search') }}
           </VButton>

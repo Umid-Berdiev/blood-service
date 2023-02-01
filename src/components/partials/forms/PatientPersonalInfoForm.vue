@@ -16,11 +16,11 @@ const emits = defineEmits(['update:patient', 'editing'])
 
 const { locale } = useI18n()
 const masks = ref({
-  input: 'YYYY-MM-DD',
+  input: 'DD.MM.YYYY',
 })
-const datePickerModelConfig = reactive({
+const datePickerModelConfig = ref({
   type: 'string',
-  mask: masks.value.input, // Uses 'iso' if missing
+  mask: 'YYYY-MM-DD', // Uses 'iso' if missing
 })
 const form = computed({
   get() {
@@ -97,12 +97,14 @@ const form = computed({
       <VControl>
         <VRadio
           v-model="form.gender"
+          class="p-0"
           value="male"
           :label="$t('Male')"
           @input="$emit('editing', 'gender')"
         />
         <VRadio
           v-model="form.gender"
+          class="p-0 pl-3"
           value="female"
           :label="$t('Female')"
           @input="$emit('editing', 'gender')"

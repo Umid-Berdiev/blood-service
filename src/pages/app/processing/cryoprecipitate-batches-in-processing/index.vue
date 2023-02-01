@@ -17,7 +17,7 @@ const selectedRowId = ref<number | null>(null)
 const optionsCryoprecipitateSeries = ref([])
 const formState = reactive({
   cryoprecipitate_series_id: null,
-  processing_date: formatDate(new Date(), 'YYYY-MM-DD'),
+  processing_date: new Date().toDateString(),
 })
 viewWrapper.setPageTitle(t('Processing'))
 useHead({
@@ -173,24 +173,21 @@ async function clearFilterForm() {
         <VFlex align-items="end" column-gap="1rem">
           <VField class="is-align-items-center" :label="$t('Suitability_decision')">
             <VControl>
-              <VControl>
-                <Multiselect
-                  v-model="formState.cryoprecipitate_series_id"
-                  :options="optionsCryoprecipitateSeries"
-                  :placeholder="$t('Select')"
-                  label="name"
-                  value-prop="id"
-                  :style="{ minWidth: '15rem' }"
-                />
-              </VControl>
+              <Multiselect
+                v-model="formState.cryoprecipitate_series_id"
+                :options="optionsCryoprecipitateSeries"
+                :placeholder="$t('Select')"
+                label="name"
+                value-prop="id"
+                :style="{ minWidth: '15rem' }"
+              />
             </VControl>
           </VField>
-          <VField class="is-align-items-center" :label="$t('Transfer_date_for_debiting')">
-            <VField>
-              <VControl>
-                <IMaskDateInput v-model="formState.processing_date" />
-              </VControl>
-            </VField>
+          <VField class="mb-0">
+            <VLabel>
+              {{ $t('Transfer_date_for_debiting') }}
+            </VLabel>
+            <DatePicker v-model="formState.processing_date" />
           </VField>
           <VButton class="mb-3" type="button" color="info">
             {{ $t('Save') }}

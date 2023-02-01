@@ -9,11 +9,13 @@ const emits = defineEmits<{
   (e: 'update:modelValue', value: string): void
 }>()
 
-const { t, locale } = useI18n()
-
+const { locale } = useI18n()
+const masks = ref({
+  input: 'DD.MM.YYYY',
+})
 const datePickerModelConfig = reactive({
   type: 'string',
-  mask: 'DD.MM.YYYY', // Uses 'iso' if missing
+  mask: 'YYYY-MM-DD', // Uses 'iso' if missing
 })
 
 const date = computed({
@@ -31,9 +33,10 @@ const date = computed({
     <VDatePicker
       v-model="date"
       :locale="locale"
+      :masks="masks"
+      :model-config="datePickerModelConfig"
       color="green"
       trim-weeks
-      :model-config="datePickerModelConfig"
     >
       <template #default="{ inputValue, inputEvents }">
         <VField>

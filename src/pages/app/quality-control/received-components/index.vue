@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { useMainStore } from '/@src/stores/main'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
+import { fetchQualityControlList } from '/@src/utils/api/quality-control'
 import { ApiDataInterface } from '/@src/utils/interfaces'
 
 interface ProductInterface {
@@ -30,14 +31,14 @@ useHead({
 
 const apiData: ApiDataInterface<ProductInterface> = reactive({
   data: [
-    {
-      id: 11,
-      donation_date: '10.12.2022',
-      donation_code: '130100123400',
-      dose: '0',
-      quantity: '300',
-      component_name: 'Эритроцитная масса',
-    },
+    // {
+    //   id: 11,
+    //   donation_date: '10.12.2022',
+    //   donation_code: '130100123400',
+    //   dose: '0',
+    //   quantity: '300',
+    //   component_name: 'Эритроцитная масса',
+    // },
   ],
   pagination: {
     total: 10,
@@ -50,7 +51,7 @@ const apiData: ApiDataInterface<ProductInterface> = reactive({
 const selectedRow = reactive({})
 const isFormModalOpen = ref(false)
 
-// await handleSearch(currentFilterData)
+await fetchData()
 
 // hooks
 watch(isFormModalOpen, function (newVal: boolean) {
@@ -63,8 +64,8 @@ watch(isFormModalOpen, function (newVal: boolean) {
 async function fetchData() {
   try {
     isLoading.value = true
-    // const res = await patientsListForScreening()
-    // Object.assign(apiData, res.result)
+    const res = await fetchQualityControlList()
+    Object.assign(apiData, res.result)
   } catch (error: any) {
     notif.error(t('Something_went_wrong'))
   } finally {

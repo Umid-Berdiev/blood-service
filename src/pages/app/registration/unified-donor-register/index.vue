@@ -10,7 +10,6 @@ import {
 } from '/@src/utils/interfaces'
 import { patientsList } from '/@src/utils/api/patient'
 import { useMainStore } from '/@src/stores/main'
-import { isEmpty } from 'lodash'
 
 const router = useRouter()
 const notif = useNotyf()
@@ -59,54 +58,31 @@ const columns = {
   '#': {
     format: (value: any, row: any, index: number) => `${index + 1}`,
     cellClass: 'is-flex-grow-0',
-    // renderHeader: () => `<span class="is-flex-grow-0">#</span>`,
   },
   category: {
     label: t('Category'),
     format: (value: any) => value.name,
-    // media: true,
-    // grow: true,
-    // sortable: true,
   },
   name: {
     label: t('Fullname'),
-    // format: (value: string, row: any) =>
-    //   `${row.first_name} ${row.last_name} ${row.father_name}`,
-    // media: true,
-    // grow: true,
-    // sortable: true,
   },
   gender: {
     label: t('Gender'),
     format: (value: string) => t(value),
-    // sortable: true,
   },
   birth_date: {
     label: t('Date-of-birth'),
-    // sortable: true,
   },
   full_address: {
     label: t('Address'),
-    // grow: true,
-    // sortable: true,
   },
   phone_number: {
     label: t('Phone_number'),
-    // grow: true,
-    // sortable: true,
   },
   isDiverted: {
     label: t('Diverted_from_donation'),
-    // grow: true,
-    // sortable: true,
   },
-  // actions: {
-  //   label: t('Actions'),
-  //   align: 'center',
-  // },
 } as const
-
-const incomingCallerId = ref<number>()
 
 async function handleSearch(filterForm: any) {
   try {

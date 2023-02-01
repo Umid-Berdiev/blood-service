@@ -794,5 +794,6 @@
   "Medical_inspection_date": "Medical inspection date",
   "Medical_inspection_conclusion": "Medical inspection conclusion",
   "Blood_component_amount": "Blood component amount",
-  "Period": "Period"
+  "Period": "Period",
+  "Form_fields_are_empty": "Form fields are empty"
 }
