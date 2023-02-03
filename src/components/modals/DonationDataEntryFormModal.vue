@@ -226,14 +226,8 @@ async function fetchContainerList() {
           <div class="field-label is-normal">
             <label class="label">{{ $t('Donation_date') }}</label>
           </div>
-          <div class="field-body">
-            <div class="field">
-              <div class="control">
-                <DatePicker v-model="formState.date" />
-                <p class="help has-text-danger">{{ formErrors.date[0] }}</p>
-              </div>
-            </div>
-          </div>
+          <DatePicker v-model="formState.date" />
+          <p class="help has-text-danger">{{ formErrors.date[0] }}</p>
         </div>
         <div class="field is-horizontal">
           <div class="field-label is-normal">

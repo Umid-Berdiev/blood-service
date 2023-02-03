@@ -69,6 +69,7 @@ const columns = {
     label: t('Independently'),
     // grow: true,
     // sortable: true,
+    align: 'center',
   },
   is_personalized_donation: {
     label: t('Personalized_donation'),
@@ -86,7 +87,6 @@ const columns = {
   },
 } as const
 const isLoading = ref<boolean>(false)
-const incomingCallerId = ref<number>()
 
 await fetchData()
 

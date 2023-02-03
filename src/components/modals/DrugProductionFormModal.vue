@@ -26,8 +26,9 @@ const notif = useNotyf()
 const { t } = useI18n()
 const title = ref(t('Quality_check_result'))
 const isLoading = ref(false)
+const today = formatDate(new Date(), 'YYYY-MM-DD')
 const formState: QuantityCheckFormInterface = reactive({
-  transfer_date: formatDate(new Date(), 'YYYY-MM-DD'),
+  transfer_date: today,
 })
 const errors = reactive({
   transfer_date: [],
@@ -55,7 +56,7 @@ function onClose() {
 
 function clearFields() {
   Object.assign(formState, {
-    transfer_date: formatDate(new Date(), 'YYYY-MM-DD'),
+    transfer_date: today,
   })
 }
 
@@ -95,14 +96,7 @@ function clearError(error: string) {
             <tr>
               <th>{{ $t('Transfer_date') }}</th>
               <td>
-                <VField>
-                  <VControl>
-                    <IMaskDateInput
-                      v-model="formState.transfer_date"
-                      :style="{ width: '50%' }"
-                    />
-                  </VControl>
-                </VField>
+                <DatePicker v-model="formState.transfer_date" />
               </td>
             </tr>
           </tbody>

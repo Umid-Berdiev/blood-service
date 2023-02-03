@@ -37,6 +37,7 @@ declare module '@vue/runtime-core' {
     ChatSideFab: typeof import('./src/components/partials/chat/ChatSideFab.vue')['default']
     CircleChart: typeof import('./src/components/partials/widgets/misc/CircleChart.vue')['default']
     CircularMenu: typeof import('./src/components/partials/circular-menu/CircularMenu.vue')['default']
+    ClearButton: typeof import('./src/components/partials/buttons/ClearButton.vue')['default']
     ClientOnly: typeof import('./src/components/ClientOnly.vue')['default']
     CloudContainer: typeof import('./src/components/partials/lifestyle/CloudContainer.vue')['default']
     CollapsedMessaging: typeof import('./src/components/partials/messaging/CollapsedMessaging.vue')['default']

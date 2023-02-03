@@ -40,6 +40,24 @@ const donationTypes = ref([
   },
 ])
 
+const canClear = ref(false)
+
+// hooks
+watch(
+  filterForm,
+  (newVal) => {
+    if (newVal)
+      canClear.value = Object.values(newVal).some((value) => {
+        if (value) {
+          return true
+        }
+        return false
+      })
+  },
+  { deep: true }
+)
+
+// functions
 const handleSearch = async () => {
   // if (!values(filterForm).every(isEmpty)) {
   emits('search', filterForm)
@@ -60,7 +78,7 @@ const clearFilterForm = async () => {
 
 <template>
   <VCard>
-    <div>
+    <form @submit.prevent="handleSearch">
       <div class="columns">
         <div class="column">
           <VField>
@@ -121,28 +139,12 @@ const clearFilterForm = async () => {
       </div>
       <div class="navigation-buttons">
         <div class="buttons is-right">
-          <VButton
-            type="button"
-            color="warning"
-            bold
-            :disabled="isLoading"
-            tabindex="0"
-            @click="clearFilterForm"
-          >
-            {{ $t('Clear') }}
-          </VButton>
-          <VButton
-            type="button"
-            color="primary"
-            bold
-            :loading="isLoading"
-            tabindex="0"
-            @click="handleSearch"
-          >
+          <ClearButton :disabled="isLoading || !canClear" @clear="clearFilterForm" />
+          <SubmitButton :loading="isLoading">
             {{ $t('Search') }}
-          </VButton>
+          </SubmitButton>
         </div>
       </div>
-    </div>
+    </form>
   </VCard>
 </template>

@@ -120,11 +120,7 @@ function clearError(error: string) {
             <tr>
               <th>{{ $t('Result_date') }}</th>
               <td>
-                <VField>
-                  <VControl>
-                    <DatePicker v-model="formState.date" />
-                  </VControl>
-                </VField>
+                <DatePicker v-model="formState.date" />
               </td>
             </tr>
           </tbody>

@@ -201,11 +201,7 @@ function onClose() {
                 <template v-if="formState.sent_to_id === 4">
                   <div class="is-flex is-align-items-center">
                     <div>{{ $t('Transfer_date_for_debiting') }}</div>
-                    <VField class="ml-5">
-                      <VControl>
-                        <IMaskDateInput v-model="formState.transfer_date" />
-                      </VControl>
-                    </VField>
+                    <DatePicker v-model="formState.transfer_date" class="ml-5" />
                   </div>
                   <div class="is-flex is-align-items-center">
                     <div>{{ $t('Defect_reasons') }}</div>
@@ -241,12 +237,7 @@ function onClose() {
                   class="is-align-items-center is-justify-content-space-between"
                 >
                   <VLabel>{{ $t('Issue_date') }}</VLabel>
-                  <VControl>
-                    <IMaskDateInput
-                      v-model="formState.issue_date"
-                      :style="{ width: '50%' }"
-                    />
-                  </VControl>
+                  <DatePicker v-model="formState.issue_date" />
                 </VField>
                 <VField
                   horizontal

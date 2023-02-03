@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { formatDate } from '@vueuse/core'
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
@@ -30,7 +31,7 @@ const formState = ref<DonationContainerInterface>({
   series: '',
   count_hemopreservative: null,
   hemopreservative: '',
-  expire_date: new Date().toDateString(),
+  expire_date: formatDate(new Date(), 'YYYY-MM-DD'),
   expire_days: null,
 })
 const formErrors = ref({
@@ -93,7 +94,7 @@ function clearFormState() {
     series: '',
     count_hemopreservative: null,
     hemopreservative: '',
-    expire_date: new Date().toDateString(),
+    expire_date: formatDate(new Date(), 'YYYY-MM-DD'),
     expire_days: null,
   }
 }
@@ -204,14 +205,10 @@ function clearErrors() {
                 {{ $t('Container_expiration_date') }}
               </td>
               <td>
-                <VField required>
-                  <VControl>
-                    <DatePicker v-model="formState.expire_date" />
-                    <p class="help has-text-danger">
-                      {{ formErrors?.expire_date[0] }}
-                    </p>
-                  </VControl>
-                </VField>
+                <DatePicker v-model="formState.expire_date" />
+                <p class="help has-text-danger">
+                  {{ formErrors?.expire_date[0] }}
+                </p>
               </td>
             </tr>
             <tr>

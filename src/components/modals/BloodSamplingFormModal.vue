@@ -20,17 +20,17 @@ const emits = defineEmits<{
   (e: 'update:list'): void
 }>()
 
-const today = new Date()
+const today = formatDate(new Date(), 'YYYY-MM-DD')
 const notif = useNotyf()
 const { t } = useI18n()
 const title = ref(t('Sampling_data_entry_form'))
 const isLoading = ref(false)
 const formFields = reactive({
-  date: formatDate(today, 'DD.MM.YYYY'),
-  hemotransmissible_date: formatDate(today, 'DD.MM.YYYY'),
-  chemical_date: formatDate(today, 'DD.MM.YYYY'),
-  buck_laboratory_date: formatDate(today, 'DD.MM.YYYY'),
-  immunological_laboratory_date: formatDate(today, 'DD.MM.YYYY'),
+  date: today,
+  hemotransmissible_date: today,
+  chemical_date: today,
+  buck_laboratory_date: today,
+  immunological_laboratory_date: today,
 })
 const errors = reactive({
   date: [],
@@ -62,11 +62,11 @@ function onClose() {
 
 function clearFields() {
   Object.assign(formFields, {
-    date: formatDate(today, 'DD.MM.YYYY'),
-    hemotransmissible_date: formatDate(today, 'DD.MM.YYYY'),
-    chemical_date: formatDate(today, 'DD.MM.YYYY'),
-    buck_laboratory_date: formatDate(today, 'DD.MM.YYYY'),
-    immunological_laboratory_date: formatDate(today, 'DD.MM.YYYY'),
+    date: today,
+    hemotransmissible_date: today,
+    chemical_date: today,
+    buck_laboratory_date: today,
+    immunological_laboratory_date: today,
   })
 }
 
@@ -97,7 +97,7 @@ function clearErrors() {
         <div class="column">
           <h5 class="is-size-5 has-text-weight-medium">
             {{ $t('Visit_date') }}:
-            {{ formatDate(new Date(patient.created_at), 'DD.MM.YYYY') }}
+            {{ patient.last_visit?.created_at }}
           </h5>
         </div>
       </div>
@@ -167,14 +167,10 @@ function clearErrors() {
             {{ $t('Blood_sampling_date') }}
           </VFlexItem>
           <VFlexItem>
-            <VField>
-              <VControl>
-                <IMaskDateInput v-model="formFields.date" />
-                <p class="help has-text-danger">
-                  {{ errors.date[0] }}
-                </p>
-              </VControl>
-            </VField>
+            <DatePicker v-model="formFields.date" />
+            <p class="help has-text-danger">
+              {{ errors.date[0] }}
+            </p>
           </VFlexItem>
         </VFlex>
         <br />
@@ -191,14 +187,10 @@ function clearErrors() {
                 {{ $t('Bloodborne-infections-laboratory') }}
               </td>
               <td>
-                <VField required>
-                  <VControl>
-                    <IMaskDateInput v-model="formFields.hemotransmissible_date" />
-                    <p class="help has-text-danger">
-                      {{ errors.hemotransmissible_date[0] }}
-                    </p>
-                  </VControl>
-                </VField>
+                <DatePicker v-model="formFields.hemotransmissible_date" />
+                <p class="help has-text-danger">
+                  {{ errors.hemotransmissible_date[0] }}
+                </p>
               </td>
             </tr>
             <tr>
@@ -206,14 +198,10 @@ function clearErrors() {
                 {{ $t('Clinical-biochemical-laboratory') }}
               </td>
               <td>
-                <VField required>
-                  <VControl>
-                    <IMaskDateInput v-model="formFields.chemical_date" />
-                    <p class="help has-text-danger">
-                      {{ errors.chemical_date[0] }}
-                    </p>
-                  </VControl>
-                </VField>
+                <DatePicker v-model="formFields.chemical_date" />
+                <p class="help has-text-danger">
+                  {{ errors.chemical_date[0] }}
+                </p>
               </td>
             </tr>
             <tr>
@@ -221,14 +209,10 @@ function clearErrors() {
                 {{ $t('Buck-laboratory') }}
               </td>
               <td>
-                <VField required>
-                  <VControl>
-                    <IMaskDateInput v-model="formFields.buck_laboratory_date" />
-                    <p class="help has-text-danger">
-                      {{ errors.buck_laboratory_date[0] }}
-                    </p>
-                  </VControl>
-                </VField>
+                <DatePicker v-model="formFields.buck_laboratory_date" />
+                <p class="help has-text-danger">
+                  {{ errors.buck_laboratory_date[0] }}
+                </p>
               </td>
             </tr>
             <tr>
@@ -236,14 +220,10 @@ function clearErrors() {
                 {{ $t('Immunological-Research-Department') }}
               </td>
               <td>
-                <VField required>
-                  <VControl>
-                    <IMaskDateInput v-model="formFields.immunological_laboratory_date" />
-                    <p class="help has-text-danger">
-                      {{ errors.immunological_laboratory_date[0] }}
-                    </p>
-                  </VControl>
-                </VField>
+                <DatePicker v-model="formFields.immunological_laboratory_date" />
+                <p class="help has-text-danger">
+                  {{ errors.immunological_laboratory_date[0] }}
+                </p>
               </td>
             </tr>
           </tbody>

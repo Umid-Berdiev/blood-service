@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
 import { formatDate } from '@vueuse/core'
+import { reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import moment from 'moment'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { fetchBloodTypes } from '/@src/utils/api/additional'
 import { storePrimaryScreeningResult } from '/@src/utils/api/screening'
@@ -27,13 +26,8 @@ const { t } = useI18n()
 const title = ref(t('Primary_screening_form'))
 const isLoading = ref(false)
 const preliminaryBloodTypes = ref([])
-const optionsHemoglobin = ref([
-  { value: 'normal', label: t('Normal') },
-  { value: 'below_normal', label: t('Below_normal') },
-  { value: 'above_normal', label: t('Above_normal') },
-])
 const formState: PrimaryScreeningFormInterface = reactive({
-  date: new Date().toDateString(),
+  date: formatDate(new Date(), 'YYYY-MM-DD'),
   blood_type_id: null,
   type: 'normal',
   value: null,
@@ -109,7 +103,7 @@ function onClose() {
 
 function clearFields() {
   Object.assign(formState, {
-    date: new Date().toDateString(),
+    date: formatDate(new Date(), 'YYYY-MM-DD'),
     blood_type_id: null,
     type: 'normal',
     value: '',
@@ -205,12 +199,8 @@ function clearError(error: string) {
             <tr>
               <th>{{ $t('Date_of_an_analysis') }}</th>
               <td>
-                <VField required>
-                  <VControl>
-                    <DatePicker v-model="formState.date" />
-                    <p class="help has-text-danger">{{ errors.date[0] }}</p>
-                  </VControl>
-                </VField>
+                <DatePicker v-model="formState.date" />
+                <p class="help has-text-danger">{{ errors.date[0] }}</p>
               </td>
             </tr>
             <tr>

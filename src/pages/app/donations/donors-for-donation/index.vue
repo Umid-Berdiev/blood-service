@@ -53,9 +53,7 @@ const columns = {
   },
   visit_date: {
     label: t('Visit_date'),
-    format: (value: string, row: any) =>
-      row.last_visit?.created_at &&
-      formatDate(new Date(row.last_visit?.created_at), 'YYYY-MM-DD'),
+    format: (value: string, row: any) => rrow.last_visit?.created_at,
   },
   donation_type: {
     label: t('Donation_type'),

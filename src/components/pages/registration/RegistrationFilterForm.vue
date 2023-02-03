@@ -119,17 +119,10 @@ const clearFilterForm = async () => {
       </div>
       <div class="navigation-buttons">
         <div class="buttons is-right">
-          <button
-            class="button is-warning"
-            type="button"
-            :disabled="isLoading"
-            @click="clearFilterForm"
-          >
-            {{ $t('Clear') }}
-          </button>
-          <VButton type="submit" color="primary" bold :loading="isLoading" tabindex="0">
+          <ClearButton :disabled="isLoading || !canClear" @clear="clearFilterForm" />
+          <SubmitButton :loading="isLoading">
             {{ $t('Search') }}
-          </VButton>
+          </SubmitButton>
         </div>
       </div>
     </form>

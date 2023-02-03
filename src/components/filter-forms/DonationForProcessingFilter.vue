@@ -23,6 +23,22 @@ const filterForm = reactive({
 })
 
 const donationTypes = ref([])
+const canClear = ref(false)
+
+// hooks
+watch(
+  filterForm,
+  (newVal) => {
+    if (newVal)
+      canClear.value = Object.values(newVal).some((value) => {
+        if (value) {
+          return true
+        }
+        return false
+      })
+  },
+  { deep: true }
+)
 
 onMounted(async () => {
   const res = await fetchDonationTypes()
@@ -77,19 +93,10 @@ const clearFilterForm = async () => {
       <div class="navigation-buttons"> -->
         <div class="column is-narrow mt-auto ml-auto pb-4">
           <div class="buttons">
-            <VButton
-              type="button"
-              color="warning"
-              bold
-              :disabled="isLoading"
-              tabindex="0"
-              @click="clearFilterForm"
-            >
-              {{ $t('Clear') }}
-            </VButton>
-            <VButton type="submit" color="primary" bold :loading="isLoading" tabindex="0">
+            <ClearButton :disabled="isLoading || !canClear" @clear="clearFilterForm" />
+            <SubmitButton :loading="isLoading">
               {{ $t('Search') }}
-            </VButton>
+            </SubmitButton>
           </div>
         </div>
       </div>

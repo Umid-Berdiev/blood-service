@@ -28,9 +28,10 @@ const notif = useNotyf()
 const { t } = useI18n()
 const title = ref(t('Scrapping_component'))
 const isLoading = ref(false)
+const today = formatDate(new Date(), 'YYYY-MM-DD')
 const formState: QuantityCheckFormInterface = reactive({
   batch_number: '',
-  destruction_date: formatDate(new Date(), 'YYYY-MM-DD'),
+  destruction_date: today,
 })
 const errors = reactive({
   batch_number: [],
@@ -60,7 +61,7 @@ function onClose() {
 function clearFields() {
   Object.assign(formState, {
     batch_number: '',
-    destruction_date: formatDate(new Date(), 'YYYY-MM-DD'),
+    destruction_date: today,
   })
 }
 
@@ -120,14 +121,7 @@ function clearError(error: string) {
             <tr>
               <th>{{ $t('Destruction_date') }}</th>
               <td>
-                <VField>
-                  <VControl>
-                    <IMaskDateInput
-                      v-model="formState.destruction_date"
-                      :style="{ width: '50%' }"
-                    />
-                  </VControl>
-                </VField>
+                <DatePicker v-model="formState.destruction_date" />
               </td>
             </tr>
           </tbody>

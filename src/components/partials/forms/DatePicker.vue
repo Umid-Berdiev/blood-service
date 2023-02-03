@@ -38,14 +38,14 @@ const date = computed({
       color="green"
       trim-weeks
     >
-      <template #default="{ inputValue, inputEvents }">
+      <template #default="{ inputValue, togglePopover }">
         <VField>
           <VControl icon="feather:calendar">
             <input
               class="input v-input"
               type="text"
               :value="inputValue"
-              v-on="inputEvents"
+              @click="togglePopover"
             />
           </VControl>
         </VField>

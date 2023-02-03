@@ -30,7 +30,7 @@ const notif = useNotyf()
 const { t } = useI18n()
 const title = ref(t('Sterility_test_result'))
 const isLoading = ref(false)
-const today = formatDate(new Date(), 'DD.MM.YYYY')
+const today = formatDate(new Date(), 'YYYY-MM-DD')
 const formFields: BuckControlSterilityFormInterface = reactive({
   sterility_status: 'sterile',
   sterility_checked_date: today,
@@ -40,6 +40,7 @@ const errors = reactive({
   sterility_checked_date: [],
 })
 
+// functions
 async function onSubmit() {
   try {
     isLoading.value = true
@@ -126,14 +127,7 @@ function clearError(error: string) {
             <tr>
               <th>{{ $t('Result_date') }}</th>
               <td>
-                <VField>
-                  <VControl>
-                    <IMaskDateInput
-                      v-model="formFields.sterility_checked_date"
-                      :style="{ width: '50%' }"
-                    />
-                  </VControl>
-                </VField>
+                <DatePicker v-model="formFields.sterility_checked_date" />
               </td>
             </tr>
           </tbody>

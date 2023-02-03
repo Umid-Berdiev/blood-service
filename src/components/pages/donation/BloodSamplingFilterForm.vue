@@ -23,12 +23,26 @@ const filterForm = reactive({
   donation_code: '',
 })
 const donationTypes = ref([])
-
+const canClear = ref(false)
 // hooks
 onMounted(async () => {
   const res = await fetchDonationTypes()
   donationTypes.value = res.result
 })
+
+watch(
+  filterForm,
+  (newVal) => {
+    if (newVal)
+      canClear.value = Object.values(newVal).some((value) => {
+        if (value) {
+          return true
+        }
+        return false
+      })
+  },
+  { deep: true }
+)
 
 const handleSearch = async () => {
   // if (Object.values(filterForm).some((value) => Boolean(value))) {
@@ -99,16 +113,7 @@ const clearFilterForm = async () => {
       </div>
       <div class="navigation-buttons">
         <div class="buttons is-right">
-          <VButton
-            type="button"
-            color="warning"
-            bold
-            :disabled="isLoading"
-            tabindex="0"
-            @click="clearFilterForm"
-          >
-            {{ $t('Clear') }}
-          </VButton>
+          <ClearButton :disabled="isLoading || !canClear" @clear="clearFilterForm" />
           <VButton type="submit" color="primary" bold :loading="isLoading" tabindex="0">
             {{ $t('Search') }}
           </VButton>

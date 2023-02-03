@@ -10,7 +10,14 @@ withDefaults(
 </script>
 
 <template>
-  <VButton type="submit" color="primary" outlined :loading="loading" :disabled="loading">
+  <VButton
+    type="submit"
+    color="primary"
+    bold
+    :loading="loading"
+    :disabled="loading"
+    tabindex="0"
+  >
     <slot>
       {{ $t('Save') }}
     </slot>

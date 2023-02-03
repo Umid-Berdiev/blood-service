@@ -43,16 +43,6 @@ const apiData: ApiDataInterface<SupernatantPlasmasItemInterface> = reactive({
   },
 })
 
-const currentPage = computed({
-  get: () => {
-    return apiData.pagination.current_page
-  },
-  set: async (page) => {
-    currentFilterData.page = page
-    await handleSearch(currentFilterData)
-  },
-})
-
 const columns = {
   serial_number: {
     label: t('Serial_number'),
@@ -76,7 +66,17 @@ const currentFilterData = reactive({
 const clickedRowData: SupernatantPlasmasItemInterface = reactive({})
 const isFormModalOpen = ref(false)
 
-// await handleSearch(currentFilterData)
+// hooks
+watch(
+  () => apiData.pagination.current_page,
+  async (newVal) => {
+    if (newVal) {
+      currentFilterData.page = newVal
+      await handleSearch(currentFilterData)
+    }
+  },
+  { immediate: true }
+)
 
 // functions
 async function handleSearch(filterForm: any) {
@@ -200,7 +200,7 @@ function openSupernatantPlasmaFormModal(patient: SupernatantPlasmasItemInterface
             <!--Table Pagination-->
             <VFlexPagination
               v-if="apiData.data.length"
-              v-model:current-page="currentPage"
+              v-model:current-page="apiData.pagination.current_page"
               class="mt-5"
               :item-per-page="apiData.pagination.per_page"
               :total-items="apiData.pagination.total"

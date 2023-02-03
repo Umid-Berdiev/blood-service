@@ -17,7 +17,7 @@ const selectedRowId = ref<number | null>(null)
 const optionsCryoprecipitateSeries = ref([])
 const formState = reactive({
   cryoprecipitate_series_id: null,
-  processing_date: new Date().toDateString(),
+  processing_date: formatDate(new Date(), 'YYYY-MM-DD'),
 })
 viewWrapper.setPageTitle(t('Processing'))
 useHead({

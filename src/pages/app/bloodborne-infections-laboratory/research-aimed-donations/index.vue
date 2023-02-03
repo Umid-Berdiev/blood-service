@@ -33,15 +33,6 @@ const apiData: ApiDataInterface<PatientInterface> = reactive({
   },
 })
 
-const currentPage = computed({
-  get: () => {
-    return apiData.pagination.current_page
-  },
-  set: async (page) => {
-    await handleSearch(currentFilterData)
-  },
-})
-
 const columns = {
   orderNumber: {
     format: (value: any, row: any, index: number) => `${index + 1}`,
@@ -68,9 +59,7 @@ const columns = {
   },
   visit_date: {
     label: t('Visit_date'),
-    format: (value: string, row: any) =>
-      row.last_visit?.created_at &&
-      formatDate(new Date(row.last_visit?.created_at), 'YYYY-MM-DD'),
+    format: (value: string, row: any) => row.last_visit?.created_at,
   },
   donation_type: {
     label: t('Donation_type'),
@@ -96,7 +85,16 @@ const clickedRowData = ref<PatientInterface | null>(null)
 const isLaboratoryFormModalOpen = ref(false)
 const isEmergencyNoticeFormModalOpen = ref(false)
 
-await handleSearch(currentFilterData)
+// hooks
+watch(
+  () => apiData.pagination.current_page,
+  async (newVal) => {
+    if (newVal) {
+      await handleSearch(currentFilterData)
+    }
+  },
+  { immediate: true }
+)
 
 // functions
 async function handleSearch(filterForm: any) {
@@ -105,7 +103,7 @@ async function handleSearch(filterForm: any) {
     Object.assign(currentFilterData, filterForm)
     const params = {
       ...filterForm,
-      page: currentPage.value,
+      page: apiData.pagination.current_page,
     }
 
     const res = await fetchPatientsListForLaboratories(params)
@@ -252,7 +250,7 @@ function clearClickedRowData() {
             <!--Table Pagination-->
             <VFlexPagination
               v-if="apiData.data.length"
-              v-model:current-page="currentPage"
+              v-model:current-page="apiData.pagination.current_page"
               class="mt-5"
               :item-per-page="apiData.pagination.per_page"
               :total-items="apiData.pagination.total"

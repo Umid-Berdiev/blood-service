@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { isEmpty, values } from 'lodash'
 import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
 
@@ -21,7 +20,24 @@ const filterForm = reactive({
   donation_type_id: null,
   donation_code: '',
 })
+const canClear = ref(false)
 
+// hooks
+watch(
+  filterForm,
+  (newVal) => {
+    if (newVal)
+      canClear.value = Object.values(newVal).some((value) => {
+        if (value) {
+          return true
+        }
+        return false
+      })
+  },
+  { deep: true }
+)
+
+// functions
 const handleSearch = async () => {
   emits('search', filterForm)
 }
@@ -61,19 +77,10 @@ const clearFilterForm = async () => {
       </div>
       <div class="navigation-buttons">
         <div class="buttons is-right">
-          <VButton
-            type="button"
-            color="warning"
-            bold
-            :disabled="isLoading"
-            tabindex="0"
-            @click="clearFilterForm"
-          >
-            {{ $t('Clear') }}
-          </VButton>
-          <VButton type="submit" color="primary" bold :loading="isLoading" tabindex="0">
+          <ClearButton :disabled="isLoading || !canClear" @clear="clearFilterForm" />
+          <SubmitButton :loading="isLoading">
             {{ $t('Search') }}
-          </VButton>
+          </SubmitButton>
         </div>
       </div>
     </form>

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { formatDate } from '@vueuse/core'
 import { reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
@@ -31,9 +32,10 @@ const errors = reactive({
   blood_samples_taken_date: [],
   analysis_date: [],
 })
+const today = formatDate(new Date(), 'YYYY-MM-DD')
 const medicalExamination = reactive({
   data: {
-    date_analysis: '',
+    date_analysis: today,
     heddelson: '',
     staphylococcal: '',
     hemolysis: false,
@@ -99,7 +101,13 @@ function onClose() {
 }
 
 function clearFields() {
-  medicalExamination.data.date_analysis = ''
+  medicalExamination.data = {
+    date_analysis: today,
+    heddelson: '',
+    staphylococcal: '',
+    hemolysis: false,
+    chilez: false,
+  }
 }
 
 function clearErrors() {
@@ -131,33 +139,16 @@ function onEmergencyNoticing() {
       <div class="box">
         <VFlex flex-wrap="wrap" row-gap="2rem" justify-content="space-between">
           <VFlexItem flex-basis="45%">
-            <VField horizontal>
-              <VLabel class="my-auto mr-3 is-size-6">{{
-                $t('Blood_sampling_date')
-              }}</VLabel>
-              <VControl>
-                <VInput :value="patient?.last_visit?.blood_sample?.date" disabled />
-              </VControl>
-            </VField>
+            <span>{{ $t('Blood_sampling_date') }}: </span>
+            <span>{{ patient?.last_visit?.blood_sample?.date }}</span>
           </VFlexItem>
           <VFlexItem flex-basis="45%">
-            <VField horizontal>
-              <VLabel class="my-auto mr-3 is-size-6">{{
-                $t('Blood_samples_taken_date')
-              }}</VLabel>
-              <VInput
-                :value="patient?.last_visit?.blood_sample?.chemical_date"
-                disabled
-              />
-            </VField>
+            <span>{{ $t('Blood_samples_taken_date') }}: </span>
+            <span>{{ patient?.last_visit?.blood_sample?.chemical_date }}</span>
           </VFlexItem>
           <VFlexItem flex-basis="45%">
-            <VField horizontal>
-              <VLabel class="my-auto mr-3 is-size-6">{{ $t('Analysis_date') }}</VLabel>
-              <VControl>
-                <IMaskDateInput v-model="medicalExamination.data.date_analysis" />
-              </VControl>
-            </VField>
+            <span class="my-auto mr-3 is-size-6">{{ $t('Analysis_date') }}</span>
+            <DatePicker v-model="medicalExamination.data.date_analysis" />
           </VFlexItem>
           <VFlexItem flex-basis="45%">
             <h5>

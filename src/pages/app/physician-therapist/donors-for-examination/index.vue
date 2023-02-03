@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { formatDate } from '@vueuse/core'
 import { useHead } from '@vueuse/head'
 import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
@@ -8,13 +7,8 @@ import { useMainStore } from '/@src/stores/main'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { patientsListForCandidate } from '/@src/utils/api/patient'
 import { fetchVisitcardStatuses, finishVisitcardById } from '/@src/utils/api/visitcard'
-import {
-  ApiDataInterface,
-  PatientInterface,
-  PatientVisitCardInterface,
-} from '/@src/utils/interfaces'
+import { ApiDataInterface, PatientInterface } from '/@src/utils/interfaces'
 
-const router = useRouter()
 const notif = useNotyf()
 const { t } = useI18n()
 const mainStore = useMainStore()
@@ -37,20 +31,6 @@ const apiData: ApiDataInterface<PatientInterface> = reactive({
   },
 })
 
-const currentPage = computed({
-  get: () => {
-    return apiData.pagination.current_page
-  },
-  set: async (page) => {
-    // currentFilterData.page = page
-    await fetchData(page)
-  },
-})
-
-// const currentFilterData = reactive({
-//   page: 1,
-// })
-
 const columns = {
   orderNumber: {
     format: (value: any, row: any, index: number) => `${index + 1}`,
@@ -68,9 +48,7 @@ const columns = {
   },
   visit_date: {
     label: t('Visit_date'),
-    format: (value: string, row: any) =>
-      row.last_visit?.created_at &&
-      formatDate(new Date(row.last_visit?.created_at), 'YYYY-MM-DD'),
+    format: (value: string, row: any) => row.last_visit?.created_at,
     // sortable: true,
   },
   visit_type: {
@@ -109,10 +87,20 @@ const donorStatuses = ref([{ id: 0, name: t('All') }])
 const selectedDonorStatus = ref('')
 const selectedPatient = ref<PatientInterface | null>(null)
 
+// hooks
 onMounted(async () => {
   const res = await fetchVisitcardStatuses()
   donorStatuses.value = res.result
 })
+
+watch(
+  () => apiData.pagination.current_page,
+  async (newVal) => {
+    if (newVal) {
+      await fetchData()
+    }
+  }
+)
 
 watch(
   () => selectedDonorStatus.value,
@@ -132,15 +120,15 @@ watch(
   }
 )
 
-// the fetchData function will be called each time one of the parameter changes
-async function fetchData(page: number = 1) {
+// functions
+async function fetchData() {
   try {
     isLoading.value = true
-
-    const res = await patientsListForCandidate({
-      page,
+    const params = {
+      page: apiData.pagination.current_page,
       status_id: selectedDonorStatus.value,
-    })
+    }
+    const res = await patientsListForCandidate(params)
     Object.assign(apiData, res.result)
   } catch (error: any) {
     notif.error(t(error.response?.data?.errors))
@@ -188,11 +176,9 @@ async function submitFinish() {
             },
             {
               label: $t('Physician-therapist'),
-              // to: { name: '/app/users/' },
             },
             {
               label: $t('Donors-list-for-examination'),
-              // to: { name: '/app/physician-therapist/donors-for-examination/' },
             },
           ]"
         />
@@ -302,7 +288,7 @@ async function submitFinish() {
             <!--Table Pagination-->
             <VFlexPagination
               v-if="apiData.data.length"
-              v-model:current-page="currentPage"
+              v-model:current-page="apiData.pagination.current_page"
               class="mt-5"
               :item-per-page="apiData.pagination.per_page"
               :total-items="apiData.pagination.total"

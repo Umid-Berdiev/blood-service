@@ -29,9 +29,10 @@ const notif = useNotyf()
 const { t } = useI18n()
 const title = ref(t('Supernatant_plasma_test_result'))
 const isLoading = ref(false)
+const today = formatDate(new Date(), 'YYYY-MM-DD')
 const formFields: SupernatantPlasmaFormInterface = reactive({
   control_result: 'sterile',
-  result_date: formatDate(new Date(), 'YYYY-MM-DD'),
+  result_date: today,
 })
 const errors = reactive({
   control_result: [],
@@ -61,17 +62,15 @@ function onClose() {
 
 function clearFields() {
   Object.assign(formFields, {
-    blood_samples_taken_date: moment().format('YYYY-MM-DD'),
-    analysis_date: moment().format('YYYY-MM-DD'),
-    clinical_biochemical_laboratory_date: moment().format('YYYY-MM-DD'),
+    control_result: 'sterile',
+    result_date: today,
   })
 }
 
 function clearErrors() {
   Object.assign(errors, {
-    blood_samples_taken_date: [],
-    analysis_date: [],
-    clinical_biochemical_laboratory_date: [],
+    control_result: [],
+    result_date: [],
   })
 }
 
@@ -126,14 +125,7 @@ function clearError(error: string) {
             <tr>
               <th>{{ $t('Result_date') }}</th>
               <td>
-                <VField>
-                  <VControl>
-                    <IMaskDateInput
-                      v-model="formFields.result_date"
-                      :style="{ width: '50%' }"
-                    />
-                  </VControl>
-                </VField>
+                <DatePicker v-model="formFields.result_date" />
               </td>
             </tr>
           </tbody>

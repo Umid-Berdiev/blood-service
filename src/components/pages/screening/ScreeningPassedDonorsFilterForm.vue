@@ -26,6 +26,23 @@ const visitTypes = ref([
   { value: 'chargeable', label: t('Chargeable') },
 ])
 
+const canClear = ref(false)
+
+// hooks
+watch(
+  filterForm,
+  (newVal) => {
+    if (newVal)
+      canClear.value = Object.values(newVal).some((value) => {
+        if (value) {
+          return true
+        }
+        return false
+      })
+  },
+  { deep: true }
+)
+
 // functions
 const handleSearch = async () => {
   emits('search', filterForm)
@@ -49,22 +66,18 @@ const clearFilterForm = async () => {
       <div class="columns">
         <div class="column">
           <VField :label="$t('Start_date')">
-            <VControl>
-              <IMaskDateInput v-model="filterForm.start_date" />
-              <p class="help has-text-danger">
-                {{ errors.start_date[0] }}
-              </p>
-            </VControl>
+            <DatePicker v-model="filterForm.start_date" />
+            <p class="help has-text-danger">
+              {{ errors.start_date[0] }}
+            </p>
           </VField>
         </div>
         <div class="column">
           <VField :label="$t('End_date')">
-            <VControl>
-              <IMaskDateInput v-model="filterForm.end_date" />
-              <p class="help has-text-danger">
-                {{ errors.end_date[0] }}
-              </p>
-            </VControl>
+            <DatePicker v-model="filterForm.end_date" />
+            <p class="help has-text-danger">
+              {{ errors.end_date[0] }}
+            </p>
           </VField>
         </div>
         <div class="column">
@@ -102,19 +115,10 @@ const clearFilterForm = async () => {
       </div>
       <div class="navigation-buttons">
         <div class="buttons is-right">
-          <VButton
-            type="button"
-            color="warning"
-            bold
-            :disabled="isLoading"
-            tabindex="0"
-            @click="clearFilterForm"
-          >
-            {{ $t('Clear') }}
-          </VButton>
-          <VButton type="submit" color="primary" bold :loading="isLoading" tabindex="0">
+          <ClearButton :disabled="isLoading || !canClear" @clear="clearFilterForm" />
+          <SubmitButton :loading="isLoading">
             {{ $t('Search') }}
-          </VButton>
+          </SubmitButton>
         </div>
       </div>
     </form>

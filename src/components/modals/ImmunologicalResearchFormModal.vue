@@ -163,12 +163,8 @@ function onEmergencyNoticing() {
             </VField>
           </VFlexItem>
           <VFlexItem flex-basis="45%">
-            <VField horizontal>
-              <VLabel class="my-auto mr-3 is-size-6">{{ $t('Analysis_date') }}</VLabel>
-              <VControl>
-                <IMaskDateInput v-model="medicalExamination.data.date_analysis" />
-              </VControl>
-            </VField>
+            <span class="my-auto mr-3 is-size-6">{{ $t('Analysis_date') }}</span>
+            <DatePicker v-model="medicalExamination.data.date_analysis" />
           </VFlexItem>
           <VFlexItem flex-basis="45%">
             <h5>

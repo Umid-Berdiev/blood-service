@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
-import { isEmpty } from 'lodash'
 import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { useMainStore } from '/@src/stores/main'
@@ -30,32 +29,13 @@ useHead({
 })
 
 const apiData: ApiDataInterface<BuckControlSterilityItemInterface> = reactive({
-  data: [
-    // {
-    //   donation_date: '05.06.2022',
-    //   donation_code: '138800115200',
-    //   dose: '0',
-    //   quantity: '250',
-    //   component_name: 'Эритроцитная масса',
-    //   come_from: 'Из отдела переработки',
-    // },
-  ],
+  data: [],
   pagination: {
     total: 10,
     count: 10,
     per_page: 10,
     current_page: 1,
     total_pages: 1,
-  },
-})
-
-const currentPage = computed({
-  get: () => {
-    return apiData.pagination.current_page
-  },
-  set: async (page) => {
-    currentFilterData.page = page
-    await handleSearch(currentFilterData)
   },
 })
 
@@ -91,7 +71,17 @@ const currentFilterData = reactive({
 const clickedRowData: BuckControlSterilityItemInterface = reactive({})
 const isFormModalOpen = ref(false)
 
-await handleSearch(currentFilterData)
+// hooks
+watch(
+  () => apiData.pagination.current_page,
+  async (newVal) => {
+    if (newVal) {
+      currentFilterData.page = newVal
+      await handleSearch(currentFilterData)
+    }
+  },
+  { immediate: true }
+)
 
 // functions
 async function handleSearch(filterForm: any) {
@@ -218,7 +208,7 @@ function openBuckControlSterilityFormModal(patient: BuckControlSterilityItemInte
             <!--Table Pagination-->
             <VFlexPagination
               v-if="apiData.data.length"
-              v-model:current-page="currentPage"
+              v-model:current-page="apiData.pagination.current_page"
               class="mt-5"
               :item-per-page="apiData.pagination.per_page"
               :total-items="apiData.pagination.total"
