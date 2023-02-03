@@ -50,9 +50,19 @@ const filterErrors = reactive({
   component_id: [],
 })
 
-// await handleSearch(currentFilterData)
-
 // hooks
+watch(
+  () => apiData.pagination.current_page,
+  async (newVal) => {
+    if (newVal) {
+      await handleSearch()
+    }
+  },
+  {
+    immediate: true,
+  }
+)
+
 watch(isFormModalOpen, function (newVal: boolean) {
   if (newVal === false) {
     Object.assign(selectedRow, {})
@@ -65,10 +75,10 @@ function openFormModal(item: any) {
   isFormModalOpen.value = true
 }
 
-async function handleSearch(filterForm: any) {
+async function handleSearch() {
   try {
     isLoading.value = true
-    const params = { ...filterForm, page: apiData.pagination.current_page }
+    const params = { page: apiData.pagination.current_page }
     // const res = await patientsListForScreening(params)
     // Object.assign(apiData, res.result)
   } catch (error: any) {
@@ -83,8 +93,7 @@ function clearError(prop: string) {
 }
 
 async function clearFilterForm() {
-  // await fetchData()
-  apiData.data = []
+  await handleSearch()
 }
 </script>
 

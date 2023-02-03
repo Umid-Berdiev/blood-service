@@ -132,8 +132,7 @@ function clearError(prop: string) {
 }
 
 async function clearFilterForm() {
-  // await fetchData()
-  apiData.data = []
+  await handleSearch(currentFilterData)
 }
 
 function openFormModal(row: any) {

@@ -1,11 +1,8 @@
 <script setup lang="ts">
-import { formatDate } from '@vueuse/core'
 import { useHead } from '@vueuse/head'
-import { isEmpty } from 'lodash'
 import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { useMainStore } from '/@src/stores/main'
-
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { patientsList } from '/@src/utils/api/patient'
 import { ApiDataInterface, PatientInterface } from '/@src/utils/interfaces'
@@ -94,7 +91,6 @@ const columns = {
   },
 } as const
 
-const incomingCallerId = ref<number>()
 const errors = reactive({
   start_date: [],
   end_date: [],
@@ -106,8 +102,6 @@ const currentFilterData = reactive({
   status: 6,
 })
 
-// await handleSearch(currentFilterData)
-
 // hooks
 watch(
   () => apiData.pagination.current_page,
@@ -115,6 +109,9 @@ watch(
     if (newVal) {
       await handleSearch(currentFilterData)
     }
+  },
+  {
+    immediate: true,
   }
 )
 // functions
@@ -141,8 +138,7 @@ function clearError(prop: string) {
 }
 
 async function clearFilterForm() {
-  // await fetchData()
-  apiData.data = []
+  await handleSearch(currentFilterData)
 }
 </script>
 

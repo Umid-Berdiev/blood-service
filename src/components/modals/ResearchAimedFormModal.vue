@@ -30,9 +30,10 @@ const isLoading = ref(false)
 const errors = reactive({
   date_analysis: [],
 })
+const today = formatDate(new Date(), 'YYYY-MM-DD')
 const medicalExamination = reactive({
   data: {
-    date_analysis: formatDate(new Date(), 'YYYY-MM-DD'),
+    date_analysis: today,
     hbsag: false,
     hbsag_test_system: '',
     hiv: false,
@@ -55,6 +56,7 @@ watch(
     if (newVal) {
       const res = await fetchRequestsForHemotransmissiveLaboratory(newVal)
       Object.assign(medicalExamination, res.result)
+      medicalExamination.data.date_analysis ||= today
     }
   }
 )
@@ -100,7 +102,7 @@ function onClose() {
 
 function clearFields() {
   medicalExamination.data = {
-    date_analysis: formatDate(new Date(), 'YYYY-MM-DD'),
+    date_analysis: today,
     hbsag: false,
     hbsag_test_system: '',
     hiv: false,

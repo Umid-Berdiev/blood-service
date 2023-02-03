@@ -29,8 +29,6 @@ const apiData: ApiDataInterface<PatientInterface> = reactive({
   },
 })
 
-const currentPage = ref(1)
-
 const errors = reactive({
   visit_type_id: [],
   donation_type_id: [],
@@ -48,11 +46,14 @@ const isEmergencyNoticeFormModalOpen = ref(false)
 await handleSearch(currentFilterData)
 
 // hooks
-watch(currentPage, async (newVal) => {
-  if (newVal) {
-    await handleSearch(currentFilterData)
+watch(
+  () => apiData.pagination.current_page,
+  async (newVal) => {
+    if (newVal) {
+      await handleSearch(currentFilterData)
+    }
   }
-})
+)
 
 // functions
 async function handleSearch(filterForm: any) {
@@ -78,7 +79,7 @@ function clearError(prop: string) {
 }
 
 async function clearFilterForm() {
-  // await fetchData()
+  await handleSearch(currentFilterData)
   apiData.data = []
 }
 
@@ -128,7 +129,7 @@ function clearClickedRowData() {
       </div>
     </div>
     <TableForLaboratories
-      v-model:current-page="currentPage"
+      v-model:current-page="apiData.pagination.current_page"
       :data="apiData"
       :is-loading="isLoading"
       @open-form-modal="openBloodSamplingFormModal"
