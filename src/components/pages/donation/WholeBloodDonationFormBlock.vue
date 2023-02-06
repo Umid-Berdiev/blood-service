@@ -1,12 +1,6 @@
 <script setup lang="ts">
 import { DonationContainerInterface } from '/@src/utils/interfaces'
 
-// export interface WholeBloodDonationFormProps {
-//   container_id: number | null
-//   hemoconservative: number | null
-//   laboratory: number | null
-// }
-
 const props = defineProps<{
   formState: any
   containerList: DonationContainerInterface[]

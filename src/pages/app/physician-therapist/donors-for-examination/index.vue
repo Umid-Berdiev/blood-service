@@ -84,7 +84,7 @@ const columns = {
 } as const
 
 const donorStatuses = ref([{ id: 0, name: t('All') }])
-const selectedDonorStatus = ref('')
+const selectedDonorStatus = ref(1)
 const selectedPatient = ref<PatientInterface | null>(null)
 
 // hooks
@@ -97,7 +97,7 @@ watch(
   () => apiData.pagination.current_page,
   async (newVal) => {
     if (newVal) {
-      await fetchData()
+      await fetchData(newVal)
     }
   }
 )
@@ -106,26 +106,27 @@ watch(
   () => selectedDonorStatus.value,
   async (newVal) => {
     if (newVal) await fetchData()
-    else
-      Object.assign(apiData, {
-        data: [],
-        pagination: {
-          total: 10,
-          count: 10,
-          per_page: 10,
-          current_page: 1,
-          total_pages: 1,
-        },
-      })
-  }
+    // else
+    //   Object.assign(apiData, {
+    //     data: [],
+    //     pagination: {
+    //       total: 10,
+    //       count: 10,
+    //       per_page: 10,
+    //       current_page: 1,
+    //       total_pages: 1,
+    //     },
+    //   })
+  },
+  { immediate: true }
 )
 
 // functions
-async function fetchData() {
+async function fetchData(page: number = 1) {
   try {
     isLoading.value = true
     const params = {
-      page: apiData.pagination.current_page,
+      page,
       status_id: selectedDonorStatus.value,
     }
     const res = await patientsListForCandidate(params)
@@ -239,26 +240,7 @@ async function submitFinish() {
                 </div>
 
                 <!-- This is the empty state -->
-                <div v-if="apiData.data.length === 0" class="flex-list-inner">
-                  <VPlaceholderSection
-                    :title="$t('No_data')"
-                    :subtitle="$t('There_is_no_data_that_match_your_query')"
-                    class="my-6"
-                  >
-                    <template #image>
-                      <img
-                        class="light-image"
-                        src="/@src/assets/illustrations/placeholders/search-7.svg"
-                        alt=""
-                      />
-                      <img
-                        class="dark-image"
-                        src="/@src/assets/illustrations/placeholders/search-7-dark.svg"
-                        alt=""
-                      />
-                    </template>
-                  </VPlaceholderSection>
-                </div>
+                <NoDataPlaceholder v-if="apiData.data.length === 0" />
               </template>
 
               <!-- This is the body cell slot -->

@@ -2,16 +2,6 @@
 import { DonationContainerInterface } from '/@src/utils/interfaces'
 import { apheresisMethods } from '/@src/utils/api/donation'
 
-// export interface PlasmapheresisFormProps {
-//   apheresis_method: 'manual' | 'device'
-//   first_container_id: number | null
-//   second_container_id: number | null
-//   first_hemoconservative: number | null
-//   second_hemoconservative: number | null
-//   plasma: number | null
-//   laboratory: number | null
-// }
-
 const props = defineProps<{
   formState: any
   containerList: DonationContainerInterface[]

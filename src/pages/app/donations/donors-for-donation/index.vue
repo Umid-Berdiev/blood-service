@@ -53,7 +53,7 @@ const columns = {
   },
   visit_date: {
     label: t('Visit_date'),
-    format: (value: string, row: any) => rrow.last_visit?.created_at,
+    format: (value: string, row: any) => row.last_visit?.created_at,
   },
   donation_type: {
     label: t('Donation_type'),
@@ -80,6 +80,7 @@ const currentFilterData = reactive({
   donation_type_id: null,
   donation_code: null,
   category_id: null,
+  page: 1,
 })
 const clickedRowData = ref<PatientInterface | null>(null)
 const isFormModalOpen = ref(false)
@@ -103,6 +104,7 @@ watch(
   () => apiData.pagination.current_page,
   async (newVal) => {
     if (newVal) {
+      currentFilterData.page = newVal
       await handleSearch(currentFilterData)
     }
   }
@@ -113,12 +115,8 @@ async function handleSearch(filterForm: any) {
   try {
     isLoading.value = true
     Object.assign(currentFilterData, filterForm)
-    const params = {
-      ...filterForm,
-      page: apiData.pagination.current_page,
-    }
 
-    const res = await patientsListForDonation(params)
+    const res = await patientsListForDonation(filterForm)
     Object.assign(apiData, res.result)
   } catch (error: any) {
     Object.assign(errors, error.response?.data?.errors)
@@ -174,10 +172,8 @@ function clearClickedRowData() {
         <DonorsListFilterForm
           :is-loading="isLoading"
           :donation-types="donationTypes"
-          :errors="errors"
           @search="handleSearch"
           @clear-form="clearFilterForm"
-          @clear-error="clearError"
         />
       </div>
     </div>
@@ -217,26 +213,7 @@ function clearClickedRowData() {
                 </div>
 
                 <!-- This is the empty state -->
-                <div v-if="apiData.data.length === 0" class="flex-list-inner">
-                  <VPlaceholderSection
-                    :title="$t('No_data')"
-                    :subtitle="$t('There_is_no_data_that_match_your_query')"
-                    class="my-6"
-                  >
-                    <template #image>
-                      <img
-                        class="light-image"
-                        src="/@src/assets/illustrations/placeholders/search-7.svg"
-                        alt=""
-                      />
-                      <img
-                        class="dark-image"
-                        src="/@src/assets/illustrations/placeholders/search-7-dark.svg"
-                        alt=""
-                      />
-                    </template>
-                  </VPlaceholderSection>
-                </div>
+                <NoDataPlaceholder v-if="apiData.data.length === 0" />
               </template>
 
               <!-- This is the body cell slot -->

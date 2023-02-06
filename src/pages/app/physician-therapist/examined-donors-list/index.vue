@@ -100,6 +100,7 @@ const errors = reactive({
 })
 const currentFilterData = reactive({
   status: 6,
+  page: 1,
 })
 
 // hooks
@@ -107,6 +108,7 @@ watch(
   () => apiData.pagination.current_page,
   async function (newVal) {
     if (newVal) {
+      currentFilterData.page = newVal
       await handleSearch(currentFilterData)
     }
   },
@@ -114,16 +116,16 @@ watch(
     immediate: true,
   }
 )
+
 // functions
 async function handleSearch(filterForm: any) {
   try {
     Object.assign(currentFilterData, {
       ...currentFilterData,
       ...filterForm,
-      page: apiData.pagination.current_page,
     })
     isLoading.value = true
-    const res = await patientsList(currentFilterData)
+    const res = await patientsList(filterForm)
     Object.assign(apiData, res.result)
   } catch (error: any) {
     notif.error(error.message)
@@ -217,26 +219,7 @@ async function clearFilterForm() {
                 </div>
 
                 <!-- This is the empty state -->
-                <div v-if="apiData.data.length === 0" class="flex-list-inner">
-                  <VPlaceholderSection
-                    :title="$t('No_data')"
-                    :subtitle="$t('There_is_no_data_that_match_your_query')"
-                    class="my-6"
-                  >
-                    <template #image>
-                      <img
-                        class="light-image"
-                        src="/@src/assets/illustrations/placeholders/search-7.svg"
-                        alt=""
-                      />
-                      <img
-                        class="dark-image"
-                        src="/@src/assets/illustrations/placeholders/search-7-dark.svg"
-                        alt=""
-                      />
-                    </template>
-                  </VPlaceholderSection>
-                </div>
+                <NoDataPlaceholder v-if="apiData.data.length === 0" />
               </template>
 
               <!-- This is the body cell slot -->
@@ -247,8 +230,6 @@ async function clearFilterForm() {
                     :to="`/app/physician-therapist/donors-for-examination/${row.id}`"
                   >
                     {{ row.first_name }} {{ row.last_name }} {{ row.father_name }}
-                    <!-- <span class="dark-text">
-                    </span> -->
                   </RouterLink>
                 </template>
               </template>

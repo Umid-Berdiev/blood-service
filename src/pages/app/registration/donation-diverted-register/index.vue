@@ -3,7 +3,6 @@ import { useHead } from '@vueuse/head'
 import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
-import FilterForm from '../../../../components/pages/registration/RegistrationFilterForm.vue'
 import {
   ApiDataInterface,
   PatientInterface,
@@ -11,7 +10,6 @@ import {
 } from '/@src/utils/interfaces'
 import { useMainStore } from '/@src/stores/main'
 import { patientsListRejected } from '/@src/utils/api/patient'
-import { isEmpty } from 'lodash'
 
 const router = useRouter()
 const notif = useNotyf()
@@ -41,16 +39,6 @@ const apiData: ApiDataInterface<PatientInterface> = reactive({
     total_pages: 1,
   },
 })
-
-// const currentPage = computed({
-//   get: () => {
-//     return apiData.pagination.current_page
-//   },
-//   set: async (page) => {
-//     currentFilterData.page = page
-//     await handleSearch(currentFilterData)
-//   },
-// })
 
 const currentFilterData = reactive({
   page: 1,
@@ -90,10 +78,19 @@ const columns = {
   },
 } as const
 
-const incomingCallerId = ref<number>()
+// hooks
+watch(
+  () => apiData.pagination.current_page,
+  async (newVal) => {
+    if (newVal) {
+      currentFilterData.page = newVal
+      await handleSearch(currentFilterData)
+    }
+  },
+  { immediate: true }
+)
 
-await handleSearch(currentFilterData)
-
+// functions
 async function handleSearch(filterForm: any) {
   try {
     Object.assign(currentFilterData, filterForm)
@@ -105,10 +102,6 @@ async function handleSearch(filterForm: any) {
   } finally {
     isLoading.value = false
   }
-}
-
-function clearError(prop: string) {
-  errors[prop] = ''
 }
 
 async function clearFilterForm() {
@@ -136,37 +129,25 @@ function printList() {
             },
             {
               label: $t('Registration'),
-              // to: { name: '/app/registration/unified-donor-register/' },
             },
             {
               label: $t('Donation-diverted-register'),
-              to: { name: '/app/registration/donation-diverted-register/' },
             },
           ]"
         />
       </VFlexItem>
       <VFlexItem>
         <VButtons>
-          <VButton
-            outlined
-            rounded
-            color="info"
-            icon="feather:printer"
-            @click.prevent="printList"
-          >
-            {{ $t('Print') }}
-          </VButton>
+          <PrintButton @click.prevent="printList" />
         </VButtons>
       </VFlexItem>
     </VFlex>
     <div class="columns mt-1">
       <div class="column">
-        <FilterForm
+        <RegistrationFilterForm
           :is-loading="isLoading"
-          :errors="errors"
           @search="handleSearch"
           @clear-form="clearFilterForm"
-          @clear-error="clearError"
         />
       </div>
     </div>
@@ -183,17 +164,6 @@ function printList() {
             Note that we can not destructure it
           -->
           <template #default>
-            <!-- We can place any content inside the default slot-->
-            <!-- <VFlexTableToolbar>
-              <template #left>
-                <SearchInput v-model="searchInput" />
-              </template>
-
-              <template #right>
-                <PerPageSelect v-model="data.pagination.per_page" />
-              </template>
-            </VFlexTableToolbar> -->
-
             <!--
               The VFlexTable "data" and "columns" props
               will be inherited from parent VFlexTableWrapper
@@ -221,26 +191,7 @@ function printList() {
                 </div>
 
                 <!-- This is the empty state -->
-                <div v-if="apiData.data.length === 0" class="flex-list-inner">
-                  <VPlaceholderSection
-                    :title="$t('No_data')"
-                    :subtitle="$t('There_is_no_data_that_match_your_query')"
-                    class="my-6"
-                  >
-                    <template #image>
-                      <img
-                        class="light-image"
-                        src="/@src/assets/illustrations/placeholders/search-7.svg"
-                        alt=""
-                      />
-                      <img
-                        class="dark-image"
-                        src="/@src/assets/illustrations/placeholders/search-7-dark.svg"
-                        alt=""
-                      />
-                    </template>
-                  </VPlaceholderSection>
-                </div>
+                <NoDataPlaceholder v-if="apiData.data.length === 0" />
               </template>
             </VFlexTable>
 

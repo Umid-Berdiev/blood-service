@@ -4,7 +4,7 @@ import { fetchDonationTypes } from '/@src/utils/api/additional'
 const props = withDefaults(
   defineProps<{
     donationType: number | null
-    error: string
+    error?: string
   }>(),
   {
     error: '',
@@ -24,7 +24,12 @@ const computedDonationType = computed({
   },
 })
 
-const donationTypes = await fetchDonationTypes().then((res) => res.result)
+const donationTypes = ref([])
+
+// hooks
+onMounted(async () => {
+  donationTypes.value = await fetchDonationTypes().then((res) => res.result)
+})
 </script>
 
 <template>

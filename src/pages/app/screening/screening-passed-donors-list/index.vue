@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { formatDate } from '@vueuse/core'
 import { useHead } from '@vueuse/head'
-import { isEmpty } from 'lodash'
 import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { useMainStore } from '/@src/stores/main'
@@ -30,16 +29,6 @@ const apiData: ApiDataInterface<PatientInterface> = reactive({
     per_page: 10,
     current_page: 1,
     total_pages: 1,
-  },
-})
-
-const currentPage = computed({
-  get: () => {
-    return apiData.pagination.current_page
-  },
-  set: async (page) => {
-    currentFilterData.page = page
-    await handleSearch(currentFilterData)
   },
 })
 
@@ -108,7 +97,6 @@ const columns = {
   },
 } as const
 
-const incomingCallerId = ref<number>()
 const errors = reactive({
   start_date: [],
   end_date: [],
@@ -121,10 +109,22 @@ const currentFilterData = reactive({
 
 await handleSearch(currentFilterData)
 
+// hooks
+watch(
+  () => apiData.pagination.current_page,
+  async (newVal) => {
+    if (newVal) {
+      currentFilterData.page = newVal
+      await handleSearch(currentFilterData)
+    }
+  }
+)
+
+// functions
 async function handleSearch(filterForm: any) {
   try {
-    Object.assign(currentFilterData, filterForm)
     isLoading.value = true
+    Object.assign(currentFilterData, filterForm)
     const res = await fetchScreeningCompletedDonorsList(filterForm)
     Object.assign(apiData, res.result)
   } catch (error: any) {
@@ -132,10 +132,6 @@ async function handleSearch(filterForm: any) {
   } finally {
     isLoading.value = false
   }
-}
-
-function clearError(prop: string) {
-  errors[prop] = ''
 }
 
 async function clearFilterForm() {
@@ -173,10 +169,8 @@ async function clearFilterForm() {
       <div class="column">
         <ScreeningPassedDonorsFilterForm
           :is-loading="isLoading"
-          :errors="errors"
           @search="handleSearch"
           @clear-form="clearFilterForm"
-          @clear-error="clearError"
         />
       </div>
     </div>
@@ -216,26 +210,7 @@ async function clearFilterForm() {
                 </div>
 
                 <!-- This is the empty state -->
-                <div v-if="apiData.data.length === 0" class="flex-list-inner">
-                  <VPlaceholderSection
-                    :title="$t('No_data')"
-                    :subtitle="$t('There_is_no_data_that_match_your_query')"
-                    class="my-6"
-                  >
-                    <template #image>
-                      <img
-                        class="light-image"
-                        src="/@src/assets/illustrations/placeholders/search-7.svg"
-                        alt=""
-                      />
-                      <img
-                        class="dark-image"
-                        src="/@src/assets/illustrations/placeholders/search-7-dark.svg"
-                        alt=""
-                      />
-                    </template>
-                  </VPlaceholderSection>
-                </div>
+                <NoDataPlaceholder v-if="apiData.data.length === 0" />
               </template>
 
               <!-- This is the body cell slot -->
@@ -251,7 +226,7 @@ async function clearFilterForm() {
             <!--Table Pagination-->
             <VFlexPagination
               v-if="apiData.data.length"
-              v-model:current-page="currentPage"
+              v-model:current-page="apiData.pagination.current_page"
               class="mt-5"
               :item-per-page="apiData.pagination.per_page"
               :total-items="apiData.pagination.total"

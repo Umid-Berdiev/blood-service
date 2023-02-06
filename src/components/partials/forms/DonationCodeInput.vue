@@ -2,7 +2,7 @@
 const props = withDefaults(
   defineProps<{
     donationCode: string
-    error: string
+    error?: string
   }>(),
   {
     donationCode: '',

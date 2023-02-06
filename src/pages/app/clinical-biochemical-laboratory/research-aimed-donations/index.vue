@@ -38,6 +38,7 @@ const currentFilterData = reactive({
   visit_type_id: '',
   donation_type_id: null,
   donation_code: '',
+  page: 1,
 })
 const clickedRowData = ref<PatientInterface | null>(null)
 const isFormModalOpen = ref(false)
@@ -50,6 +51,7 @@ watch(
   () => apiData.pagination.current_page,
   async (newVal) => {
     if (newVal) {
+      currentFilterData.page = newVal
       await handleSearch(currentFilterData)
     }
   }
@@ -60,12 +62,8 @@ async function handleSearch(filterForm: any) {
   try {
     isLoading.value = true
     Object.assign(currentFilterData, filterForm)
-    const params = {
-      ...filterForm,
-      page: apiData.pagination.current_page,
-    }
 
-    const res = await fetchPatientsListForLaboratories(params)
+    const res = await fetchPatientsListForLaboratories(filterForm)
     Object.assign(apiData, res.result)
   } catch (error: any) {
     Object.assign(errors, error.response?.data?.errors)
@@ -74,13 +72,8 @@ async function handleSearch(filterForm: any) {
   }
 }
 
-function clearError(prop: string) {
-  errors[prop] = ''
-}
-
 async function clearFilterForm() {
   await handleSearch(currentFilterData)
-  apiData.data = []
 }
 
 function openBloodSamplingFormModal(patient: PatientInterface) {
@@ -121,10 +114,8 @@ function clearClickedRowData() {
       <div class="column">
         <FilterForm
           :is-loading="isLoading"
-          :errors="errors"
           @search="handleSearch"
           @clear-form="clearFilterForm"
-          @clear-error="clearError"
         />
       </div>
     </div>

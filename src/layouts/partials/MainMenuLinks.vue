@@ -3,14 +3,13 @@ const route = useRoute()
 const openSideblockLinks = ref('')
 
 // hooks
-onMounted(function () {
-  const el = document.querySelector('ul#sidebar-menu a.router-link-exact-active')
-  const elParent = el?.closest('li.collapse-links')
-  // console.log({ el })
-  // console.log({ elParent })
-
-  elParent?.scrollIntoView()
-})
+// onMounted(function () {
+// const el = document.querySelector('ul#sidebar-menu a.router-link-exact-active')
+// const elParent = el?.closest('li.collapse-links')
+// console.log({ el })
+// console.log({ elParent })
+// elParent?.scrollIntoView()
+// })
 
 watch(
   () => route.path,

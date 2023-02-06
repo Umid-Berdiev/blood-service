@@ -2,14 +2,12 @@
 import { isEmpty, values } from 'lodash'
 import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
-import { SearchErrorInterface } from '/@src/utils/interfaces'
 
 defineProps<{
   isLoading: boolean
-  errors: SearchErrorInterface
 }>()
 
-const emits = defineEmits(['search', 'clearError', 'clearForm'])
+const emits = defineEmits(['search', 'clearForm'])
 
 const { t } = useI18n()
 const notif = useNotyf()
@@ -38,15 +36,35 @@ const computedPassportId = computed({
     }
   },
 })
+const passportIMaskInputOptions = ref({
+  mask: 'aa0000000',
+  prepare: function (str: string) {
+    return str.toUpperCase()
+  },
+})
+const canClear = ref(false)
+
+// hooks
+watch(
+  filterForm,
+  (newVal) => {
+    if (newVal)
+      canClear.value = Object.values(newVal).some((value) => {
+        if (value) {
+          return true
+        }
+        return false
+      })
+  },
+  { deep: true }
+)
+
+// functions
 const handleSearch = async () => {
-  if (!values(filterForm.value).every(isEmpty)) {
-    emits('search', filterForm.value)
-  } else notif.error(t('Form_fields_are_empty'))
+  emits('search', filterForm.value)
 }
 
 const clearFilterForm = async () => {
-  console.log('ok')
-
   filterForm.value.last_name = ''
   filterForm.value.first_name = ''
   filterForm.value.father_name = ''
@@ -67,17 +85,9 @@ const clearFilterForm = async () => {
               <VIMaskInput
                 v-model.trim="computedPassportId"
                 class="input"
-                :options="{
-                  mask: 'aa0000000',
-                  prepare: function (str) {
-                    return str.toUpperCase()
-                  },
-                }"
+                :options="passportIMaskInputOptions"
                 :placeholder="$t('Passport_series_number')"
               />
-              <p class="help has-text-danger">
-                {{ errors.passport_series || errors.passport_number }}
-              </p>
             </VControl>
           </VField>
         </div>
@@ -88,9 +98,7 @@ const clearFilterForm = async () => {
                 v-model.trim="filterForm.last_name"
                 type="text"
                 :placeholder="$t('Last_name')"
-                @input="emits('clearError', 'last_name')"
               />
-              <p class="help has-text-danger">{{ errors.last_name }}</p>
             </VControl>
           </VField>
         </div>

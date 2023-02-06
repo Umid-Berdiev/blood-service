@@ -32,16 +32,6 @@ const apiData: ApiDataInterface<PatientInterface> = reactive({
   },
 })
 
-const currentPage = computed({
-  get: () => {
-    return apiData.pagination.current_page
-  },
-  set: async (page) => {
-    currentFilterData.page = page
-    await handleSearch(currentFilterData)
-  },
-})
-
 const columns = {
   orderNumber: {
     format: (value: any, row: any, index: number) => `${index + 1}`,
@@ -102,7 +92,6 @@ const columns = {
   },
 } as const
 
-const incomingCallerId = ref<number>()
 const errors = reactive({
   donor_category_id: [],
   visit_type: [],
@@ -116,6 +105,18 @@ const isPrimaryScreeningModalOpen = ref(false)
 
 await handleSearch(currentFilterData)
 
+// hooks
+watch(
+  () => apiData.pagination.current_page,
+  async (newVal) => {
+    if (newVal) {
+      currentFilterData.page = newVal
+      await handleSearch(currentFilterData)
+    }
+  }
+)
+
+// functions
 async function handleSearch(filterForm: any) {
   try {
     Object.assign(currentFilterData, filterForm)
@@ -171,10 +172,8 @@ function openPrimaryScreeningModal(patient: PatientInterface) {
       <div class="column">
         <ForScreeningDonorsFilterForm
           :is-loading="isLoading"
-          :errors="errors"
           @search="handleSearch"
           @clear-form="clearFilterForm"
-          @clear-error="clearError"
         />
       </div>
     </div>
@@ -214,26 +213,7 @@ function openPrimaryScreeningModal(patient: PatientInterface) {
                 </div>
 
                 <!-- This is the empty state -->
-                <div v-if="apiData.data.length === 0" class="flex-list-inner">
-                  <VPlaceholderSection
-                    :title="$t('No_data')"
-                    :subtitle="$t('There_is_no_data_that_match_your_query')"
-                    class="my-6"
-                  >
-                    <template #image>
-                      <img
-                        class="light-image"
-                        src="/@src/assets/illustrations/placeholders/search-7.svg"
-                        alt=""
-                      />
-                      <img
-                        class="dark-image"
-                        src="/@src/assets/illustrations/placeholders/search-7-dark.svg"
-                        alt=""
-                      />
-                    </template>
-                  </VPlaceholderSection>
-                </div>
+                <NoDataPlaceholder v-if="apiData.data.length === 0" />
               </template>
 
               <!-- This is the body cell slot -->
@@ -245,8 +225,6 @@ function openPrimaryScreeningModal(patient: PatientInterface) {
                     @click="openPrimaryScreeningModal(row)"
                   >
                     {{ row.first_name }} {{ row.last_name }} {{ row.father_name }}
-                    <!-- <span class="dark-text">
-                    </span> -->
                   </a>
                 </template>
               </template>

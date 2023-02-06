@@ -40,16 +40,6 @@ const apiData: ApiDataInterface<PatientInterface> = reactive({
   },
 })
 
-const currentPage = computed({
-  get: () => {
-    return apiData.pagination.current_page
-  },
-  set: async (page) => {
-    currentFilterData.page = page
-    await handleSearch(currentFilterData)
-  },
-})
-
 const currentFilterData = reactive({
   page: 1,
 })
@@ -84,6 +74,19 @@ const columns = {
   },
 } as const
 
+// hooks
+watch(
+  () => apiData.pagination.current_page,
+  async (newVal) => {
+    if (newVal) {
+      currentFilterData.page = newVal
+      await handleSearch(currentFilterData)
+    }
+  },
+  { immediate: true }
+)
+
+// functions
 async function handleSearch(filterForm: any) {
   try {
     Object.assign(currentFilterData, filterForm)
@@ -97,20 +100,12 @@ async function handleSearch(filterForm: any) {
   }
 }
 
-function clearError(prop: string) {
-  errors[prop] = ''
-}
-
 async function clearFilterForm() {
   await handleSearch(currentFilterData)
 }
 
 function addPatient() {
   router.push('/app/registration/register-donors')
-}
-
-function onView(rowId: string | number) {
-  router.push(`/app/registration/unified-donor-register/${rowId}#details`)
 }
 
 function printList() {
@@ -134,35 +129,17 @@ function printList() {
             },
             {
               label: $t('Registration'),
-              // to: { name: '/app/registration/unified-donor-register/' },
             },
             {
               label: $t('Unified-donor-register'),
-              to: { name: '/app/registration/unified-donor-register/' },
             },
           ]"
         />
       </VFlexItem>
       <VFlexItem>
         <VButtons>
-          <VButton
-            outlined
-            rounded
-            color="primary"
-            icon="feather:plus"
-            @click.prevent="addPatient"
-          >
-            {{ $t('Add') }}
-          </VButton>
-          <VButton
-            outlined
-            rounded
-            color="info"
-            icon="feather:printer"
-            @click.prevent="printList"
-          >
-            {{ $t('Print') }}
-          </VButton>
+          <AddButton @click.prevent="addPatient" />
+          <PrintButton @click.prevent="printList" />
         </VButtons>
       </VFlexItem>
     </VFlex>
@@ -170,10 +147,8 @@ function printList() {
       <div class="column">
         <RegistrationFilterForm
           :is-loading="isLoading"
-          :errors="errors"
           @search="handleSearch"
           @clear-form="clearFilterForm"
-          @clear-error="clearError"
         />
       </div>
     </div>
@@ -213,26 +188,7 @@ function printList() {
                 </div>
 
                 <!-- This is the empty state -->
-                <div v-if="apiData.data.length === 0" class="flex-list-inner">
-                  <VPlaceholderSection
-                    :title="$t('No_data')"
-                    :subtitle="$t('There_is_no_data_that_match_your_query')"
-                    class="my-6"
-                  >
-                    <template #image>
-                      <img
-                        class="light-image"
-                        src="/@src/assets/illustrations/placeholders/search-7.svg"
-                        alt=""
-                      />
-                      <img
-                        class="dark-image"
-                        src="/@src/assets/illustrations/placeholders/search-7-dark.svg"
-                        alt=""
-                      />
-                    </template>
-                  </VPlaceholderSection>
-                </div>
+                <NoDataPlaceholder v-if="apiData.data.length === 0" />
               </template>
 
               <!-- This is the body cell slot -->
@@ -252,7 +208,7 @@ function printList() {
             <!--Table Pagination-->
             <VFlexPagination
               v-if="apiData.data.length"
-              v-model:current-page="currentPage"
+              v-model:current-page="apiData.pagination.current_page"
               class="mt-5"
               :item-per-page="apiData.pagination.per_page"
               :total-items="apiData.pagination.total"

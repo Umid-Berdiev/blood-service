@@ -13,7 +13,6 @@ const { t } = useI18n()
 const mainStore = useMainStore()
 const isLoading = ref(false)
 const viewWrapper = useViewWrapper()
-const selectedRowId = ref<number | null>(null)
 
 viewWrapper.setPageTitle(t('Processing'))
 useHead({
@@ -41,9 +40,8 @@ const currentFilterData = reactive({
   donation_type_id: null,
   donation_code: '',
   category_id: '',
+  page: 1,
 })
-
-await handleSearch(currentFilterData)
 
 // hooks
 watch(isFormModalOpen, function (newVal: boolean) {
@@ -51,6 +49,17 @@ watch(isFormModalOpen, function (newVal: boolean) {
     selectedRow.value = null
   }
 })
+
+watch(
+  () => apiData.pagination.current_page,
+  async (newVal) => {
+    if (newVal) {
+      currentFilterData.page = newVal
+      await handleSearch(currentFilterData)
+    }
+  },
+  { immediate: true }
+)
 
 // functions
 function openFormModal(item: any) {
@@ -61,18 +70,15 @@ function openFormModal(item: any) {
 async function handleSearch(filterForm: any) {
   try {
     isLoading.value = true
-    const params = { ...filterForm, page: apiData.pagination.current_page }
-    const res = await fetchDonationsForProcessing(params)
+    Object.assign(currentFilterData, filterForm)
+
+    const res = await fetchDonationsForProcessing(filterForm)
     Object.assign(apiData, res.result)
   } catch (error: any) {
     Object.assign(filterErrors, error.response?.data?.errors)
   } finally {
     isLoading.value = false
   }
-}
-
-function clearError(prop: string) {
-  errors[prop] = ''
 }
 
 async function clearFilterForm() {
@@ -108,10 +114,8 @@ async function clearFilterForm() {
       <div class="column">
         <DonationForProcessingFilter
           :is-loading="isLoading"
-          :errors="filterErrors"
           @search="handleSearch"
           @clear-form="clearFilterForm"
-          @clear-error="clearError"
         />
       </div>
     </div>
@@ -119,26 +123,7 @@ async function clearFilterForm() {
       <div class="column">
         <VCard>
           <div class="table-container">
-            <div v-if="apiData.data.length === 0" class="flex-list-inner">
-              <VPlaceholderSection
-                :title="$t('No_data')"
-                :subtitle="$t('There_is_no_data_that_match_your_query')"
-                class="my-6"
-              >
-                <template #image>
-                  <img
-                    class="light-image"
-                    src="/@src/assets/illustrations/placeholders/search-7.svg"
-                    alt=""
-                  />
-                  <img
-                    class="dark-image"
-                    src="/@src/assets/illustrations/placeholders/search-7-dark.svg"
-                    alt=""
-                  />
-                </template>
-              </VPlaceholderSection>
-            </div>
+            <NoDataPlaceholder v-if="apiData.data.length === 0" />
             <table v-else class="table is-hoverable is-fullwidth">
               <thead>
                 <tr>

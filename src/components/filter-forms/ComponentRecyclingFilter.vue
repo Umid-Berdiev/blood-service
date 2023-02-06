@@ -4,15 +4,11 @@ import { useNotyf } from '/@src/composable/useNotyf'
 
 interface FilterFormProps {
   isLoading: boolean
-  errors: {
-    donation_code: string[]
-    donation_type_id: string[]
-  }
 }
 
 defineProps<FilterFormProps>()
 
-const emits = defineEmits(['search', 'clearError', 'clearForm'])
+const emits = defineEmits(['search', 'clearForm'])
 
 const { t } = useI18n()
 const notif = useNotyf()
@@ -68,7 +64,6 @@ const clearFilterForm = async () => {
                 :attrs="{ id }"
                 :placeholder="$t('Donation_code')"
               />
-              <p class="help has-text-danger">{{ errors.donation_code[0] }}</p>
             </VControl>
           </VField>
         </div>
@@ -87,7 +82,6 @@ const clearFilterForm = async () => {
                 label="name"
                 value-prop="id"
               />
-              <p class="help has-text-danger">{{ errors.donation_type_id[0] }}</p>
             </VControl>
           </VField>
         </div>

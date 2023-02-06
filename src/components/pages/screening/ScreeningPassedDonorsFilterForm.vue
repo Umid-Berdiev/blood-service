@@ -6,10 +6,9 @@ import { patientCategoriesList } from '/@src/utils/api/patient'
 
 defineProps<{
   isLoading: boolean
-  errors: {}
 }>()
 
-const emits = defineEmits(['search', 'clearError', 'clearForm'])
+const emits = defineEmits(['search', 'clearForm'])
 
 const { t } = useI18n()
 const notif = useNotyf()
@@ -65,19 +64,12 @@ const clearFilterForm = async () => {
     <form @submit.prevent="handleSearch">
       <div class="columns">
         <div class="column">
-          <VField :label="$t('Start_date')">
-            <DatePicker v-model="filterForm.start_date" />
-            <p class="help has-text-danger">
-              {{ errors.start_date[0] }}
-            </p>
-          </VField>
-        </div>
-        <div class="column">
-          <VField :label="$t('End_date')">
-            <DatePicker v-model="filterForm.end_date" />
-            <p class="help has-text-danger">
-              {{ errors.end_date[0] }}
-            </p>
+          <VField>
+            <VLabel>{{ $t('Period') }}</VLabel>
+            <DateRangePicker
+              v-model:start="filterForm.start_date"
+              v-model:end="filterForm.end_date"
+            />
           </VField>
         </div>
         <div class="column">
@@ -95,7 +87,6 @@ const clearFilterForm = async () => {
                 label="name"
                 value-prop="id"
               />
-              <p class="help has-text-danger">{{ errors.donor_category_id[0] }}</p>
             </VControl>
           </VField>
         </div>
@@ -108,7 +99,6 @@ const clearFilterForm = async () => {
                 :options="visitTypes"
                 :placeholder="$t('All')"
               />
-              <p class="help has-text-danger">{{ errors.visit_type_id[0] }}</p>
             </VControl>
           </VField>
         </div>

@@ -4,14 +4,9 @@ import { useNotyf } from '/@src/composable/useNotyf'
 
 defineProps<{
   isLoading: boolean
-  errors: {
-    visit_type_id: string[]
-    donation_type_id: string[]
-    donation_code: string[]
-  }
 }>()
 
-const emits = defineEmits(['search', 'clearError', 'clearForm'])
+const emits = defineEmits(['search', 'clearForm'])
 
 const { t } = useI18n()
 const notif = useNotyf()
@@ -57,22 +52,13 @@ const clearFilterForm = async () => {
     <form @submit.prevent="handleSearch">
       <div class="columns">
         <div class="column is-3">
-          <VisitTypeSelect
-            v-model:visit-type="filterForm.visit_type_id"
-            :error="errors.visit_type_id[0]"
-          />
+          <VisitTypeSelect v-model:visit-type="filterForm.visit_type_id" />
         </div>
         <div class="column is-3">
-          <DonationTypeSelect
-            v-model:donation-type="filterForm.donation_type_id"
-            :error="errors.donation_type_id[0]"
-          />
+          <DonationTypeSelect v-model:donation-type="filterForm.donation_type_id" />
         </div>
         <div class="column is-3">
-          <DonationCodeInput
-            v-model:donation-code="filterForm.donation_code"
-            :error="errors.donation_code[0]"
-          />
+          <DonationCodeInput v-model:donation-code="filterForm.donation_code" />
         </div>
       </div>
       <div class="navigation-buttons">

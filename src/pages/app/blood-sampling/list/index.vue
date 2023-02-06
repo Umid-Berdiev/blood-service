@@ -85,13 +85,12 @@ const currentFilterData = reactive({
 const selectedRow: PatientInterface = reactive({})
 const isBloodSamplingFormModalOpen = ref(false)
 
-// await handleSearch(currentFilterData)
-
 // hooks
 watch(
   () => apiData.pagination.current_page,
   async (newVal) => {
     if (newVal) {
+      currentFilterData.page = newVal
       await handleSearch(currentFilterData)
     }
   },
@@ -105,9 +104,6 @@ async function handleSearch(filterForm: any) {
     isLoading.value = true
     const res = await getPatientsForBloodSample(filterForm)
     Object.assign(apiData, res.result)
-
-    if (isEmpty(res.result.data)) notif.warning(t('Data_not_found'))
-    // else notif.success(`${t('Found')}: ${res.result.pagination.total} ${t('records')}`)
   } catch (error: any) {
     Object.assign(errors, error.response?.data?.errors)
   } finally {
@@ -121,8 +117,6 @@ function clearError(prop: string) {
 
 async function clearFilterForm() {
   await handleSearch(currentFilterData)
-  // await fetchData()
-  // apiData.data = []
 }
 
 function openBloodSamplingFormModal(patient: PatientInterface) {
@@ -159,10 +153,8 @@ function openBloodSamplingFormModal(patient: PatientInterface) {
       <div class="column">
         <BloodSamplingFilterForm
           :is-loading="isLoading"
-          :errors="errors"
           @search="handleSearch"
           @clear-form="clearFilterForm"
-          @clear-error="clearError"
         />
       </div>
     </div>
@@ -206,26 +198,7 @@ function openBloodSamplingFormModal(patient: PatientInterface) {
                 </div>
 
                 <!-- This is the empty state -->
-                <div v-if="apiData.data.length === 0" class="flex-list-inner">
-                  <VPlaceholderSection
-                    :title="$t('No_data')"
-                    :subtitle="$t('There_is_no_data_that_match_your_query')"
-                    class="my-6"
-                  >
-                    <template #image>
-                      <img
-                        class="light-image"
-                        src="/@src/assets/illustrations/placeholders/search-7.svg"
-                        alt=""
-                      />
-                      <img
-                        class="dark-image"
-                        src="/@src/assets/illustrations/placeholders/search-7-dark.svg"
-                        alt=""
-                      />
-                    </template>
-                  </VPlaceholderSection>
-                </div>
+                <NoDataPlaceholder v-if="apiData.data.length === 0" />
               </template>
 
               <!-- This is the body cell slot -->

@@ -6,14 +6,9 @@ import { fetchDonationTypes } from '/@src/utils/api/additional'
 
 defineProps<{
   isLoading: boolean
-  errors: {
-    visit_type: string[]
-    donation_type_id: string[]
-    donation_code: string[]
-  }
 }>()
 
-const emits = defineEmits(['search', 'clearError', 'clearForm'])
+const emits = defineEmits(['search', 'clearForm'])
 
 const { t } = useI18n()
 const notif = useNotyf()
@@ -45,9 +40,7 @@ watch(
 )
 
 const handleSearch = async () => {
-  // if (Object.values(filterForm).some((value) => Boolean(value))) {
   emits('search', filterForm)
-  // } else notif.error(t('Form_fields_are_empty'))
 }
 
 const clearFilterForm = async () => {
@@ -73,9 +66,6 @@ const clearFilterForm = async () => {
                 :options="visitTypes"
                 :placeholder="$t('All')"
               />
-              <p class="help has-text-danger">
-                {{ errors.visit_type[0] }}
-              </p>
             </VControl>
           </VField>
         </div>
@@ -90,9 +80,6 @@ const clearFilterForm = async () => {
                 label="name"
                 value-prop="id"
               />
-              <p class="help has-text-danger">
-                {{ errors.donation_type_id[0] }}
-              </p>
             </VControl>
           </VField>
         </div>
@@ -104,9 +91,6 @@ const clearFilterForm = async () => {
                 :attrs="{ id }"
                 :placeholder="$t('Donation_code')"
               />
-              <p class="help has-text-danger">
-                {{ errors.donation_code[0] }}
-              </p>
             </VControl>
           </VField>
         </div>
