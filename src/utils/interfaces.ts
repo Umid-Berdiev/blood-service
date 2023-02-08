@@ -103,7 +103,7 @@ export interface PatientInterface {
   last_name: string
   first_name: string
   father_name: string
-  birth_date: Date
+  birth_date: string
   gender: 'male' | 'female'
   phone_number: string
   phone_work: string
@@ -111,7 +111,7 @@ export interface PatientInterface {
   passport_series: string
   passport_number: string
   issued_by: string
-  when_issued: Date
+  when_issued: string
   region_id: number | null
   region?: RegionInterface
   district_id: number | null
@@ -162,6 +162,7 @@ export interface PatientVisitCardInterface {
   id: number
   patient_id: number | string | null
   visit_type: PatientVisitType
+  visit_status_id: number
   stage: string
   directed_by: PatientDirectorType
   medical_organization_id: object | null
@@ -300,4 +301,11 @@ export interface DonationContainerInterface {
   hemopreservative: string
   expire_date: string
   expire_days: number | null
+}
+
+export interface ReagentInterface {
+  name: string
+  unit: string
+  min_value: number | null
+  max_value: number | null
 }

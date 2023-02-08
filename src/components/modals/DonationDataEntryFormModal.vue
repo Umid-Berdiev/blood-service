@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { formatDate } from '@vueuse/core'
-import moment from 'moment'
 import { reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
@@ -197,7 +196,7 @@ function clearErrors() {
   })
 }
 
-function clearError(error: string) {
+function clearError(error: keyof typeof formErrors) {
   formErrors[error] = []
 }
 

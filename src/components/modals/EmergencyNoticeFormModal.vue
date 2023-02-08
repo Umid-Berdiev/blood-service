@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import moment from 'moment'
+import { formatDate } from '@vueuse/core'
 import { reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import SubmitButton from '../partials/buttons/SubmitButton.vue'
 import { useNotyf } from '/@src/composable/useNotyf'
-import { storeHemotransmissionResearchResults } from '/@src/utils/api/patient'
 import { PatientInterface } from '/@src/utils/interfaces'
 
 interface EmergencyNoticeFormInterface {
@@ -74,6 +73,7 @@ const diagnosisOptions = ref([
   { id: 3, name: 'PW' },
   { id: 4, name: 'ВИЧ' },
 ])
+const today = formatDate(new Date(), 'YYYY-MM-DD')
 
 async function onSubmit() {
   try {
@@ -97,9 +97,9 @@ function onClose() {
 
 function clearFields() {
   Object.assign(formState, {
-    blood_samples_taken_date: moment().format('YYYY-MM-DD'),
-    analysis_date: moment().format('YYYY-MM-DD'),
-    clinical_biochemical_laboratory_date: moment().format('YYYY-MM-DD'),
+    blood_samples_taken_date: today,
+    analysis_date: today,
+    clinical_biochemical_laboratory_date: today,
   })
 }
 
@@ -111,8 +111,8 @@ function clearErrors() {
   })
 }
 
-function clearError(error: string) {
-  errors[error] = ''
+function clearError(error: keyof typeof errors) {
+  errors[error] = []
 }
 </script>
 

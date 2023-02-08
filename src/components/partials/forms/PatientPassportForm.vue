@@ -1,39 +1,31 @@
 <script setup lang="ts">
-import { useI18n } from 'vue-i18n'
 import { PatientInterface } from '/@src/utils/interfaces'
 
-const props = withDefaults(
-  defineProps<{
-    patient: PatientInterface
-    errors: {
-      pinfl: string[]
-      passport_series: string[]
-      passport_number: string[]
-      issued_by: string[]
-      when_issued: string[]
-    }
-  }>(),
-  {
-    patient: {
-      pinfl: '',
-    },
+const props = defineProps<{
+  patient: PatientInterface
+  errors: {
+    pinfl: string[]
+    passport_series: string[]
+    passport_number: string[]
+    issued_by: string[]
+    when_issued: string[]
   }
-)
+}>()
+
 const emits = defineEmits(['update:patient', 'editing'])
-const { locale } = useI18n()
-const masks = ref({
-  input: 'DD.MM.YYYY',
-})
-const datePickerModelConfig = reactive({
-  type: 'string',
-  mask: 'YYYY-MM-DD', // Uses 'iso' if missing
-})
+
 const formData = computed({
   get() {
     return props.patient
   },
   set(val) {
     emits('update:patient', val)
+  },
+})
+const passportSeriesMaskOptions = ref({
+  mask: 'aa',
+  prepare: function (str: string) {
+    return str.toUpperCase()
   },
 })
 </script>
@@ -59,14 +51,9 @@ const formData = computed({
         <VIMaskInput
           v-model="formData.passport_series"
           class="input"
-          :options="{
-            mask: 'aa',
-            prepare: function (str) {
-              return str.toUpperCase()
-            },
-          }"
-          @input="$emit('editing', 'passport_series')"
+          :options="passportSeriesMaskOptions"
           :placeholder="$t('Enter_passport_series')"
+          @input="$emit('editing', 'passport_series')"
         />
         <p class="help has-text-danger">{{ errors.passport_series[0] }}</p>
       </VControl>
@@ -96,30 +83,11 @@ const formData = computed({
         <p class="help has-text-danger">{{ errors.issued_by[0] }}</p>
       </VControl>
     </VField>
-    <ClientOnly>
-      <VDatePicker
-        v-model="formData.when_issued"
-        :locale="locale"
-        mode="date"
-        :masks="masks"
-        :model-config="datePickerModelConfig"
-        color="green"
-        trim-weeks
-        :popover="{ visibility: 'click' }"
-      >
-        <template #default="{ inputValue, inputEvents }">
-          <VField :label="$t('When_issued')">
-            <VControl icon="feather:calendar">
-              <VInput
-                :value="inputValue"
-                v-on="inputEvents"
-                @change="$emit('editing', 'when_issued')"
-              />
-              <p class="help has-text-danger">{{ errors.when_issued[0] }}</p>
-            </VControl>
-          </VField>
-        </template>
-      </VDatePicker>
-    </ClientOnly>
+    <DatePicker
+      v-model="formData.when_issued"
+      :label="$t('When_issued')"
+      :error-text="errors.when_issued[0]"
+      @editing="$emit('editing', 'when_issued')"
+    />
   </div>
 </template>

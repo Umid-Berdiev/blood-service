@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import moment from 'moment'
+import { formatDate } from '@vueuse/core'
 import { reactive, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
@@ -38,7 +38,7 @@ const withdrawalReasons = ref([])
 const formData: WithdrawalFormInterface = reactive({
   type: 'temporary',
   reason_text: '',
-  start_date: moment().format('YYYY-MM-DD'),
+  start_date: formatDate(new Date(), 'YYYY-MM-DD'),
   end_date: '',
   source: '',
 })
@@ -85,7 +85,7 @@ function clearFields() {
   Object.assign(formData, {
     type: 'temporary',
     reason_text: null,
-    start_date: moment().format('YYYY-MM-DD'),
+    start_date: formatDate(new Date(), 'YYYY-MM-DD'),
     end_date: '',
     source: '',
   })
@@ -101,8 +101,8 @@ function clearErrors() {
   })
 }
 
-function clearError(error: string) {
-  errors[error] = ''
+function clearError(error: keyof typeof errors) {
+  errors[error] = []
 }
 </script>
 
@@ -134,57 +134,19 @@ function clearError(error: string) {
               <span class="help has-text-danger">{{ errors.reason_text[0] }}</span>
             </VControl>
           </VField>
-          <ClientOnly>
-            <VDatePicker
-              v-model="formData.start_date"
-              :locale="locale"
-              mode="date"
-              :masks="masks"
-              :model-config="datePickerModelConfig"
-              color="green"
-              trim-weeks
-              :popover="{ visibility: 'click' }"
-            >
-              <template #default="{ inputValue, inputEvents }">
-                <VField :label="$t('Start_date')">
-                  <VControl icon="feather:calendar">
-                    <VInput
-                      :value="inputValue"
-                      v-on="inputEvents"
-                      @change="clearError('start_date')"
-                    />
-                    <p class="help has-text-danger">{{ errors.start_date[0] }}</p>
-                  </VControl>
-                </VField>
-              </template>
-            </VDatePicker>
-            <VDatePicker
-              v-if="formData.type === 'temporary'"
-              v-model="formData.end_date"
-              :locale="locale"
-              mode="date"
-              :masks="masks"
-              :model-config="datePickerModelConfig"
-              color="green"
-              trim-weeks
-              :popover="{ visibility: 'click' }"
-            >
-              <template #default="{ inputValue, inputEvents }">
-                <VField :label="$t('End_date')">
-                  <VControl icon="feather:calendar">
-                    <VInput
-                      class="is-primary-focus"
-                      :value="inputValue"
-                      :disabled="formData.type === 'permanent'"
-                      v-on="inputEvents"
-                      @change="clearError('end_date')"
-                    />
-                    <p class="help has-text-danger">{{ errors.end_date[0] }}</p>
-                  </VControl>
-                </VField>
-              </template>
-            </VDatePicker>
-          </ClientOnly>
+          <DatePicker
+            v-model="formData.start_date"
+            :label="$t('Start_date')"
+            :error-text="errors.start_date[0]"
+            @editing="clearError('start_date')"
+          />
+          <DatePicker
+            v-if="formData.type === 'temporary'"
+            v-model="formData.end_date"
+            :label="$t('End_date')"
+            :error-text="errors.start_date[0]"
+            @editing="clearError('start_date')"
+          />
           <VField :label="$t('Source')" required>
             <VControl>
               <VTextarea

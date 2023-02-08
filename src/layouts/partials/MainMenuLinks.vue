@@ -449,5 +449,20 @@ watch(
         <span>{{ $t('Donor-system-directories') }}</span>
       </RouterLink>
     </VCollapseLinks> -->
+
+    <!-- Handbook -->
+    <VCollapseLinks v-model:open="openSideblockLinks" collapse-id="handbook">
+      <template #header>
+        <div class="icon">
+          <i class="iconify" data-icon="feather:folder-plus" aria-hidden="true"></i>
+        </div>
+        {{ $t('Handbook') }}
+        <i aria-hidden="true" class="iconify" data-icon="feather:chevron-right"></i>
+      </template>
+      <RouterLink to="/app/handbook/reagents" class="is-submenu mb-3">
+        <i class="iconify" data-icon="feather:minus" aria-hidden="true"></i>
+        <span>{{ $t('Reagents') }}</span>
+      </RouterLink>
+    </VCollapseLinks>
   </ul>
 </template>

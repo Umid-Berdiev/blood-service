@@ -113,8 +113,8 @@ async function handleSearch(filterForm: any) {
   }
 }
 
-function clearError(prop: string) {
-  errors[prop] = ''
+function clearError(prop: keyof typeof errors) {
+  errors[prop] = []
 }
 
 async function clearFilterForm() {

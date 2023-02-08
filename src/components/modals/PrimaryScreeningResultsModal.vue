@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
-import { getPrimaryScreeningResult } from '/@src/utils/api/screening'
 import {
   PatientVisitCardInterface,
   PrimaryScreeningFormInterface,

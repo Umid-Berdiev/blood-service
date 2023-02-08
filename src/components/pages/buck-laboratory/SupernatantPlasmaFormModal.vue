@@ -2,7 +2,6 @@
 import { reactive, ref } from 'vue'
 import { formatDate } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
-import moment from 'moment'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { SupernatantPlasmasItemInterface } from '/@src/pages/app/buck-laboratory/supernatant-plasmas/index.vue'
 
@@ -74,8 +73,8 @@ function clearErrors() {
   })
 }
 
-function clearError(error: string) {
-  errors[error] = ''
+function clearError(error: keyof typeof errors) {
+  errors[error] = []
 }
 </script>
 

@@ -119,8 +119,8 @@ function clearErrors() {
   })
 }
 
-function clearError(error: string) {
-  errors[error] = ''
+function clearError(error: keyof typeof errors) {
+  errors[error] = []
 }
 </script>
 
@@ -136,7 +136,7 @@ function clearError(error: string) {
         <div class="column">
           <h5 class="is-size-5 has-text-weight-medium">
             {{ $t('Visit_date') }}:
-            {{ patient.created_at }}
+            {{ patient.last_visit?.created_at }}
           </h5>
         </div>
       </div>

@@ -13,6 +13,7 @@ import { PatientVisitCardInterface } from '/@src/utils/interfaces'
 const props = defineProps<{
   isOpen: boolean
   cardId: number | null
+  patientCategoryId: number | null
 }>()
 
 const emits = defineEmits<{
@@ -147,6 +148,7 @@ function clearErrors() {
               :placeholder="$t('Visit_type')"
               label="label"
               value-prop="value"
+              :disabled="patientCategoryId === 2"
             />
             <p class="help has-text-danger">{{ errors.visit_type[0] }}</p>
           </VControl>

@@ -105,7 +105,7 @@ function clearErrors() {
   })
 }
 
-// function clearError(error: string) {
+// function clearError(error: keyof typeof errors) {
 //   formErrors.value[error] = ''
 // }
 </script>

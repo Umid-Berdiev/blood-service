@@ -11,6 +11,8 @@ import {
   patientCategoriesList,
 } from '/@src/utils/api/patient'
 import { useNotyf } from '/@src/composable/useNotyf'
+import { formatDate } from '@vueuse/core'
+import moment from 'moment'
 
 const route = useRoute()
 const router = useRouter()
@@ -21,13 +23,13 @@ const patientForm: PatientInterface = reactive({
   last_name: '',
   first_name: '',
   father_name: '',
-  birth_date: new Date(),
+  birth_date: '',
   gender: 'male',
   pinfl: '',
   passport_series: '',
   passport_number: '',
   issued_by: '',
-  when_issued: new Date(),
+  when_issued: '',
   region_id: null,
   district_id: null,
   work_study_place: '',
@@ -103,19 +105,25 @@ onMounted(async () => {
 // functions
 async function fetchPatientInfo() {
   try {
-    const res = await fetchPatientById(patientID)
+    const res = await fetchPatientById(Number(patientID))
     Object.assign(patientForm, res.result)
     patientForm.pinfl ??= ''
     patientForm.phone_home ??= ''
     patientForm.phone_number ??= ''
     patientForm.phone_work ??= ''
+    patientForm.birth_date = patientForm.birth_date
+      ? moment(patientForm.birth_date, 'YYYY-MM-DD').format('YYYY-MM-DD')
+      : ''
+    patientForm.when_issued = patientForm.when_issued
+      ? moment(patientForm.when_issued, 'YYYY-MM-DD').format('YYYY-MM-DD')
+      : ''
   } catch (error: any) {
     notif.error(error.message)
   }
 }
 
-function clearError(error: string) {
-  errors[error] = ''
+function clearError(error: keyof typeof errors) {
+  errors[error] = []
 }
 
 async function onSubmit() {
@@ -173,7 +181,15 @@ function onDirectionForDonationSubmit() {
         <form v-if="activeValue === '#details'" @submit.prevent="onSubmit">
           <div class="columns mt-5">
             <div class="column">
-              <p class="is-size-5">{{ $t('Personal_Info') }}</p>
+              <p class="title is-size-5">{{ $t('Passport_info') }}</p>
+              <PatientPassportForm
+                :patient="patientForm"
+                :errors="errors"
+                @editing="clearError"
+              />
+            </div>
+            <div class="column">
+              <p class="title is-size-5">{{ $t('Personal_Info') }}</p>
               <PatientPersonalInfoForm
                 :patient="patientForm"
                 :errors="errors"
@@ -195,15 +211,7 @@ function onDirectionForDonationSubmit() {
               </VField>
             </div>
             <div class="column">
-              <p class="is-size-5">{{ $t('Passport_info') }}</p>
-              <PatientPassportForm
-                :patient="patientForm"
-                :errors="errors"
-                @editing="clearError"
-              />
-            </div>
-            <div class="column">
-              <p class="is-size-5">{{ $t('Address') }}</p>
+              <p class="title is-size-5">{{ $t('Address') }}</p>
               <PatientAddressForm
                 :patient="patientForm"
                 :errors="errors"
@@ -318,7 +326,7 @@ function onDirectionForDonationSubmit() {
       @laboratory-research="openLaboratoryResearchModal"
     />
     <PrimaryScreeningResultsModal
-      v-if="patientForm.last_visit?.visit_status_id === 3"
+      v-if="patientForm.last_visit?.visit_status_id >= 3"
       v-model:is-open="isPrimaryScreeningResultsModalOpen"
       :visitcard="patientForm.last_visit"
       @withdrawal="openWithdrawalModal"

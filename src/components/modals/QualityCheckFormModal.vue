@@ -73,7 +73,7 @@ function clearErrors() {
   })
 }
 
-function clearError(error: string) {
+function clearError(error: keyof typeof errors) {
   errors[error] = []
 }
 </script>

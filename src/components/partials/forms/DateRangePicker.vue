@@ -44,6 +44,7 @@ const range = computed({
       trim-weeks
       :masks="masks"
       :model-config="datePickerModelConfig"
+      :popover="{ visibility: 'click' }"
     >
       <template #default="{ inputValue, inputEvents }">
         <VField addons>

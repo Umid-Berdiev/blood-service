@@ -5,13 +5,13 @@ import { useHead } from '@vueuse/head'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { useI18n } from 'vue-i18n'
 import { PatientInterface, TabHeader } from '/@src/utils/interfaces'
-import PatientVisitCardTable from '/@src/components/tables/PatientVisitCardTable.vue'
 import {
   fetchPatientById,
   updatePatientById,
   patientCategoriesList,
 } from '/@src/utils/api/patient'
 import { useNotyf } from '/@src/composable/useNotyf'
+import moment from 'moment'
 
 const route = useRoute()
 const router = useRouter()
@@ -101,13 +101,19 @@ async function fetchPatientInfo() {
     patientForm.phone_home ??= ''
     patientForm.phone_number ??= ''
     patientForm.phone_work ??= ''
+    patientForm.birth_date = patientForm.birth_date
+      ? moment(patientForm.birth_date, 'YYYY-MM-DD').format('YYYY-MM-DD')
+      : ''
+    patientForm.when_issued = patientForm.when_issued
+      ? moment(patientForm.when_issued, 'YYYY-MM-DD').format('YYYY-MM-DD')
+      : ''
   } catch (error: any) {
     notif.error(error.message)
   }
 }
 
-function clearError(error: string) {
-  errors[error] = ''
+function clearError(error: keyof typeof errors) {
+  errors[error] = []
 }
 
 async function onSubmit() {
@@ -133,7 +139,15 @@ async function onSubmit() {
         <form v-if="activeValue === '#details'" @submit.prevent="onSubmit">
           <div class="columns mt-5">
             <div class="column">
-              <p class="is-size-5">{{ $t('Personal_Info') }}</p>
+              <p class="title is-size-5">{{ $t('Passport_info') }}</p>
+              <PatientPassportForm
+                :patient="patientForm"
+                :errors="errors"
+                @editing="clearError"
+              />
+            </div>
+            <div class="column">
+              <p class="title is-size-5">{{ $t('Personal_Info') }}</p>
               <PatientPersonalInfoForm
                 :patient="patientForm"
                 :errors="errors"
@@ -154,15 +168,7 @@ async function onSubmit() {
               </VField>
             </div>
             <div class="column">
-              <p class="is-size-5">{{ $t('Passport_info') }}</p>
-              <PatientPassportForm
-                :patient="patientForm"
-                :errors="errors"
-                @editing="clearError"
-              />
-            </div>
-            <div class="column">
-              <p class="is-size-5">{{ $t('Address') }}</p>
+              <p class="title is-size-5">{{ $t('Address') }}</p>
               <PatientAddressForm
                 :patient="patientForm"
                 :errors="errors"
@@ -186,7 +192,7 @@ async function onSubmit() {
           </div>
         </form>
         <div v-else-if="activeValue === '#patient_visit_cards'" class="mt-5">
-          <PatientVisitCardTable />
+          <PatientVisitCardTable :patient-category-id="patientForm.patient_category_id" />
         </div>
       </template>
     </VTabs>

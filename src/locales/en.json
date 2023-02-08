@@ -795,5 +795,6 @@
   "Medical_inspection_conclusion": "Medical inspection conclusion",
   "Blood_component_amount": "Blood component amount",
   "Period": "Period",
-  "Form_fields_are_empty": "Form fields are empty"
+  "Form_fields_are_empty": "Form fields are empty",
+  "Reagents": "Reagents"
 }

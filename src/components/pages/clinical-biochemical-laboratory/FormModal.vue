@@ -144,8 +144,8 @@ function clearErrors() {
   })
 }
 
-// function clearError(error: string) {
-//   errors[error] = ''
+// function clearError(error: keyof typeof errors) {
+//   errors[error] = []
 // }
 </script>
 

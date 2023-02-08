@@ -44,7 +44,7 @@ const columns = {
       row.last_visit?.primary_screening_result &&
       formatDate(
         new Date(row.last_visit?.primary_screening_result?.created_at),
-        'YYYY-MM-DD'
+        'DD.MM.YYYY'
       ),
     // media: true,
     // grow: true,

@@ -92,7 +92,11 @@ const apiData: ApiDataInterface<ProductInterface> = reactive({
 const selectedRow = reactive({})
 const selectedRows = ref<number[]>([])
 const isFormModalOpen = ref(false)
-const filterErrors = reactive({
+const currentFilterData = reactive({
+  donation_code: '',
+  donation_type_id: '',
+})
+const errors = reactive({
   donation_code: [],
   donation_type_id: [],
 })
@@ -128,14 +132,14 @@ async function handleSearch(filterForm: any) {
     // const res = await patientsListForScreening(params)
     // Object.assign(apiData, res.result)
   } catch (error: any) {
-    Object.assign(filterErrors, error.response?.data?.errors)
+    Object.assign(errors, error.response?.data?.errors)
   } finally {
     isLoading.value = false
   }
 }
 
-function clearError(prop: string) {
-  errors[prop] = ''
+function clearError(prop: keyof typeof errors) {
+  errors[prop] = []
 }
 
 async function clearFilterForm() {

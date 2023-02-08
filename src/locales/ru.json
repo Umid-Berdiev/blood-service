@@ -795,5 +795,6 @@
   "Medical_inspection_conclusion": "Заключение по медосвидетельствованию",
   "Blood_component_amount": "Количество крови или компонента",
   "Period": "Период",
-  "Form_fields_are_empty": "Пустая форма, введите хотя бы один параметр"
+  "Form_fields_are_empty": "Пустая форма, введите хотя бы один параметр",
+  "Reagents": "Реагенты"
 }

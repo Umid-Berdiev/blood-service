@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useI18n } from 'vue-i18n'
 import { PatientInterface } from '/@src/utils/interfaces'
 
 const props = defineProps<{
@@ -14,14 +13,6 @@ const props = defineProps<{
 }>()
 const emits = defineEmits(['update:patient', 'editing'])
 
-const { locale } = useI18n()
-const masks = ref({
-  input: 'DD.MM.YYYY',
-})
-const datePickerModelConfig = ref({
-  type: 'string',
-  mask: 'YYYY-MM-DD', // Uses 'iso' if missing
-})
 const form = computed({
   get() {
     return props.patient
@@ -34,7 +25,6 @@ const form = computed({
 
 <template>
   <div class="fieldset p-5">
-    <!-- <div class="fieldset-separator"></div> -->
     <VField :label="$t('Last_name')" required>
       <VControl>
         <VInput
@@ -68,31 +58,12 @@ const form = computed({
         <p class="help has-text-danger">{{ errors.father_name[0] }}</p>
       </VControl>
     </VField>
-    <ClientOnly>
-      <VDatePicker
-        v-model="form.birth_date"
-        :locale="locale"
-        mode="date"
-        :masks="masks"
-        :model-config="datePickerModelConfig"
-        color="green"
-        trim-weeks
-        :popover="{ visibility: 'click' }"
-      >
-        <template #default="{ inputValue, inputEvents }">
-          <VField :label="$t('Date-of-birth')" required>
-            <VControl icon="feather:calendar">
-              <VInput
-                :value="inputValue"
-                v-on="inputEvents"
-                @input="$emit('editing', 'birth_date')"
-              />
-              <p class="help has-text-danger">{{ errors.birth_date[0] }}</p>
-            </VControl>
-          </VField>
-        </template>
-      </VDatePicker>
-    </ClientOnly>
+    <DatePicker
+      v-model="form.birth_date"
+      :label="$t('Date-of-birth')"
+      :error-text="errors.birth_date[0]"
+      @editing="$emit('editing', 'birth_date')"
+    />
     <VField :label="$t('Gender')">
       <VControl>
         <VRadio
